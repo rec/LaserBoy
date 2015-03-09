@@ -1,0 +1,76 @@
+# Project: LaserBoy
+# Makefile created by Dev-C++ 4.9.9.2
+# Editied by James Lehman.
+
+RM       = rm -f
+STRIP    = strip -s -v
+CPP      = g++.exe
+INCS     = -I include
+OBJ      = ../src/LaserBoy.o ../src/LaserBoy_common.o ../src/LaserBoy_frame.o ../src/LaserBoy_frame_effects.o ../src/LaserBoy_frame_set.o ../src/LaserBoy_frame_set_effects.o ../src/LaserBoy_ild_header.o ../src/LaserBoy_segment.o ../src/LaserBoy_palette.o ../src/LaserBoy_palette_set.o ../src/LaserBoy_real_segment.o ../src/LaserBoy_wave.o ../src/LaserBoy_space.o ../src/LaserBoy_TUI.o ../src/LaserBoy_SDL_GUI.o ../src/LaserBoy_bmp.o ../src/LaserBoy_font.o
+LIBS     = -lmingw32 -lSDLmain -lSDL -lboost_system-mgw47-1_53 -lboost_filesystem-mgw47-1_53 -lboost_iostreams-mgw47-1_53 -lws2_32
+CPPFLAGS = -O3 -fexpensive-optimizations -Wall -Dmain=SDL_main -mwindows -D_WIN32_WINNT=0x0501 -static
+BIN      = ../LaserBoy.exe
+HEADERS  = LaserBoy_3D_double.hpp LaserBoy_3D_short.hpp LaserBoy_bmp.hpp LaserBoy_color.hpp LaserBoy_common.hpp LaserBoy_font.hpp LaserBoy_frame.hpp LaserBoy_frame_set.hpp LaserBoy_GUI_base.hpp LaserBoy_ild_header.hpp LaserBoy_includes.hpp LaserBoy_macros.hpp LaserBoy_palette.hpp LaserBoy_palette_set.hpp LaserBoy_real_segment.hpp LaserBoy_real_vertex.hpp LaserBoy_SDL_GUI.hpp LaserBoy_segment.hpp LaserBoy_space.hpp LaserBoy_TUI.hpp LaserBoy_utility.hpp LaserBoy_vertex.hpp LaserBoy_wave.hpp
+
+all: $(BIN) strip
+
+strip:
+	$(STRIP) $(BIN)
+
+clean:
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) -static-libgcc -static-libstdc++ $(OBJ) -o $(BIN) $(LIBS)
+
+../src/LaserBoy.o: LaserBoy.cpp $(HEADERS)
+	$(CPP) -c LaserBoy.cpp -o ../src/LaserBoy.o $(CPPFLAGS)
+
+../src/LaserBoy_SDL_GUI.o: LaserBoy_SDL_GUI.cpp $(HEADERS)
+	$(CPP) -c LaserBoy_SDL_GUI.cpp -o ../src/LaserBoy_SDL_GUI.o $(CPPFLAGS)
+
+../src/LaserBoy_TUI.o: LaserBoy_TUI.cpp $(HEADERS)
+	$(CPP) -c LaserBoy_TUI.cpp -o ../src/LaserBoy_TUI.o $(CPPFLAGS)
+
+../src/LaserBoy_space.o: LaserBoy_space.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_space.cpp -o ../src/LaserBoy_space.o $(CPPFLAGS)
+
+../src/LaserBoy_frame_set_effects.o: LaserBoy_frame_set_effects.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_frame_set_effects.cpp -o ../src/LaserBoy_frame_set_effects.o $(CPPFLAGS)
+
+../src/LaserBoy_frame_effects.o: LaserBoy_frame_effects.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_frame_effects.cpp -o ../src/LaserBoy_frame_effects.o $(CPPFLAGS)
+
+../src/LaserBoy_palette_set.o: LaserBoy_palette_set.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_palette_set.cpp -o ../src/LaserBoy_palette_set.o $(CPPFLAGS)
+
+../src/LaserBoy_palette.o: LaserBoy_palette.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_palette.cpp -o ../src/LaserBoy_palette.o $(CPPFLAGS)
+
+../src/LaserBoy_frame_set.o: LaserBoy_frame_set.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_frame_set.cpp -o ../src/LaserBoy_frame_set.o $(CPPFLAGS)
+
+../src/LaserBoy_frame.o: LaserBoy_frame.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_frame.cpp -o ../src/LaserBoy_frame.o $(CPPFLAGS)
+
+../src/LaserBoy_ild_header.o: LaserBoy_ild_header.cpp LaserBoy_ild_header.hpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
+	$(CPP) -c LaserBoy_ild_header.cpp -o ../src/LaserBoy_ild_header.o $(CPPFLAGS)
+
+../src/LaserBoy_bmp.o: LaserBoy_bmp.cpp LaserBoy_bmp.hpp LaserBoy_font.hpp LaserBoy_color.hpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
+	$(CPP) -c LaserBoy_bmp.cpp -o ../src/LaserBoy_bmp.o $(CPPFLAGS)
+
+../src/LaserBoy_font.o: LaserBoy_font.cpp LaserBoy_font.hpp
+	$(CPP) -c LaserBoy_font.cpp -o ../src/LaserBoy_font.o $(CPPFLAGS)
+
+../src/LaserBoy_segment.o: LaserBoy_segment.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_segment.cpp -o ../src/LaserBoy_segment.o $(CPPFLAGS)
+
+../src/LaserBoy_real_segment.o: LaserBoy_real_segment.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy_real_segment.cpp -o ../src/LaserBoy_real_segment.o $(CPPFLAGS)
+
+../src/LaserBoy_wave.o: LaserBoy_wave.cpp LaserBoy_wave.hpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
+	$(CPP) -c LaserBoy_wave.cpp -o ../src/LaserBoy_wave.o $(CPPFLAGS)
+
+../src/LaserBoy_common.o: LaserBoy_common.cpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
+	$(CPP) -c LaserBoy_common.cpp -o ../src/LaserBoy_common.o $(CPPFLAGS)
+
