@@ -1,3 +1,7 @@
+# Executable target.
+
+LaserBoy
+
 # Compiled Object files
 *.slo
 *.lo
@@ -26,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Mac files
+
+.DS_Store
