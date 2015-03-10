@@ -27,14 +27,14 @@
 // along with LaserBoy. If not, see <http://www.gnu.org/licenses/>.
 //
 //############################################################################
-#include "LaserBoy_SDL_GUI.hpp"
+#include <LaserBoy/SDL_GUI.hpp>
 
 //############################################################################
 int main(int argc, char *argv[])
 {
     int xres = 640,
         yres = 480;
-        
+
     if(argc >= 3)
     {
         xres = atoi(argv[1]);

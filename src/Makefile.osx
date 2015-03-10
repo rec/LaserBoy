@@ -3,12 +3,12 @@
 
 RM       = rm -f
 CPP      = g++
-CPPFLAGS = -I/opt/local/include -O3 -fexpensive-optimizations -static
-OBJ      = ../src/LaserBoy.obj ../src/LaserBoy_common.obj ../src/LaserBoy_frame.obj ../src/LaserBoy_frame_effects.obj ../src/LaserBoy_frame_set.obj ../src/LaserBoy_frame_set_effects.obj ../src/LaserBoy_ild_header.obj ../src/LaserBoy_segment.obj ../src/LaserBoy_palette.obj ../src/LaserBoy_palette_set.obj ../src/LaserBoy_real_segment.obj ../src/LaserBoy_wave.obj ../src/LaserBoy_space.obj ../src/LaserBoy_TUI.obj ../src/LaserBoy_SDL_GUI.obj ../src/LaserBoy_bmp.obj ../src/LaserBoy_font.obj
+CPPFLAGS = -O3 -fexpensive-optimizations -Wall -static -I.
+OBJ      = LaserBoy.obj LaserBoy/common.obj LaserBoy/frame.obj LaserBoy/frame_effects.obj LaserBoy/frame_set.obj LaserBoy/frame_set_effects.obj LaserBoy/ild_header.obj LaserBoy/segment.obj LaserBoy/palette.obj LaserBoy/palette_set.obj LaserBoy/real_segment.obj LaserBoy/wave.obj LaserBoy/space.obj LaserBoy/TUI.obj LaserBoy/SDL_GUI.obj LaserBoy/bmp.obj LaserBoy/font.obj
 # LIBS     = -L/opt/local/lib -lSDL -lSDLMain -lboost_system -lboost_filesystem -lboost_iostreams -pg -g3 -framework Cocoa
 LIBS     = -L/opt/local/lib -lSDL -lSDLMain -lboost_system-mt -lboost_filesystem-mt -lboost_iostreams-mt -pg -g3 -framework Cocoa
 BIN      = ../LaserBoy
-HEADERS  = LaserBoy_3D_double.hpp LaserBoy_3D_short.hpp LaserBoy_bmp.hpp LaserBoy_color.hpp LaserBoy_common.hpp LaserBoy_font.hpp LaserBoy_frame.hpp LaserBoy_frame_set.hpp LaserBoy_GUI_base.hpp LaserBoy_ild_header.hpp LaserBoy_includes.hpp LaserBoy_macros.hpp LaserBoy_palette.hpp LaserBoy_palette_set.hpp LaserBoy_real_segment.hpp LaserBoy_real_vertex.hpp LaserBoy_SDL_GUI.hpp LaserBoy_segment.hpp LaserBoy_space.hpp LaserBoy_TUI.hpp LaserBoy_utility.hpp LaserBoy_vertex.hpp LaserBoy_wave.hpp
+HEADERS  = LaserBoy/3D_double.hpp LaserBoy/3D_short.hpp LaserBoy/bmp.hpp LaserBoy/color.hpp LaserBoy/common.hpp LaserBoy/font.hpp LaserBoy/frame.hpp LaserBoy/frame_set.hpp LaserBoy/GUI_base.hpp LaserBoy/ild_header.hpp LaserBoy/includes.hpp LaserBoy/macros.hpp LaserBoy/palette.hpp LaserBoy/palette_set.hpp LaserBoy/real_segment.hpp LaserBoy/real_vertex.hpp LaserBoy/SDL_GUI.hpp LaserBoy/segment.hpp LaserBoy/space.hpp LaserBoy/TUI.hpp LaserBoy/utility.hpp LaserBoy/vertex.hpp LaserBoy/wave.hpp
 
 all: $(BIN)
 
@@ -18,53 +18,53 @@ clean:
 $(BIN): $(OBJ)
 	$(CPP) $(OBJ) -o $(BIN) $(LIBS)
 
-../src/LaserBoy.obj: LaserBoy.cpp $(HEADERS)
-	$(CPP) -c LaserBoy.cpp -o ../src/LaserBoy.obj $(CPPFLAGS)
+LaserBoy.obj: LaserBoy.cpp $(HEADERS)
+	$(CPP) -c LaserBoy.cpp -o LaserBoy.obj $(CPPFLAGS)
 
-../src/LaserBoy_SDL_GUI.obj: LaserBoy_SDL_GUI.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_SDL_GUI.cpp -o ../src/LaserBoy_SDL_GUI.obj $(CPPFLAGS)
+LaserBoy/SDL_GUI.obj: LaserBoy/SDL_GUI.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/SDL_GUI.cpp -o LaserBoy/SDL_GUI.obj $(CPPFLAGS)
 
-../src/LaserBoy_TUI.obj: LaserBoy_TUI.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_TUI.cpp -o ../src/LaserBoy_TUI.obj $(CPPFLAGS)
+LaserBoy/TUI.obj: LaserBoy/TUI.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/TUI.cpp -o LaserBoy/TUI.obj $(CPPFLAGS)
 
-../src/LaserBoy_space.obj: LaserBoy_space.cpp $(SPACE_HEADERS)
-	$(CPP) -c LaserBoy_space.cpp -o ../src/LaserBoy_space.obj $(CPPFLAGS)
+LaserBoy/space.obj: LaserBoy/space.cpp $(SPACE_HEADERS)
+	$(CPP) -c LaserBoy/space.cpp -o LaserBoy/space.obj $(CPPFLAGS)
 
-../src/LaserBoy_frame_set_effects.obj: LaserBoy_frame_set_effects.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_frame_set_effects.cpp -o ../src/LaserBoy_frame_set_effects.obj $(CPPFLAGS)
+LaserBoy/frame_set_effects.obj: LaserBoy/frame_set_effects.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/frame_set_effects.cpp -o LaserBoy/frame_set_effects.obj $(CPPFLAGS)
 
-../src/LaserBoy_frame_effects.obj: LaserBoy_frame_effects.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_frame_effects.cpp -o ../src/LaserBoy_frame_effects.obj $(CPPFLAGS)
+LaserBoy/frame_effects.obj: LaserBoy/frame_effects.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/frame_effects.cpp -o LaserBoy/frame_effects.obj $(CPPFLAGS)
 
-../src/LaserBoy_palette_set.obj: LaserBoy_palette_set.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_palette_set.cpp -o ../src/LaserBoy_palette_set.obj $(CPPFLAGS)
+LaserBoy/palette_set.obj: LaserBoy/palette_set.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/palette_set.cpp -o LaserBoy/palette_set.obj $(CPPFLAGS)
 
-../src/LaserBoy_palette.obj: LaserBoy_palette.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_palette.cpp -o ../src/LaserBoy_palette.obj $(CPPFLAGS)
+LaserBoy/palette.obj: LaserBoy/palette.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/palette.cpp -o LaserBoy/palette.obj $(CPPFLAGS)
 
-../src/LaserBoy_frame_set.obj: LaserBoy_frame_set.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_frame_set.cpp -o ../src/LaserBoy_frame_set.obj $(CPPFLAGS)
+LaserBoy/frame_set.obj: LaserBoy/frame_set.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/frame_set.cpp -o LaserBoy/frame_set.obj $(CPPFLAGS)
 
-../src/LaserBoy_frame.obj: LaserBoy_frame.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_frame.cpp -o ../src/LaserBoy_frame.obj $(CPPFLAGS)
+LaserBoy/frame.obj: LaserBoy/frame.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/frame.cpp -o LaserBoy/frame.obj $(CPPFLAGS)
 
-../src/LaserBoy_ild_header.obj: LaserBoy_ild_header.cpp LaserBoy_ild_header.hpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
-	$(CPP) -c LaserBoy_ild_header.cpp -o ../src/LaserBoy_ild_header.obj $(CPPFLAGS)
+LaserBoy/ild_header.obj: LaserBoy/ild_header.cpp LaserBoy/ild_header.hpp LaserBoy/common.hpp LaserBoy/macros.hpp LaserBoy/includes.hpp
+	$(CPP) -c LaserBoy/ild_header.cpp -o LaserBoy/ild_header.obj $(CPPFLAGS)
 
-../src/LaserBoy_bmp.obj: LaserBoy_bmp.cpp LaserBoy_bmp.hpp LaserBoy_font.hpp LaserBoy_color.hpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
-	$(CPP) -c LaserBoy_bmp.cpp -o ../src/LaserBoy_bmp.obj $(CPPFLAGS)
+LaserBoy/bmp.obj: LaserBoy/bmp.cpp LaserBoy/bmp.hpp LaserBoy/font.hpp LaserBoy/color.hpp LaserBoy/common.hpp LaserBoy/macros.hpp LaserBoy/includes.hpp
+	$(CPP) -c LaserBoy/bmp.cpp -o LaserBoy/bmp.obj $(CPPFLAGS)
 
-../src/LaserBoy_font.obj: LaserBoy_font.cpp LaserBoy_font.hpp
-	$(CPP) -c LaserBoy_font.cpp -o ../src/LaserBoy_font.obj $(CPPFLAGS)
+LaserBoy/font.obj: LaserBoy/font.cpp LaserBoy/font.hpp
+	$(CPP) -c LaserBoy/font.cpp -o LaserBoy/font.obj $(CPPFLAGS)
 
-../src/LaserBoy_segment.obj: LaserBoy_segment.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_segment.cpp -o ../src/LaserBoy_segment.obj $(CPPFLAGS)
+LaserBoy/segment.obj: LaserBoy/segment.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/segment.cpp -o LaserBoy/segment.obj $(CPPFLAGS)
 
-../src/LaserBoy_real_segment.obj: LaserBoy_real_segment.cpp $(HEADERS)
-	$(CPP) -c LaserBoy_real_segment.cpp -o ../src/LaserBoy_real_segment.obj $(CPPFLAGS)
+LaserBoy/real_segment.obj: LaserBoy/real_segment.cpp $(HEADERS)
+	$(CPP) -c LaserBoy/real_segment.cpp -o LaserBoy/real_segment.obj $(CPPFLAGS)
 
-../src/LaserBoy_wave.obj: LaserBoy_wave.cpp LaserBoy_wave.hpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
-	$(CPP) -c LaserBoy_wave.cpp -o ../src/LaserBoy_wave.obj $(CPPFLAGS)
+LaserBoy/wave.obj: LaserBoy/wave.cpp LaserBoy/wave.hpp LaserBoy/common.hpp LaserBoy/macros.hpp LaserBoy/includes.hpp
+	$(CPP) -c LaserBoy/wave.cpp -o LaserBoy/wave.obj $(CPPFLAGS)
 
-../src/LaserBoy_common.obj: LaserBoy_common.cpp LaserBoy_common.hpp LaserBoy_macros.hpp LaserBoy_includes.hpp
-	$(CPP) -c LaserBoy_common.cpp -o ../src/LaserBoy_common.obj $(CPPFLAGS)
+LaserBoy/common.obj: LaserBoy/common.cpp LaserBoy/common.hpp LaserBoy/macros.hpp LaserBoy/includes.hpp
+	$(CPP) -c LaserBoy/common.cpp -o LaserBoy/common.obj $(CPPFLAGS)
