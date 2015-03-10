@@ -33,6 +33,8 @@
 //############################################################################
 #include <LaserBoy/common.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_ild_header
 {
@@ -101,6 +103,8 @@ virtual
                          future          ;
     LaserBoy_Error_Code  ild_header_error;
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

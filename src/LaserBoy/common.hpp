@@ -33,6 +33,8 @@
 //############################################################################
 #include <LaserBoy/macros.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 typedef unsigned int   u_int  ;
 typedef unsigned short u_short;
@@ -97,6 +99,8 @@ int    LaserBoy_version_check(string &version_string,
                               string install_GUID,
                               u_int app_runs_count
                              );
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

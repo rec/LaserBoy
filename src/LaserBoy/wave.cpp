@@ -29,6 +29,8 @@
 //############################################################################
 #include <LaserBoy/wave.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 LaserBoy_wave_header::LaserBoy_wave_header(const LaserBoy_wave_header& header)
   : num_channels      (header.num_channels      ),
@@ -824,6 +826,7 @@ void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
     return;
 }
 
+} // namespace LaserBoy
 
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////

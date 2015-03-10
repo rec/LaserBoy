@@ -34,6 +34,8 @@
 #include <LaserBoy/bmp.hpp>
 #include <LaserBoy/real_segment.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_segment : public LaserBoy_segment_base
 {
@@ -532,6 +534,8 @@ virtual
 //############################################################################
 LaserBoy_segment blank_segment(LaserBoy_space* ps);
 LaserBoy_segment NULL_segment (LaserBoy_space* ps);
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

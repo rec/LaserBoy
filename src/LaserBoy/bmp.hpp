@@ -34,6 +34,8 @@
 #include <LaserBoy/font.hpp>
 #include <LaserBoy/color.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 extern "C"
 {
@@ -217,6 +219,8 @@ int         bmp_from_file         (struct LaserBoy_bmp* bmp, char* file_name);
 int         bmp_save_as           (struct LaserBoy_bmp* bmp, char* file_name);
 //############################################################################
 } // end extern "C"
+
+} // namespace LaserBoy
 
 #endif // __BMP_FUNCTIONS__
 

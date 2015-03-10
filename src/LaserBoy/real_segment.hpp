@@ -35,6 +35,8 @@
 #include <LaserBoy/palette.hpp>
 #include <LaserBoy/vertex.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_frame_set;
 class LaserBoy_space;
@@ -355,6 +357,8 @@ virtual
     LaserBoy_space*   p_space;
     //------------------------------------------------------------------------
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

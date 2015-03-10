@@ -29,6 +29,8 @@
 //############################################################################
 #include <LaserBoy/GUI_base.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 LaserBoy_segment::LaserBoy_segment(LaserBoy_space   *ps,
                                    LaserBoy_3D_short from,
@@ -3971,6 +3973,8 @@ LaserBoy_segment NULL_segment(LaserBoy_space* ps) // vector word NULL
     segment.push_back(LaserBoy_vertex(-19976, -8000, 0, 255, 255, 255, 64, 55));
     return segment;
 }
+
+} // namespace LaserBoy
 
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////

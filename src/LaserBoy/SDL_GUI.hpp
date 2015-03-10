@@ -34,6 +34,8 @@
 #include <LaserBoy/GUI_base.hpp>
 #include <SDL/SDL.h>
 
+namespace LaserBoy {
+
 //############################################################################
 //  BITMAP MEMORY AND SDL
 void bmp_clone_SDL_Surface(struct LaserBoy_bmp* bmp,    struct SDL_Surface*  screen, int copy);
@@ -213,6 +215,8 @@ virtual  void       display_message                            (const string& me
     SDL_Event     event ; // UI input (keys)
     //------------------------------------------------------------------------
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

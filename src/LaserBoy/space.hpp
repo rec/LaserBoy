@@ -34,6 +34,8 @@
 #include <LaserBoy/frame_set.hpp>
 #include <LaserBoy/palette_set.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_GUI_base;
 
@@ -445,6 +447,8 @@ virtual
             magnitude_step_dn        ;
     //------------------------------------------------------------------------
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

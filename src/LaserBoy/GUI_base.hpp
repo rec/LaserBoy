@@ -32,6 +32,8 @@
 
 #include <LaserBoy/TUI.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_GUI_base
 {
@@ -87,6 +89,8 @@ virtual void     display_progress                           (      int   countdo
     string       file_name;
     LaserBoy_TUI space;
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

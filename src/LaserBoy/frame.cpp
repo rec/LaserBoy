@@ -29,6 +29,8 @@
 //############################################################################
 #include <LaserBoy/GUI_base.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 LaserBoy_frame::LaserBoy_frame(LaserBoy_space* ps,
                                LaserBoy_vertex(*F)(int, int),
@@ -4312,6 +4314,9 @@ LaserBoy_frame NULL_frame(LaserBoy_space* ps)
     frame.is_2D();
     return frame;
 }
+
+} // namespace LaserBoy
+
 
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////

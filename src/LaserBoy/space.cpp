@@ -29,6 +29,8 @@
 //############################################################################
 #include <LaserBoy/GUI_base.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 LaserBoy_space::LaserBoy_space(LaserBoy_GUI_base* gui)
             : LaserBoy_frame_set       (this       )
@@ -3467,6 +3469,8 @@ void LaserBoy_space::tell(LaserBoy_wave_header header, string label) const
     return;
 }
 */
+
+} // namespace LaserBoy
 
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////

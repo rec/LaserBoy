@@ -33,6 +33,8 @@
 //############################################################################
 #include <LaserBoy/frame.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_frame_set : public LaserBoy_frame_set_base
 {
@@ -571,6 +573,8 @@ virtual
 //############################################################################
 typedef LaserBoy_Bounds(*LaserBoy_frame_effect    )(LaserBoy_frame*    ); // function prototyes
 typedef LaserBoy_Bounds(*LaserBoy_frame_set_effect)(LaserBoy_frame_set*);
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

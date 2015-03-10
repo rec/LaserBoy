@@ -33,6 +33,7 @@
 //############################################################################
 #include <LaserBoy/vertex.hpp>
 
+namespace LaserBoy {
 
 //############################################################################
 inline int linear_steps(const LaserBoy_3D_double p1,
@@ -217,6 +218,8 @@ inline LaserBoy_Bounds LaserBoy_bounds_check(const LaserBoy_3D_double& f, const 
     }
     return LaserBoy_bounds_check(f, max, min);
 }
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

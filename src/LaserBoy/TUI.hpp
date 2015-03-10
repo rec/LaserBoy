@@ -32,6 +32,9 @@
 
 #include <LaserBoy/space.hpp>
 
+namespace LaserBoy {
+
+
 //############################################################################
 class LaserBoy_TUI : public LaserBoy_space
 {
@@ -140,6 +143,8 @@ virtual
 
     vector<directory_entry> working_directory_list;
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

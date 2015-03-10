@@ -30,6 +30,8 @@
 #ifndef __LASERBOY_3D_SHORT_DEFINITIONS__
 #define __LASERBOY_3D_SHORT_DEFINITIONS__
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_3D_short
 {
@@ -206,6 +208,8 @@ public:
     //------------------------------------------------------------------------
     short x, y, z;
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

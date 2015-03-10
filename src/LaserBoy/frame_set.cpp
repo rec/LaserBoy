@@ -29,6 +29,8 @@
 //############################################################################
 #include <LaserBoy/GUI_base.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 LaserBoy_frame_set::LaserBoy_frame_set(LaserBoy_space* ps,
                                        LaserBoy_vertex(*F)(int, int),
@@ -4701,6 +4703,8 @@ bool LaserBoy_frame_set::save_as_dxf_directory(const string& dir) const
     }
     return all_saved;
 }
+
+} // namespace LaserBoy
 
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////

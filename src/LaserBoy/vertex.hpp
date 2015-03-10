@@ -34,6 +34,8 @@
 #include <LaserBoy/real_vertex.hpp>
 #include <LaserBoy/wave.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_vertex : public LaserBoy_3D_short, public LaserBoy_color
 {
@@ -957,6 +959,8 @@ virtual
             { clear(); }
     //------------------------------------------------------------------------
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

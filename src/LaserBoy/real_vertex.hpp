@@ -34,6 +34,8 @@
 #include <LaserBoy/color.hpp>
 #include <LaserBoy/3D_double.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 class LaserBoy_real_vertex : public LaserBoy_3D_double, public LaserBoy_color
 {
@@ -384,6 +386,8 @@ virtual
             { clear(); }
     //------------------------------------------------------------------------
 };
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif

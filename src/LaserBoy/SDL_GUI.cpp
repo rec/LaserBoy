@@ -29,6 +29,8 @@
 //############################################################################
 #include <LaserBoy/SDL_GUI.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 void bmp_clone_SDL_Surface(struct LaserBoy_bmp* bmp, struct SDL_Surface* screen, int copy)
 {
@@ -11684,6 +11686,8 @@ int LaserBoy_SDL_GUI::start_menu_loop()
     Laserboy_terminating();
     return 0;
 }
+
+} // namespace LaserBoy
 
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////

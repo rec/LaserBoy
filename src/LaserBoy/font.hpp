@@ -30,8 +30,12 @@
 #ifndef __LASERBOY_BMP_FONT__
 #define __LASERBOY_BMP_FONT__
 
+namespace LaserBoy {
+
 //############################################################################
 extern unsigned char fontdata_8x8[2048];
+
+} // namespace LaserBoy
 
 //############################################################################
 #endif // __LASERBOY_BMP_FONT__

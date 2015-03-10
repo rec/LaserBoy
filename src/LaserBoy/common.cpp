@@ -30,6 +30,8 @@
 #include <LaserBoy/common.hpp>
 #include <boost/asio.hpp>
 
+namespace LaserBoy {
+
 //############################################################################
 const double pi                = (4 * atan(1.0)) ;
 const double two_pi            = (pi * 2.0)      ;
@@ -499,6 +501,8 @@ int LaserBoy_version_check(string& version_string, string install_GUID, u_int ap
     }
     return 0;
 }
+
+} // namespace LaserBoy
 
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////
