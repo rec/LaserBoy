@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_real_vertex.hpp is part of LaserBoy.
+// real_vertex.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,10 +37,10 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_real_vertex : public LaserBoy_3D_double, public LaserBoy_color
+class RealVertex : public Double3d, public Color
 {
 public:
-    LaserBoy_real_vertex(const double&  _x = 0,
+    RealVertex(const double&  _x = 0,
                          const double&  _y = 0,
                          const double&  _z = 0,
                          const u_char&  _r = 0,
@@ -49,48 +49,48 @@ public:
                          const u_char&  _k = LASERBOY_BLANKING_BIT,
                          const u_char&  _c = 0
                         )
-                  : LaserBoy_3D_double (_x, _y, _z),
-                    LaserBoy_color     (_r, _g, _b),
+                  : Double3d (_x, _y, _z),
+                    Color     (_r, _g, _b),
                     k                  (_k        ),
                     c                  (_c        )             {}
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex(const LaserBoy_real_vertex& p)
-                  : LaserBoy_3D_double (p.x, p.y, p.z),
-                    LaserBoy_color     (p.r, p.g, p.b),
+    RealVertex(const RealVertex& p)
+                  : Double3d (p.x, p.y, p.z),
+                    Color     (p.r, p.g, p.b),
                     k                  (p.k          ),
                     c                  (p.c          )          {}
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex(const LaserBoy_3D_double& f,
-                         const LaserBoy_color&     rgb,
+    RealVertex(const Double3d& f,
+                         const Color&     rgb,
                          const u_char&             _k = LASERBOY_BLANKING_BIT,
                          const u_char&             _c = 0
                         )
-                  : LaserBoy_3D_double (f  ),
-                    LaserBoy_color     (rgb),
+                  : Double3d (f  ),
+                    Color     (rgb),
                     k                  (_k ),
                     c                  (_c )                    {}
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex(const LaserBoy_3D_double& f,
+    RealVertex(const Double3d& f,
                          const u_char&             _c
                         )
-                  : LaserBoy_3D_double (f),
-                    LaserBoy_color     (0, 0, 0),
+                  : Double3d (f),
+                    Color     (0, 0, 0),
                     k                  (LASERBOY_BLANKING_BIT),
                     c                  (_c)                     {}
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex(const LaserBoy_3D_double& f)
-                  : LaserBoy_3D_double (f),
-                    LaserBoy_color     (0, 0, 0),
+    RealVertex(const Double3d& f)
+                  : Double3d (f),
+                    Color     (0, 0, 0),
                     k                  (LASERBOY_BLANKING_BIT),
                     c                  (0)                      {}
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex( const LaserBoy_color& rgb)
-                  : LaserBoy_3D_double (0, 0, 0),
-                    LaserBoy_color     (rgb),
+    RealVertex( const Color& rgb)
+                  : Double3d (0, 0, 0),
+                    Color     (rgb),
                     k                  (LASERBOY_BLANKING_BIT),
                     c                  (0)                      {}
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex& operator = (const LaserBoy_real_vertex& p)
+    RealVertex& operator = (const RealVertex& p)
                     {
                         x = p.x;
                         y = p.y;
@@ -103,7 +103,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex& operator = (const LaserBoy_3D_double& f) // only assign the coordinates
+    RealVertex& operator = (const Double3d& f) // only assign the coordinates
                     {
                         x = f.x;
                         y = f.y;
@@ -111,9 +111,9 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex  operator + (const LaserBoy_3D_double& f)
+    RealVertex  operator + (const Double3d& f)
                     {
-                        LaserBoy_real_vertex sum(*this);
+                        RealVertex sum(*this);
                         sum.x += f.x;
                         sum.y += f.y;
                         sum.z += f.z;
@@ -125,7 +125,7 @@ public:
                         return sum;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex& operator += (const LaserBoy_3D_double& f)
+    RealVertex& operator += (const Double3d& f)
                     {
                         x += f.x;
                         y += f.y;
@@ -133,16 +133,16 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex  operator - (const LaserBoy_3D_double& f)
+    RealVertex  operator - (const Double3d& f)
                     {
-                        LaserBoy_real_vertex diff(*this);
+                        RealVertex diff(*this);
                         diff.x -= f.x;
                         diff.y -= f.y;
                         diff.z -= f.z;
                         return diff;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex& operator -= (const LaserBoy_3D_double& f)
+    RealVertex& operator -= (const Double3d& f)
                     {
                         x -= f.x;
                         y -= f.y;
@@ -150,7 +150,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex& operator *= (const LaserBoy_3D_double& f)
+    RealVertex& operator *= (const Double3d& f)
                     {
                         x *= f.x;
                         y *= f.y;
@@ -158,9 +158,9 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex operator * (const LaserBoy_3D_double& f)
+    RealVertex operator * (const Double3d& f)
                     {
-                        LaserBoy_real_vertex product;
+                        RealVertex product;
                         product.r = r;
                         product.g = g;
                         product.b = b;
@@ -172,7 +172,7 @@ public:
                         return product;
                     }
     //------------------------------------------------------------------------
-    bool operator == (const LaserBoy_real_vertex& p) const
+    bool operator == (const RealVertex& p) const
             {
                 if(    (x != p.x)
                     || (y != p.y)
@@ -187,7 +187,7 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    bool operator != (const LaserBoy_real_vertex& p) const
+    bool operator != (const RealVertex& p) const
             {
                 if(    (x == p.x)
                     && (y == p.y)
@@ -202,9 +202,9 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex operator - ()
+    RealVertex operator - ()
                     {
-                        LaserBoy_real_vertex negative;
+                        RealVertex negative;
                         negative.x = -x;
                         negative.y = -y;
                         negative.z = -z;
@@ -323,8 +323,8 @@ public:
             return (in.good() && got_data);
         }
     //------------------------------------------------------------------------
-    LaserBoy_real_vertex& blank  () { k |=  LASERBOY_BLANKING_BIT; return *this; }
-    LaserBoy_real_vertex& unblank() { k &= ~LASERBOY_BLANKING_BIT; return *this; }
+    RealVertex& blank  () { k |=  LASERBOY_BLANKING_BIT; return *this; }
+    RealVertex& unblank() { k &= ~LASERBOY_BLANKING_BIT; return *this; }
     //------------------------------------------------------------------------
     bool  is_blank    () const { return (bool)(k & LASERBOY_BLANKING_BIT);  }
     bool  is_lit      () const { return !is_blank()                      ;  }
@@ -350,7 +350,7 @@ public:
                        );
             }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double as_3D_double() const {  return (LaserBoy_3D_double)(*this); }
+    Double3d as_3D_double() const {  return (Double3d)(*this); }
     //------------------------------------------------------------------------
     int color_of(int black_level) const
             {
@@ -365,24 +365,24 @@ public:
                        : -1; // is blank
             }
     //------------------------------------------------------------------------
-    LaserBoy_color as_LaserBoy_color() const
+    Color as_Color() const
             {
-                return (LaserBoy_color)(*this);
+                return (Color)(*this);
             }
     //------------------------------------------------------------------------
     u_char  k, c;
 };
 
 //############################################################################
-class LaserBoy_real_segment_base : public vector<LaserBoy_real_vertex>
+class RealSegmentBase : public vector<RealVertex>
 {
 public:
     //------------------------------------------------------------------------
-    LaserBoy_real_segment_base()
+    RealSegmentBase()
             {}
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_real_segment_base()
+   ~RealSegmentBase()
             { clear(); }
     //------------------------------------------------------------------------
 };

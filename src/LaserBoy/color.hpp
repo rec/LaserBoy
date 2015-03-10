@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_color.hpp is part of LaserBoy.
+// color.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,26 +35,26 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_color
+class Color
 {
 public:
-    LaserBoy_color( const u_char& _r = 0,
+    Color( const u_char& _r = 0,
                     const u_char& _g = 0,
                     const u_char& _b = 0
                   )
             : r(_r), g(_g), b(_b)                      {}
     //------------------------------------------------------------------------
-    LaserBoy_color(const LaserBoy_color& c)
+    Color(const Color& c)
             : r(c.r), g(c.g), b(c.b)                   {}
     //------------------------------------------------------------------------
-    LaserBoy_color(const u_int& c)
+    Color(const u_int& c)
             : r((c & 0x00ff0000) >> 16)
             , g((c & 0x0000ff00) >>  8)
             , b((c & 0x000000ff)      )                {}
     //------------------------------------------------------------------------
-   ~LaserBoy_color()                                   {}
+   ~Color()                                   {}
     //------------------------------------------------------------------------
-    LaserBoy_color& operator = (const LaserBoy_color& c)
+    Color& operator = (const Color& c)
                 {
                     r = c.r;
                     g = c.g;
@@ -62,7 +62,7 @@ public:
                     return *this;
                 }
     //------------------------------------------------------------------------
-    LaserBoy_color& operator = (const u_char& c)
+    Color& operator = (const u_char& c)
                 {
                     r = c;
                     g = c;
@@ -70,7 +70,7 @@ public:
                     return *this;
                 }
     //------------------------------------------------------------------------
-    LaserBoy_color& operator = (const u_int& i)
+    Color& operator = (const u_int& i)
                 {
                     r = (i & 0x00ff0000) >> 16;
                     g = (i & 0x0000ff00) >>  8;
@@ -78,32 +78,32 @@ public:
                     return *this;
                 }
     //------------------------------------------------------------------------
-    bool operator == (const LaserBoy_color& c) const
+    bool operator == (const Color& c) const
             {
                 return(as_uint() == c.as_uint());
             }
     //------------------------------------------------------------------------
-    bool operator != (const LaserBoy_color& c) const
+    bool operator != (const Color& c) const
             {
                 return(as_uint() != c.as_uint());
             }
     //------------------------------------------------------------------------
-    bool operator >  (const LaserBoy_color& c) const
+    bool operator >  (const Color& c) const
             {
                 return(as_uint() > c.as_uint());
             }
     //------------------------------------------------------------------------
-    bool operator >= (const LaserBoy_color& c) const
+    bool operator >= (const Color& c) const
             {
                 return(as_uint() >= c.as_uint());
             }
     //------------------------------------------------------------------------
-    bool operator <  (const LaserBoy_color& c) const
+    bool operator <  (const Color& c) const
             {
                 return(as_uint() < c.as_uint());
             }
     //------------------------------------------------------------------------
-    bool operator <=  (const LaserBoy_color& c) const
+    bool operator <=  (const Color& c) const
             {
                 return(as_uint() <= c.as_uint());
             }
@@ -197,16 +197,16 @@ public:
     //------------------------------------------------------------------------
     u_int intensity() const {    return(r + g + b) / 3;           }
     //------------------------------------------------------------------------
-    LaserBoy_color  blend(const LaserBoy_color& c, double ratio)
+    Color  blend(const Color& c, double ratio)
                 {
-                    LaserBoy_color blended;
+                    Color blended;
                     blended.r = (u_char)(((1.0 - ratio) * r) + (ratio * c.r) + 0.5);
                     blended.g = (u_char)(((1.0 - ratio) * g) + (ratio * c.g) + 0.5);
                     blended.b = (u_char)(((1.0 - ratio) * b) + (ratio * c.b) + 0.5);
                     return blended;
                 }
     //------------------------------------------------------------------------
-    LaserBoy_color& shade(const u_char& s)
+    Color& shade(const u_char& s)
                 {
                     (r - s > 0) ? (r -= s) : (r = 0);
                     (g - s > 0) ? (g -= s) : (g = 0);
@@ -214,7 +214,7 @@ public:
                     return *this;
                 }
     //------------------------------------------------------------------------
-    LaserBoy_color& tint(const u_char& t)
+    Color& tint(const u_char& t)
                 {
                     (r + t <= 255) ? (r += t) : (r = 255);
                     (g + t <= 255) ? (g += t) : (g = 255);
@@ -226,15 +226,15 @@ public:
 };
 
 //############################################################################
-class LaserBoy_palette_base : public vector<LaserBoy_color>
+class PaletteBase : public vector<Color>
 {
 public:
     //------------------------------------------------------------------------
-    LaserBoy_palette_base()
+    PaletteBase()
             {}
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_palette_base()
+   ~PaletteBase()
             { clear(); }
     //------------------------------------------------------------------------
 };

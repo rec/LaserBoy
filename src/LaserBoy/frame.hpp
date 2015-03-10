@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_frame.hpp is part of LaserBoy.
+// frame.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,13 +36,13 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_frame : public LaserBoy_ild_header, public LaserBoy_segment
+class Frame : public ILDHeader, public Segment
 {
 public:
     //------------------------------------------------------------------------
-    LaserBoy_frame(LaserBoy_space* ps = NULL)
-                 : LaserBoy_ild_header ()
-                 , LaserBoy_segment    (ps)
+    Frame(Space* ps = NULL)
+                 : ILDHeader ()
+                 , Segment    (ps)
                  , is_selected         (false)
                  , is_unique           (true)
                  , is_wagged           (false)
@@ -53,9 +53,9 @@ public:
                  , coda                (ps)
                      {}
     //------------------------------------------------------------------------
-    LaserBoy_frame(const LaserBoy_frame& frame)
-                 : LaserBoy_ild_header ((LaserBoy_ild_header)frame)
-                 , LaserBoy_segment    ((LaserBoy_segment   )frame)
+    Frame(const Frame& frame)
+                 : ILDHeader ((ILDHeader)frame)
+                 , Segment    ((Segment   )frame)
                  , is_selected         (false)
                  , is_unique           (frame.is_unique)
                  , is_wagged           (frame.is_wagged)
@@ -66,8 +66,8 @@ public:
                  , coda                (frame.coda)
                      {}
     //------------------------------------------------------------------------
-    LaserBoy_frame(LaserBoy_segment& segment)
-                 : LaserBoy_ild_header ()
+    Frame(Segment& segment)
+                 : ILDHeader ()
                  , is_selected         (false)
                  , is_unique           (true)
                  , is_wagged           (false)
@@ -81,12 +81,12 @@ public:
                          is_2D();
                      }
     //------------------------------------------------------------------------
-    LaserBoy_frame(LaserBoy_space* ps,
+    Frame(Space* ps,
                    const int& palette_index,
                    bool       add_origin
                   )
-                 : LaserBoy_ild_header ()
-                 , LaserBoy_segment    (ps, palette_index, add_origin)
+                 : ILDHeader ()
+                 , Segment    (ps, palette_index, add_origin)
                  , is_selected         (false)
                  , is_unique           (true)
                  , is_wagged           (false)
@@ -97,11 +97,11 @@ public:
                  , coda                (ps)
                      {}
     //------------------------------------------------------------------------
-    LaserBoy_frame(const LaserBoy_ild_header& header,
-                   const LaserBoy_segment&    segment
+    Frame(const ILDHeader& header,
+                   const Segment&    segment
                   )
-                 : LaserBoy_ild_header (header)
-                 , LaserBoy_segment    (segment)
+                 : ILDHeader (header)
+                 , Segment    (segment)
                  , is_selected         (false)
                  , is_unique           (true)
                  , is_wagged           (false)
@@ -112,14 +112,14 @@ public:
                  , coda                (segment.p_space)
                      {}
     //------------------------------------------------------------------------
-    LaserBoy_frame(LaserBoy_space* ps,
-                   LaserBoy_vertex(*F)(int, int),
+    Frame(Space* ps,
+                   Vertex(*F)(int, int),
                    int vertices_per_frame,
                    int frame_index
                   );
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_frame() {}
+   ~Frame() {}
     //------------------------------------------------------------------------
     void normalize_cursors()
             {
@@ -129,7 +129,7 @@ virtual
     //------------------------------------------------------------------------
     bool is_2D()
             {
-                if(LaserBoy_segment::is_2D())
+                if(Segment::is_2D())
                     format = LASERBOY_2D_FRAME;
                 else
                     format = LASERBOY_3D_FRAME;
@@ -167,10 +167,10 @@ virtual
                     return egg - spider;
             }
     //------------------------------------------------------------------------
-    LaserBoy_segment selected_segment() const
+    Segment selected_segment() const
                         {
                             u_int            i;
-                            LaserBoy_segment segment(p_space);
+                            Segment segment(p_space);
                             segment.reserve(size());
                             for(i = 0; i < size(); i++)
                                 if(is_index_selected(i))
@@ -178,7 +178,7 @@ virtual
                             return segment;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator =  (const LaserBoy_frame& frame)
+    Frame& operator =  (const Frame& frame)
                     {
                         clear();
                         format        = frame.format;
@@ -195,7 +195,7 @@ virtual
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator =  (const LaserBoy_ild_header& header)
+    Frame& operator =  (const ILDHeader& header)
                     {
                         format        = header.format  ;
                         name          = header.name    ;
@@ -209,7 +209,7 @@ virtual
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator =  (const LaserBoy_segment& segment)
+    Frame& operator =  (const Segment& segment)
                     {
                         clear();
                         palette_index = segment.palette_index;
@@ -220,7 +220,7 @@ virtual
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator += (const LaserBoy_frame& frame)
+    Frame& operator += (const Frame& frame)
                     {
                         reserve(size() + frame.size());
                         if(palette_index != frame.palette_index)
@@ -231,7 +231,7 @@ virtual
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator += (const LaserBoy_segment& segment)
+    Frame& operator += (const Segment& segment)
                     {
                         reserve(size() + segment.size());
                         if(palette_index != segment.palette_index)
@@ -242,7 +242,7 @@ virtual
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator += (const LaserBoy_vertex& vertex)
+    Frame& operator += (const Vertex& vertex)
                     {
                         push_back(vertex);
                         if(size() > LASERBOY_MAX_USHORT)
@@ -250,161 +250,161 @@ virtual
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame  operator +  (const LaserBoy_frame& frame) const
+    Frame  operator +  (const Frame& frame) const
                     {
-                        LaserBoy_frame sum(*this);
+                        Frame sum(*this);
                         sum += frame;
                         if(sum.size() > LASERBOY_MAX_USHORT)
                             sum.segment_error = LASERBOY_VERTEX_COUNT_OVERFLOW;
                         return sum;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  add_vertex       (u_int vertex_index);
-    LaserBoy_Error_Code  break_segment    ();
-    LaserBoy_Error_Code  set_spider_to_egg();
-    LaserBoy_Error_Code  set_egg_to_spider();
-    LaserBoy_Error_Code  connect_the_dots ();
-    LaserBoy_frame&      to_dots          ();
-    LaserBoy_frame&      selected_to_dots ();
-    LaserBoy_frame&      remove_at_spider ();
-    LaserBoy_frame&      remove_vertex    (u_int vertex_index);
+    ErrorCode  add_vertex       (u_int vertex_index);
+    ErrorCode  break_segment    ();
+    ErrorCode  set_spider_to_egg();
+    ErrorCode  set_egg_to_spider();
+    ErrorCode  connect_the_dots ();
+    Frame&      to_dots          ();
+    Frame&      selected_to_dots ();
+    Frame&      remove_at_spider ();
+    Frame&      remove_vertex    (u_int vertex_index);
     //------------------------------------------------------------------------
     void reduce_blank_vectors()
             {
-                LaserBoy_segment::reduce_blank_vectors();
+                Segment::reduce_blank_vectors();
                 normalize_cursors();
                 return;
             }
     //------------------------------------------------------------------------
     void omit_equivalent_vectors()
             {
-                LaserBoy_segment::omit_equivalent_vectors();
+                Segment::omit_equivalent_vectors();
                 normalize_cursors();
                 return;
             }
     //------------------------------------------------------------------------
     void remove_dots()
             {
-                LaserBoy_segment::remove_dots();
+                Segment::remove_dots();
                 normalize_cursors();
                 return;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code enhance_dots()
+    ErrorCode enhance_dots()
             {
-                LaserBoy_Error_Code stat = LaserBoy_segment::enhance_dots();
+                ErrorCode stat = Segment::enhance_dots();
                 normalize_cursors();
                 return stat;
             }
     //------------------------------------------------------------------------
     void remove_dwell_vertices()
             {
-                LaserBoy_segment::remove_dwell_vertices();
+                Segment::remove_dwell_vertices();
                 normalize_cursors();
                 return;
             }
     //------------------------------------------------------------------------
     void remove_short_vectors()
             {
-                LaserBoy_segment::remove_short_vectors();
+                Segment::remove_short_vectors();
                 normalize_cursors();
                 return;
             }
     //------------------------------------------------------------------------
     void reduce_lit_vectors()
             {
-                LaserBoy_segment::reduce_lit_vectors();
+                Segment::reduce_lit_vectors();
                 normalize_cursors();
                 return;
             }
     //------------------------------------------------------------------------
-    LaserBoy_frame& reorder_from_egg()
+    Frame& reorder_from_egg()
             {
-                LaserBoy_segment::reorder_from(egg);
+                Segment::reorder_from(egg);
                 normalize_cursors();
                 return *this;
             }
     //------------------------------------------------------------------------
-    LaserBoy_frame& reorder_from_spider()
+    Frame& reorder_from_spider()
             {
-                LaserBoy_segment::reorder_from(spider);
+                Segment::reorder_from(spider);
                 normalize_cursors();
                 return *this;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  reorder_segments(const LaserBoy_segment& previous_frame)
+    ErrorCode  reorder_segments(const Segment& previous_frame)
             {
-                LaserBoy_segment::reorder_segments(previous_frame);
+                Segment::reorder_segments(previous_frame);
                 normalize_cursors();
                 return segment_error;
             }
     //------------------------------------------------------------------------
-    LaserBoy_frame& randomize_segments()
+    Frame& randomize_segments()
             {
-                LaserBoy_segment::randomize_segments();
+                Segment::randomize_segments();
                 normalize_cursors();
                 return *this;
             }
     //------------------------------------------------------------------------
-    LaserBoy_frame& conglomerate_lit_segments()
+    Frame& conglomerate_lit_segments()
             {
-                LaserBoy_segment::conglomerate_lit_segments();
+                Segment::conglomerate_lit_segments();
                 normalize_cursors();
                 return *this;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  fracture_segments()
+    ErrorCode  fracture_segments()
             {
-                LaserBoy_segment::fracture_segments();
+                Segment::fracture_segments();
                 normalize_cursors();
                 return segment_error;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  bond_segments()
+    ErrorCode  bond_segments()
             {
-                LaserBoy_segment::bond_segments();
+                Segment::bond_segments();
                 normalize_cursors();
                 return LASERBOY_OK;
             }
     //------------------------------------------------------------------------
-    LaserBoy_frame& reverse()
+    Frame& reverse()
             {
-                LaserBoy_segment::reverse();
+                Segment::reverse();
                 normalize_cursors();
                 return *this;
             }
     //------------------------------------------------------------------------
-    LaserBoy_frame& reverse_selected()
+    Frame& reverse_selected()
             {
-                LaserBoy_segment::reverse_sub_segment(egg, spider);
+                Segment::reverse_sub_segment(egg, spider);
                 normalize_cursors();
                 return *this;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code add_dwell()
+    ErrorCode add_dwell()
             {
-                LaserBoy_Error_Code stat = LaserBoy_segment::add_dwell();
+                ErrorCode stat = Segment::add_dwell();
                 normalize_cursors();
                 return stat;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code add_lit_span_vertices()
+    ErrorCode add_lit_span_vertices()
             {
-                LaserBoy_Error_Code stat = LaserBoy_segment::add_lit_span_vertices();
+                ErrorCode stat = Segment::add_lit_span_vertices();
                 normalize_cursors();
                 return stat;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code add_blank_span_vertices()
+    ErrorCode add_blank_span_vertices()
             {
-                LaserBoy_Error_Code stat = LaserBoy_segment::add_blank_span_vertices();
+                ErrorCode stat = Segment::add_blank_span_vertices();
                 normalize_cursors();
                 return stat;
             }
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code append_selected_segment()
+    ErrorCode append_selected_segment()
             {
-                LaserBoy_frame frame = *this;
+                Frame frame = *this;
                 frame += selected_segment();
                 if(frame.size() <= LASERBOY_MAX_USHORT)
                     *this = frame;
@@ -448,36 +448,36 @@ virtual
     bool  save_as_txt              (const string& file);
     bool  save_as_txt_table        (const string& file);
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  optimize  (LaserBoy_3D_short point_of_entry);
+    ErrorCode  optimize  (Short3d point_of_entry);
     //------------------------------------------------------------------------
-    void  add_coda                 (LaserBoy_3D_short next_frame_entry);
+    void  add_coda                 (Short3d next_frame_entry);
     //------------------------------------------------------------------------
     bool  from_ifstream_format_3   (ifstream&                  in,
-                                    const LaserBoy_ild_header& header,
+                                    const ILDHeader& header,
                                     long int&                  bytes_skipped
                                    );
     //------------------------------------------------------------------------
     bool  from_ifstream_ild        (ifstream& in,
-                                    const LaserBoy_ild_header& header
+                                    const ILDHeader& header
                                    );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_ifstream_dxf       (ifstream& in);
+    ErrorCode  from_ifstream_dxf       (ifstream& in);
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_ifstream_txt       (ifstream&     in,
+    ErrorCode  from_ifstream_txt       (ifstream&     in,
                                                   const u_int& group_type,
                                                   const u_int& element_type,
                                                   u_int&       line_number
                                                  );
     //------------------------------------------------------------------------
-    LaserBoy_Bounds  move_selection              (LaserBoy_3D_double d,
+    Bounds  move_selection              (Double3d d,
                                                   bool               check_bounds = true
                                                  );
     //------------------------------------------------------------------------
-    LaserBoy_Bounds  scale_selection             (LaserBoy_3D_double m);
-    LaserBoy_Bounds  scale_selection_on_fulcrum  (LaserBoy_3D_double d);
+    Bounds  scale_selection             (Double3d m);
+    Bounds  scale_selection_on_fulcrum  (Double3d d);
     //------------------------------------------------------------------------
-    LaserBoy_Bounds  rotate_selection            (LaserBoy_3D_double a);
-    LaserBoy_Bounds  rotate_selection_on_fulcrum (LaserBoy_3D_double a);
+    Bounds  rotate_selection            (Double3d a);
+    Bounds  rotate_selection_on_fulcrum (Double3d a);
     //------------------------------------------------------------------------
     void next_segment_select            ();
     void next_segment_egg               ();
@@ -509,7 +509,7 @@ virtual
                                         );
     //------------------------------------------------------------------------
     void to_fstream_wave                (fstream& out,
-                                         LaserBoy_wave_header& header,
+                                         WaveHeader& header,
                                          bool optimized,
                                          bool timed
                                         );
@@ -523,24 +523,24 @@ virtual
                       is_wagged  ;
     u_int             egg        ,
                       spider     ;
-    LaserBoy_segment  intro      ,
+    Segment  intro      ,
                       bridge     ,
                       coda       ;
 };
 
 //############################################################################
-LaserBoy_frame blank_frame(LaserBoy_space* p_space);
-LaserBoy_frame NULL_frame (LaserBoy_space* p_space);
+Frame blank_frame(Space* p_space);
+Frame NULL_frame (Space* p_space);
 
 //############################################################################
-class LaserBoy_frame_set_base : public vector<LaserBoy_frame>
+class FrameSet_base : public vector<Frame>
 {
 public:
     //------------------------------------------------------------------------
-    LaserBoy_frame_set_base()  {}
+    FrameSet_base()  {}
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_frame_set_base()  { clear(); }
+   ~FrameSet_base()  { clear(); }
     //------------------------------------------------------------------------
 };
 

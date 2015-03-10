@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_segment.cpp is part of LaserBoy.
+// segment.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,9 +32,9 @@
 namespace LaserBoy {
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space   *ps,
-                                   LaserBoy_3D_short from,
-                                   LaserBoy_vertex   to
+Segment::Segment(Space   *ps,
+                                   Short3d from,
+                                   Vertex   to
                                   )
                 : p_space       (ps),
                   palette_index (LASERBOY_ILDA_DEFAULT),
@@ -48,15 +48,15 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space   *ps,
     //------------------------------------------------------------------------
     if(steps)
     {
-        LaserBoy_3D_double _to        (to), // convert 3D short to 3D double
+        Double3d _to        (to), // convert 3D short to 3D double
                            _from      (from),
                            difference (_to - _from),
                            delta      (difference / steps);
         //--------------------------------------------------------------------
         reserve(steps);
         for(int i = 1; i <= steps; i++)
-            push_back(LaserBoy_vertex(LaserBoy_3D_short(_from + (delta * i)),
-                                      (LaserBoy_color)to,
+            push_back(Vertex(Short3d(_from + (delta * i)),
+                                      (Color)to,
                                       to.k,
                                       to.c
                                      )
@@ -68,9 +68,9 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space   *ps,
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
-                                   LaserBoy_vertex p0,
-                                   LaserBoy_vertex p1,
+Segment::Segment(Space* ps,
+                                   Vertex p0,
+                                   Vertex p1,
                                    string          font,
                                    string          text
                                   )
@@ -80,7 +80,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
 {   // mono spaced font constructor
     //------------------------------------------------------------------------
     long int bytes_skipped = 0;
-    LaserBoy_frame_set font_frames(p_space);
+    FrameSet font_frames(p_space);
     font_frames.from_ild_file(font, bytes_skipped);
     //------------------------------------------------------------------------
     if(font_frames.number_of_frames() < ('~' - '!' + 1)) // are there enough frames?
@@ -95,10 +95,10 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
 //                                                 p1.x - p0.x
 //                                                );
 
-//        LaserBoy_3D_short     p1_minus_y_rotation = rotate_vertex_on_coordinates_y(p1, p0, -y_rotation);
-        LaserBoy_3D_double    float_3D;
-        LaserBoy_real_segment real_segment(p_space);
-        LaserBoy_vertex       vertex;
+//        Short3d     p1_minus_y_rotation = rotate_vertex_on_coordinates_y(p1, p0, -y_rotation);
+        Double3d    float_3D;
+        RealSegment real_segment(p_space);
+        Vertex       vertex;
         //--------------------------------------------------------------------
         vertex.blank();
         vertex.c = p_space->selected_color_index;
@@ -122,15 +122,15 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
                                               );
                     //--------------------------------------------------------
                     if(font_frames[text[text_index] - '!'].at(vertex_index).is_black(p_space->black_level))
-                        real_segment.push_back(LaserBoy_real_vertex(float_3D,
-                                                                    LaserBoy_color(0,0,0),
+                        real_segment.push_back(RealVertex(float_3D,
+                                                                    Color(0,0,0),
                                                                     vertex.k,
                                                                     p_space->palette_picker(palette_index).black
                                                                    )
                                               );
                     else
-                        real_segment.push_back(LaserBoy_real_vertex(float_3D,
-                                                                    vertex.as_LaserBoy_color(),
+                        real_segment.push_back(RealVertex(float_3D,
+                                                                    vertex.as_Color(),
                                                                     vertex.k,
                                                                     vertex.c
                                                                    )
@@ -142,7 +142,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
         }
         //--------------------------------------------------------------------
         for(vertex_index = 0; vertex_index < (int)real_segment.size(); vertex_index++)
-            push_back(LaserBoy_vertex(   real_segment[vertex_index]
+            push_back(Vertex(   real_segment[vertex_index]
                                        * (length / real_segment.segment_width())
                                        + p0
                                      )
@@ -155,9 +155,9 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
-                                   LaserBoy_vertex p0,
-                                   LaserBoy_vertex p1,
+Segment::Segment(Space* ps,
+                                   Vertex p0,
+                                   Vertex p1,
                                    string          font,
                                    string          text,
                                    int = 0
@@ -168,7 +168,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
 {   // variable spaced font constructor
     //------------------------------------------------------------------------
     long int bytes_skipped = 0;
-    LaserBoy_frame_set font_frames(p_space);
+    FrameSet font_frames(p_space);
     font_frames.from_ild_file(font, bytes_skipped);
     //------------------------------------------------------------------------
     if(font_frames.number_of_frames() < ('~' - '!' + 1)) // are there enough frames?
@@ -186,10 +186,10 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
 //                                                         p1.x - p0.x
 //                                                        );
 
-//        LaserBoy_3D_short     p1_minus_y_rotation = rotate_vertex_on_coordinates_y(p1, p0, -y_rotation);
-        LaserBoy_3D_double    float_3D;
-        LaserBoy_real_segment real_segment(p_space);
-        LaserBoy_vertex       vertex;
+//        Short3d     p1_minus_y_rotation = rotate_vertex_on_coordinates_y(p1, p0, -y_rotation);
+        Double3d    float_3D;
+        RealSegment real_segment(p_space);
+        Vertex       vertex;
 
         for(u_int i = 0; i < font_frames.size(); i++)
             if(widest_glyph < font_frames[i].segment_width())
@@ -214,15 +214,15 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
                     float_3D.x = (float_3D.x - glyph_offset) + accumulated_offset;
                     //--------------------------------------------------------
                     if(font_frames[text[text_index] - '!'].at(vertex_index).is_black(p_space->black_level))
-                        real_segment.push_back(LaserBoy_real_vertex(float_3D,
-                                                                    LaserBoy_color(0,0,0),
+                        real_segment.push_back(RealVertex(float_3D,
+                                                                    Color(0,0,0),
                                                                     vertex.k,
                                                                     p_space->palette_picker(palette_index).black
                                                                    )
                                               );
                     else
-                        real_segment.push_back(LaserBoy_real_vertex(float_3D,
-                                                                    vertex.as_LaserBoy_color(),
+                        real_segment.push_back(RealVertex(float_3D,
+                                                                    vertex.as_Color(),
                                                                     vertex.k,
                                                                     vertex.c
                                                                    )
@@ -245,7 +245,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
         } // end for(text_index = 0; text_index < (int)text.size(); text_index++)
         //--------------------------------------------------------------------
         for(vertex_index = 0; vertex_index < (int)real_segment.size(); vertex_index++)
-            push_back(LaserBoy_vertex(   real_segment[vertex_index]
+            push_back(Vertex(   real_segment[vertex_index]
                                        * (length / real_segment.segment_width())
                                        + p0
                                      )
@@ -258,9 +258,9 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space* ps,
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
-                                   LaserBoy_3D_short center,
-                                   LaserBoy_3D_short arc_start,
+Segment::Segment(Space*   ps,
+                                   Short3d center,
+                                   Short3d arc_start,
                                    double            arc_angle
                                   )
                 : p_space       (ps),
@@ -273,15 +273,15 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
            radius         = center | arc_start, // distance between
            y_rotation     = atan2(arc_start.z - center.z, arc_start.x - center.x),
            z_rotation;
-    LaserBoy_vertex vertex(arc_start);
+    Vertex vertex(arc_start);
     //------------------------------------------------------------------------
     vertex.c = p_space->selected_color_index;
     vertex.r = p_space->palette_picker(p_space->palette_index)[vertex.c].r;
     vertex.g = p_space->palette_picker(p_space->palette_index)[vertex.c].g;
     vertex.b = p_space->palette_picker(p_space->palette_index)[vertex.c].b;
     vertex.blank();
-    push_back(LaserBoy_vertex(rotate_vertex_on_coordinates_y(vertex, center, -y_rotation),
-                              (LaserBoy_color)vertex
+    push_back(Vertex(rotate_vertex_on_coordinates_y(vertex, center, -y_rotation),
+                              (Color)vertex
                              )
              );
     vertex.unblank();
@@ -296,7 +296,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
         vertex.x = (short)(radius * cos(a * arc_step + z_rotation));
         vertex.y = (short)(radius * sin(a * arc_step + z_rotation));
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     rotate_on_coordinates_y(center, y_rotation);
     if(size() > LASERBOY_MAX_USHORT)
@@ -304,9 +304,9 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
-                                   LaserBoy_3D_short center,
-                                   LaserBoy_3D_short arc_start,
+Segment::Segment(Space*   ps,
+                                   Short3d center,
+                                   Short3d arc_start,
                                    double            arc_angle,
                                    double            radii_ratio
                                   )
@@ -321,7 +321,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
            radius_2       = radius_1 * radii_ratio,
            y_rotation     = atan2(arc_start.z - center.z, arc_start.x - center.x),
            z_rotation;
-    LaserBoy_vertex vertex(arc_start);
+    Vertex vertex(arc_start);
     //------------------------------------------------------------------------
     vertex.c   = p_space->selected_color_index;
     vertex.r   = p_space->palette_picker(p_space->palette_index)[vertex.c].r;
@@ -333,7 +333,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     vertex.y   = 0;
     vertex.z   = center.z;
     vertex.blank();
-    push_back(LaserBoy_vertex(vertex + center));
+    push_back(Vertex(vertex + center));
     vertex.unblank();
     arc_step *= one_degree; // convert to radians!
     //------------------------------------------------------------------------
@@ -344,7 +344,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
         vertex.x = (short)(radius_1 * cos(a * arc_step));
         vertex.y = (short)(radius_2 * sin(a * arc_step));
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     rotate_on_coordinates_z(center, z_rotation);
     rotate_on_coordinates_y(center, y_rotation);
@@ -353,9 +353,9 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
-                                   LaserBoy_3D_short center,
-                                   LaserBoy_3D_short first_vertex,
+Segment::Segment(Space*   ps,
+                                   Short3d center,
+                                   Short3d first_vertex,
                                    u_int             number_of_sides
                                   )
                 : p_space       (ps),
@@ -366,14 +366,14 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
            radius     = center | first_vertex,
            y_rotation = atan2(first_vertex.z - center.z, first_vertex.x - center.x);
 
-    LaserBoy_vertex vertex(first_vertex);
+    Vertex vertex(first_vertex);
     vertex.blank();
     vertex.c = p_space->selected_color_index;
     vertex.r = p_space->palette_picker(p_space->palette_index)[vertex.c].r;
     vertex.g = p_space->palette_picker(p_space->palette_index)[vertex.c].g;
     vertex.b = p_space->palette_picker(p_space->palette_index)[vertex.c].b;
-    push_back(LaserBoy_vertex(rotate_vertex_on_coordinates_y(vertex, center, -y_rotation),
-                              (LaserBoy_color)vertex
+    push_back(Vertex(rotate_vertex_on_coordinates_y(vertex, center, -y_rotation),
+                              (Color)vertex
                              )
              );
     vertex.unblank();
@@ -385,7 +385,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
         vertex.x = (short)(radius * cos(a * arc_step + z_rotation));
         vertex.y = (short)(radius * sin(a * arc_step + z_rotation));
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     rotate_on_coordinates_y(center, y_rotation);
     if(size() > LASERBOY_MAX_USHORT)
@@ -393,9 +393,9 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
-                                   LaserBoy_3D_short center,
-                                   LaserBoy_3D_short first_vertex,
+Segment::Segment(Space*   ps,
+                                   Short3d center,
+                                   Short3d first_vertex,
                                    u_int             number_of_points,
                                    double            ratio
                                   )
@@ -407,14 +407,14 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     double arc_step   = two_pi / number_of_points,
            radius     = center | first_vertex,
            y_rotation = atan2(first_vertex.z - center.z, first_vertex.x - center.x);
-    LaserBoy_vertex vertex(first_vertex);
+    Vertex vertex(first_vertex);
     vertex.blank();
     vertex.c = p_space->selected_color_index;
     vertex.r = p_space->palette_picker(p_space->palette_index)[vertex.c].r;
     vertex.g = p_space->palette_picker(p_space->palette_index)[vertex.c].g;
     vertex.b = p_space->palette_picker(p_space->palette_index)[vertex.c].b;
-    push_back(LaserBoy_vertex(rotate_vertex_on_coordinates_y(vertex, center, -y_rotation),
-                              (LaserBoy_color)vertex
+    push_back(Vertex(rotate_vertex_on_coordinates_y(vertex, center, -y_rotation),
+                              (Color)vertex
                              )
              );
     vertex.unblank();
@@ -426,25 +426,25 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
         vertex.x = (short)(radius * cos(a * arc_step + z_rotation));
         vertex.y = (short)(radius * sin(a * arc_step + z_rotation));
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
 
         vertex.x = (short)(radius * ratio * cos(a * arc_step + arc_step / 2 + z_rotation));
         vertex.y = (short)(radius * ratio * sin(a * arc_step + arc_step / 2 + z_rotation));
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     vertex.x = (short)(radius * cos(a * arc_step + z_rotation));
     vertex.y = (short)(radius * sin(a * arc_step + z_rotation));
     vertex.z = center.z;
-    push_back(LaserBoy_vertex(vertex + center));
+    push_back(Vertex(vertex + center));
     rotate_on_coordinates_y(center, y_rotation);
     if(size() > LASERBOY_MAX_USHORT)
         segment_error = LASERBOY_VERTEX_COUNT_OVERFLOW;
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
-                                   LaserBoy_3D_short center,
+Segment::Segment(Space*   ps,
+                                   Short3d center,
                                    int               radius,
                                    int               pedals_numerator,
                                    int               pedals_denominator
@@ -457,7 +457,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     double arc_step,
            arc_angle,
            ratio = pedals_numerator / (double)pedals_denominator;
-    LaserBoy_vertex vertex;
+    Vertex vertex;
     arc_angle = pedals_denominator / greatest_common_devisor(pedals_numerator, pedals_denominator) * 360;
     total_vertices = (int)ceil(arc_angle / p_space->rendered_arc_angle);
     if(total_vertices > 15000) // that's a lot!
@@ -472,23 +472,23 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     vertex.x = (short)(radius);
     vertex.y = 0;
     vertex.z = center.z;
-    push_back(LaserBoy_vertex(vertex + center));
+    push_back(Vertex(vertex + center));
     vertex.unblank();
     for(u_int a = 0; a <= total_vertices; a++)
     {
         vertex.x = (short)(radius * cos(ratio * a * arc_step) * cos(a * arc_step));
         vertex.y = (short)(radius * cos(ratio * a * arc_step) * sin(a * arc_step));
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     if(size() > LASERBOY_MAX_USHORT)
         segment_error = LASERBOY_VERTEX_COUNT_OVERFLOW;
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
+Segment::Segment(Space*   ps,
                                    int               center_radius,
-                                   LaserBoy_3D_short center,
+                                   Short3d center,
                                    int               roller_radius,
                                    int               roller_offset
                                   ) // epitrochoid and epicycloid when roller_radius == roller_offset
@@ -500,7 +500,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     double arc_angle,
            arc_step,
            ratio = center_radius / (double)roller_radius;
-    LaserBoy_vertex vertex;
+    Vertex vertex;
     if(    ratio > 0
         && (ratio - (int)ratio) == 0
       ) // it's a positive int!
@@ -520,7 +520,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     vertex.x = (short)(roller_radius * (ratio + 1) - roller_offset);
     vertex.y = 0;
     vertex.z = center.z;
-    push_back(LaserBoy_vertex(vertex + center));
+    push_back(Vertex(vertex + center));
     vertex.unblank();
     for(u_int a = 0; a <= total_vertices; a++)
     {
@@ -531,18 +531,18 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
                             - roller_offset * sin((ratio + 1) * a * arc_step)
                           );
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     if(size() > LASERBOY_MAX_USHORT)
         segment_error = LASERBOY_VERTEX_COUNT_OVERFLOW;
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
+Segment::Segment(Space*   ps,
                                    int               center_radius,
                                    int               roller_radius,
                                    int               roller_offset,
-                                   LaserBoy_3D_short center
+                                   Short3d center
                                   ) // hypotrochoid and hypocycloid when roller_radius == roller_offset
                 : p_space       (ps),
                   palette_index (LASERBOY_ILDA_DEFAULT),
@@ -552,7 +552,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     double arc_angle,
            arc_step,
            ratio = center_radius / (double)roller_radius;
-    LaserBoy_vertex vertex;
+    Vertex vertex;
     if(    ratio > 0
         && (ratio - (int)ratio) == 0
       ) // it's a positive int!
@@ -572,7 +572,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     vertex.x = (short)((center_radius - roller_radius) + roller_offset);
     vertex.y = 0;
     vertex.z = center.z;
-    push_back(LaserBoy_vertex(vertex + center));
+    push_back(Vertex(vertex + center));
     vertex.unblank();
     for(u_int a = 0; a <= total_vertices; a++)
     {
@@ -583,15 +583,15 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
                             - roller_offset * sin((ratio - 1) * a * arc_step)
                           );
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     if(size() > LASERBOY_MAX_USHORT)
         segment_error = LASERBOY_VERTEX_COUNT_OVERFLOW;
 }
 
 //############################################################################
-LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
-                                   LaserBoy_3D_short center,
+Segment::Segment(Space*   ps,
+                                   Short3d center,
                                    int               amplitude_x,
                                    int               amplitude_y,
                                    int               frequency_x,
@@ -607,7 +607,7 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     double arc_angle,
            arc_step,
            ratio = frequency_x / frequency_x;
-    LaserBoy_vertex vertex;
+    Vertex vertex;
     if(    ratio > 0
         && (ratio - (int)ratio) == 0
       ) // it's a positive int!
@@ -629,21 +629,21 @@ LaserBoy_segment::LaserBoy_segment(LaserBoy_space*   ps,
     vertex.x = (short)(amplitude_x * sin(phase_x));
     vertex.y = (short)(amplitude_y * sin(phase_y));
     vertex.z = center.z;
-    push_back(LaserBoy_vertex(vertex + center));
+    push_back(Vertex(vertex + center));
     vertex.unblank();
     for(u_int a = 0; a <= total_vertices; a++)
     {
         vertex.x = (short)(amplitude_x * sin(frequency_x * a * arc_step + phase_x));
         vertex.y = (short)(amplitude_y * sin(frequency_y * a * arc_step + phase_y));
         vertex.z = center.z;
-        push_back(LaserBoy_vertex(vertex + center));
+        push_back(Vertex(vertex + center));
     }
     if(size() > LASERBOY_MAX_USHORT)
         segment_error = LASERBOY_VERTEX_COUNT_OVERFLOW;
 }
 
 //############################################################################
-u_int LaserBoy_segment::number_of_color_vectors() const
+u_int Segment::number_of_color_vectors() const
 {
     u_int count = 0;
     for(u_int i = 1; i < size(); i++)
@@ -653,7 +653,7 @@ u_int LaserBoy_segment::number_of_color_vectors() const
 }
 
 //############################################################################
-u_int LaserBoy_segment::number_of_dark_vectors() const
+u_int Segment::number_of_dark_vectors() const
 {
     u_int count = 0;
     for(u_int i = 1; i < size(); i++)
@@ -663,9 +663,9 @@ u_int LaserBoy_segment::number_of_dark_vectors() const
 }
 
 //############################################################################
-LaserBoy_3D_short LaserBoy_segment::segment_front() const
+Short3d Segment::segment_front() const
 {
-    LaserBoy_3D_short front_;
+    Short3d front_;
     front_.z = LASERBOY_MIN_SHORT;
     for(u_int i = 0; i < size(); i++)
         if(at(i).z > front_.z)
@@ -674,9 +674,9 @@ LaserBoy_3D_short LaserBoy_segment::segment_front() const
 }
 
 //############################################################################
-LaserBoy_3D_short LaserBoy_segment::segment_back() const
+Short3d Segment::segment_back() const
 {
-    LaserBoy_3D_short back_;
+    Short3d back_;
     back_.z = LASERBOY_MAX_SHORT;
     for(u_int i = 0; i < size(); i++)
         if(at(i).z < back_.z)
@@ -685,9 +685,9 @@ LaserBoy_3D_short LaserBoy_segment::segment_back() const
 }
 
 //############################################################################
-LaserBoy_3D_short LaserBoy_segment::segment_top() const
+Short3d Segment::segment_top() const
 {
-    LaserBoy_3D_short top_;
+    Short3d top_;
     top_.y = LASERBOY_MIN_SHORT;
     for(u_int i = 0; i < size(); i++)
         if(at(i).y > top_.y)
@@ -696,9 +696,9 @@ LaserBoy_3D_short LaserBoy_segment::segment_top() const
 }
 
 //############################################################################
-LaserBoy_3D_short LaserBoy_segment::segment_bottom() const
+Short3d Segment::segment_bottom() const
 {
-    LaserBoy_3D_short bottom_;
+    Short3d bottom_;
     bottom_.y = LASERBOY_MAX_SHORT;
     for(u_int i = 0; i < size(); i++)
         if(at(i).y < bottom_.y)
@@ -707,9 +707,9 @@ LaserBoy_3D_short LaserBoy_segment::segment_bottom() const
 }
 
 //############################################################################
-LaserBoy_3D_short LaserBoy_segment::segment_right() const
+Short3d Segment::segment_right() const
 {
-    LaserBoy_3D_short right_;
+    Short3d right_;
     right_.x = LASERBOY_MIN_SHORT;
     for(u_int i = 0; i < size(); i++)
         if(at(i).x > right_.x)
@@ -718,9 +718,9 @@ LaserBoy_3D_short LaserBoy_segment::segment_right() const
 }
 
 //############################################################################
-LaserBoy_3D_short LaserBoy_segment::segment_left() const
+Short3d Segment::segment_left() const
 {
-    LaserBoy_3D_short left_;
+    Short3d left_;
     left_.x = LASERBOY_MAX_SHORT;
     for(u_int i = 0; i < size(); i++)
         if(at(i).x < left_.x)
@@ -729,10 +729,10 @@ LaserBoy_3D_short LaserBoy_segment::segment_left() const
 }
 
 //############################################################################
-LaserBoy_3D_short LaserBoy_segment::vertex_farthest_from_origin() const
+Short3d Segment::vertex_farthest_from_origin() const
 {
     double            distance = 0;
-    LaserBoy_3D_short origin,
+    Short3d origin,
                       farthest_;
     for(u_int i = 0; i < size(); i++)
         if((origin | at(i)) > distance)
@@ -744,24 +744,24 @@ LaserBoy_3D_short LaserBoy_segment::vertex_farthest_from_origin() const
 }
 
 //############################################################################
-short LaserBoy_segment::segment_height() const
+short Segment::segment_height() const
 {
     return (segment_top().y - segment_bottom().y);
 }
 //############################################################################
-short LaserBoy_segment::segment_width() const
+short Segment::segment_width() const
 {
     return (segment_right().x - segment_left().x);
 }
 
 //############################################################################
-short LaserBoy_segment::segment_depth() const
+short Segment::segment_depth() const
 {
     return (segment_front().z - segment_back().z);
 }
 
 //############################################################################
-short LaserBoy_segment::segment_size() const
+short Segment::segment_size() const
 {
     short greatest = 0;
     if(segment_width () > greatest)    greatest = segment_width ();
@@ -771,7 +771,7 @@ short LaserBoy_segment::segment_size() const
 }
 
 //############################################################################
-bool LaserBoy_segment::is_closed_polygon() const
+bool Segment::is_closed_polygon() const
 {
     if(   (first_lit_anchor() | last_lit_vector())
         < p_space->insignificant_distance
@@ -781,7 +781,7 @@ bool LaserBoy_segment::is_closed_polygon() const
 }
 
 //############################################################################
-void LaserBoy_segment::blank_all_vertices()
+void Segment::blank_all_vertices()
 {
     for(u_int i = 0; i < size(); i++)
         at(i).blank();
@@ -789,7 +789,7 @@ void LaserBoy_segment::blank_all_vertices()
 }
 
 //############################################################################
-void LaserBoy_segment::unblank_all_vertices()
+void Segment::unblank_all_vertices()
 {
     for(u_int i = 1; i < size(); i++)
         at(i).unblank();
@@ -797,7 +797,7 @@ void LaserBoy_segment::unblank_all_vertices()
 }
 
 //############################################################################
-void LaserBoy_segment::blacken_vertices()
+void Segment::blacken_vertices()
 {
     for(u_int i = 0; i < size(); i++)
     {
@@ -810,11 +810,11 @@ void LaserBoy_segment::blacken_vertices()
 }
 
 //############################################################################
-LaserBoy_segment& LaserBoy_segment::reverse()
+Segment& Segment::reverse()
 {
     int               i;
-    LaserBoy_segment  reversed(p_space);
-    LaserBoy_vertex   vertex;
+    Segment  reversed(p_space);
+    Vertex   vertex;
 
     if(size() > 2)
     {
@@ -859,7 +859,7 @@ LaserBoy_segment& LaserBoy_segment::reverse()
 }
 
 //############################################################################
-LaserBoy_segment& LaserBoy_segment::reverse_sub_segment(u_int p1, u_int p2) // vertex indices
+Segment& Segment::reverse_sub_segment(u_int p1, u_int p2) // vertex indices
 {
     //------------------------------------------------------------------------
     if(p1 != p2)
@@ -869,7 +869,7 @@ LaserBoy_segment& LaserBoy_segment::reverse_sub_segment(u_int p1, u_int p2) // v
         else
         {
             u_int                i;
-            LaserBoy_segment   segment  (p_space),
+            Segment   segment  (p_space),
                                reversed (p_space);
             //----------------------------------------------------------------
             if(p2 < p1)
@@ -900,14 +900,14 @@ LaserBoy_segment& LaserBoy_segment::reverse_sub_segment(u_int p1, u_int p2) // v
 
 
 //############################################################################
-LaserBoy_segment& LaserBoy_segment::reorder_from(u_int vertex_index)
+Segment& Segment::reorder_from(u_int vertex_index)
 {
     if(    vertex_index
         && size() > 1
       )
     {
         u_int             i;
-        LaserBoy_segment  reordered(p_space);
+        Segment  reordered(p_space);
         //--------------------------------------------------------------------
         for(i = vertex_index; i < size(); i++)
             reordered += at(i);
@@ -924,11 +924,11 @@ LaserBoy_segment& LaserBoy_segment::reorder_from(u_int vertex_index)
 }
 
 //############################################################################
-LaserBoy_segment& LaserBoy_segment::randomize_segments()
+Segment& Segment::randomize_segments()
 {
     if(number_of_segments() > 1)
     {
-        LaserBoy_segment segment(p_space),
+        Segment segment(p_space),
                          randomized(p_space);
         vector<bool>     been_here(number_of_segments());
         u_int            i,
@@ -958,7 +958,7 @@ LaserBoy_segment& LaserBoy_segment::randomize_segments()
 }
 
 //############################################################################
-LaserBoy_segment& LaserBoy_segment::conglomerate_lit_segments()
+Segment& Segment::conglomerate_lit_segments()
 {
     if(number_of_segments() > 1)
     {
@@ -970,9 +970,9 @@ LaserBoy_segment& LaserBoy_segment::conglomerate_lit_segments()
                             least_angle;
         vector<int>         match_index;
         vector<char>        match_index_type;
-        LaserBoy_segment    copy(*this);
-        LaserBoy_frame      frame(p_space);
-        LaserBoy_frame_set  lit_vectors(p_space);
+        Segment    copy(*this);
+        Frame      frame(p_space);
+        FrameSet  lit_vectors(p_space);
         //--------------------------------------------------------------------
         if(p_space->fracture_b4_conglomerate)
             copy.fracture_segments();
@@ -1101,13 +1101,13 @@ LaserBoy_segment& LaserBoy_segment::conglomerate_lit_segments()
 }
 
 //############################################################################
-LaserBoy_segment LaserBoy_segment::shortest_path_of_segments(const LaserBoy_segment& previous_frame)
+Segment Segment::shortest_path_of_segments(const Segment& previous_frame)
 {
-    LaserBoy_frame_set  segments = explode_segments();
+    FrameSet  segments = explode_segments();
     long int            j,
                         points_away,
                         points_away_temp;
-    LaserBoy_3D_double  _0,
+    Double3d  _0,
                         _1,
                         _2;
     //------------------------------------------------------------------------
@@ -1119,7 +1119,7 @@ LaserBoy_segment LaserBoy_segment::shortest_path_of_segments(const LaserBoy_segm
                             closest_segment_index = 0;
         double              temp_distance,
                             shortest_distance = 1000000.0; // more positive than possible
-        LaserBoy_segment    reordered(p_space, palette_index, true);
+        Segment    reordered(p_space, palette_index, true);
         //--------------------------------------------------------------------
         reordered.reserve(size());
         //--------------------------------------------------------------------
@@ -1554,12 +1554,12 @@ LaserBoy_segment LaserBoy_segment::shortest_path_of_segments(const LaserBoy_segm
 }
 
 //############################################################################
-void LaserBoy_segment::reduce_blank_vectors()
+void Segment::reduce_blank_vectors()
 {
     if(size() > 1)
     {
         u_int             i;
-        LaserBoy_segment  minimum_blanking(p_space, palette_index, false);
+        Segment  minimum_blanking(p_space, palette_index, false);
         //--------------------------------------------------------------------
         minimum_blanking.reserve(size());
         //--------------------------------------------------------------------
@@ -1582,11 +1582,11 @@ void LaserBoy_segment::reduce_blank_vectors()
 }
 
 //############################################################################
-void LaserBoy_segment::omit_equivalent_vectors()
+void Segment::omit_equivalent_vectors()
 {
     if(number_of_segments() > 1)
     {
-        LaserBoy_frame_set  segments(p_space);
+        FrameSet  segments(p_space);
         u_int               i,
                             j;
         //--------------------------------------------------------------------
@@ -1610,12 +1610,12 @@ void LaserBoy_segment::omit_equivalent_vectors()
 }
 
 //############################################################################
-void LaserBoy_segment::remove_dots()
+void Segment::remove_dots()
 {
     if(size() > 1)
     {
         u_int             i;
-        LaserBoy_segment  no_dots(p_space, palette_index, false);
+        Segment  no_dots(p_space, palette_index, false);
         //--------------------------------------------------------------------
         no_dots.reserve(size());
         //--------------------------------------------------------------------
@@ -1633,11 +1633,11 @@ void LaserBoy_segment::remove_dots()
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::enhance_dots()
+ErrorCode Segment::enhance_dots()
 {
     if(size() > 1)
     {
-        LaserBoy_segment  more_dots(p_space, palette_index, false);
+        Segment  more_dots(p_space, palette_index, false);
         //--------------------------------------------------------------------
         more_dots.reserve(size());
         //--------------------------------------------------------------------
@@ -1664,12 +1664,12 @@ LaserBoy_Error_Code LaserBoy_segment::enhance_dots()
 }
 
 //############################################################################
-void LaserBoy_segment::remove_dwell_vertices()
+void Segment::remove_dwell_vertices()
 {
     if(size() > 2)
     {
         u_int             i;
-        LaserBoy_segment  no_dwell_vertices(p_space, palette_index, false);
+        Segment  no_dwell_vertices(p_space, palette_index, false);
         //--------------------------------------------------------------------
         no_dwell_vertices.reserve(size());
         no_dwell_vertices.push_back(front());
@@ -1694,13 +1694,13 @@ void LaserBoy_segment::remove_dwell_vertices()
 }
 
 //############################################################################
-void LaserBoy_segment::remove_short_vectors()
+void Segment::remove_short_vectors()
 {
     if(size() > 2)
     {
         int               i,
                           index;
-        LaserBoy_segment  no_short_vectors(*this);
+        Segment  no_short_vectors(*this);
         //--------------------------------------------------------------------
         if(no_short_vectors.size() > 2)
         {
@@ -1722,7 +1722,7 @@ void LaserBoy_segment::remove_short_vectors()
                 if(index != -1)
                 {
                     if(index > 1)
-                        no_short_vectors.at(index - 1) = (LaserBoy_3D_short) // just coordinates
+                        no_short_vectors.at(index - 1) = (Short3d) // just coordinates
                                                          no_short_vectors.at(index - 1).blend(no_short_vectors.at(index), 0.50);
                     no_short_vectors.remove_vertex(index);
                 }
@@ -1735,12 +1735,12 @@ void LaserBoy_segment::remove_short_vectors()
 }
 
 //############################################################################
-void LaserBoy_segment::reduce_lit_vectors()
+void Segment::reduce_lit_vectors()
 {
     if(size() > 1)
     {
         u_int             i;
-        LaserBoy_segment  segment_1(p_space, palette_index, false),
+        Segment  segment_1(p_space, palette_index, false),
                           segment_2(p_space, palette_index, false);
         //--------------------------------------------------------------------
         segment_1.reserve(size());
@@ -1782,7 +1782,7 @@ void LaserBoy_segment::reduce_lit_vectors()
 }
 
 //############################################################################
-void LaserBoy_segment::impose_bit_resolution()
+void Segment::impose_bit_resolution()
 {
     if(size() > 1)
     {
@@ -1800,9 +1800,9 @@ void LaserBoy_segment::impose_bit_resolution()
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::reorder_segments(const LaserBoy_segment& previous_frame)
+ErrorCode Segment::reorder_segments(const Segment& previous_frame)
 {
-    LaserBoy_segment reordered = shortest_path_of_segments(previous_frame);
+    Segment reordered = shortest_path_of_segments(previous_frame);
     if(reordered.size() <= LASERBOY_MAX_USHORT)
         *this = reordered;
     else
@@ -1811,12 +1811,12 @@ LaserBoy_Error_Code LaserBoy_segment::reorder_segments(const LaserBoy_segment& p
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::fracture_segments()
+ErrorCode Segment::fracture_segments()
 {
     if(number_of_lit_vectors() > 1)
     {
         u_int             i;
-        LaserBoy_segment  fractured(p_space, palette_index, false);
+        Segment  fractured(p_space, palette_index, false);
         fractured.reserve(3 * size());
         reduce_blank_vectors();
         //--------------------------------------------------------------------
@@ -1838,12 +1838,12 @@ LaserBoy_Error_Code LaserBoy_segment::fracture_segments()
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::bond_segments()
+ErrorCode Segment::bond_segments()
 {
     if(size() > 1)
     {
         u_int             i;
-        LaserBoy_segment  bonded(p_space, palette_index, false);
+        Segment  bonded(p_space, palette_index, false);
         //--------------------------------------------------------------------
         bonded.reserve(size());
         bonded.push_back(front());
@@ -1865,18 +1865,18 @@ LaserBoy_Error_Code LaserBoy_segment::bond_segments()
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::add_vertex(u_int vertex_index)
+ErrorCode Segment::add_vertex(u_int vertex_index)
 {
     if(!size()) // there is nothing
     {
         reserve(2);
-        push_back(LaserBoy_vertex());
-        push_back(LaserBoy_vertex()); // add blank, zero vector
+        push_back(Vertex());
+        push_back(Vertex()); // add blank, zero vector
     }
     else if(vertex_index < size())
     {
         u_int             i;
-        LaserBoy_segment  segment(p_space, palette_index, false);
+        Segment  segment(p_space, palette_index, false);
 
         segment.reserve(size() + 1);
         if(vertex_index < size() - 1) // not the last vertex
@@ -1885,9 +1885,9 @@ LaserBoy_Error_Code LaserBoy_segment::add_vertex(u_int vertex_index)
                 segment += at(i);
 
             if((at(vertex_index) | at(vertex_index + 1)) > p_space->insignificant_distance)
-                segment += LaserBoy_vertex(   scale_vertex_on_coordinates(   at(vertex_index + 1)
+                segment += Vertex(   scale_vertex_on_coordinates(   at(vertex_index + 1)
                                                                            , at(vertex_index)
-                                                                           , LaserBoy_3D_double(0.5, 0.5, 0.5)
+                                                                           , Double3d(0.5, 0.5, 0.5)
                                                                          )
                                             , at(vertex_index) // is an rgb
                                             , at(vertex_index).k
@@ -1900,9 +1900,9 @@ LaserBoy_Error_Code LaserBoy_segment::add_vertex(u_int vertex_index)
         else // it is the last vertex
         {
             segment = *this;
-            segment += LaserBoy_vertex(   scale_vertex_on_coordinates(   back()
+            segment += Vertex(   scale_vertex_on_coordinates(   back()
                                                                        , at(size() - 2)
-                                                                       , LaserBoy_3D_double(2.0, 2.0, 2.0)
+                                                                       , Double3d(2.0, 2.0, 2.0)
                                                                      )
                                         , back() // is an rgb
                                         , back().k
@@ -1918,14 +1918,14 @@ LaserBoy_Error_Code LaserBoy_segment::add_vertex(u_int vertex_index)
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::break_segment(u_int& vertex_index)
+ErrorCode Segment::break_segment(u_int& vertex_index)
 {
     if(    vertex_index > 0
         && vertex_index < size() - 1
       )
     {
         u_int             i;
-        LaserBoy_segment  segment(p_space, palette_index, false);
+        Segment  segment(p_space, palette_index, false);
 
         segment.reserve(size() + 1);
         for(i = 0; i <= vertex_index; i++)
@@ -1949,7 +1949,7 @@ LaserBoy_Error_Code LaserBoy_segment::break_segment(u_int& vertex_index)
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::connect_the_dots(u_int p0, u_int p1) // vertex indices
+ErrorCode Segment::connect_the_dots(u_int p0, u_int p1) // vertex indices
 {
     if((size() + 2) <= LASERBOY_MAX_USHORT)
     {
@@ -1981,7 +1981,7 @@ LaserBoy_Error_Code LaserBoy_segment::connect_the_dots(u_int p0, u_int p1) // ve
 }
 
 //############################################################################
-double LaserBoy_segment::vector_angle(u_int vertex_index) const
+double Segment::vector_angle(u_int vertex_index) const
 {
     double angle = 0.0;
     if(vertex_index != 0)
@@ -2016,7 +2016,7 @@ double LaserBoy_segment::vector_angle(u_int vertex_index) const
 }
 
 //############################################################################
-double LaserBoy_segment::total_angle() const
+double Segment::total_angle() const
 {
     double total_angle = 0.0;
     u_int  i;
@@ -2027,7 +2027,7 @@ double LaserBoy_segment::total_angle() const
 }
 
 //############################################################################
-double LaserBoy_segment::max_angle() const
+double Segment::max_angle() const
 {
     double max_angle = 0.0;
     u_int  i;
@@ -2039,7 +2039,7 @@ double LaserBoy_segment::max_angle() const
 }
 
 //############################################################################
-double LaserBoy_segment::vector_magnitude(u_int vertex) const
+double Segment::vector_magnitude(u_int vertex) const
 {
     if(size() > 1)
     {
@@ -2063,7 +2063,7 @@ double LaserBoy_segment::vector_magnitude(u_int vertex) const
 }
 
 //############################################################################
-double LaserBoy_segment::total_distance() const
+double Segment::total_distance() const
 {
     double total_distance = 0.0;
     u_int  i;
@@ -2074,7 +2074,7 @@ double LaserBoy_segment::total_distance() const
 }
 
 //############################################################################
-double LaserBoy_segment::max_distance() const
+double Segment::max_distance() const
 {
     double max_distance = 0.0;
     u_int  i;
@@ -2086,7 +2086,7 @@ double LaserBoy_segment::max_distance() const
 }
 
 //############################################################################
-double LaserBoy_segment::max_color_distance() const
+double Segment::max_color_distance() const
 {
     double max_distance = 0.0;
     u_int  i;
@@ -2100,7 +2100,7 @@ double LaserBoy_segment::max_color_distance() const
 }
 
 //############################################################################
-double LaserBoy_segment::max_dark_distance() const
+double Segment::max_dark_distance() const
 {
     double max_distance = 0.0;
     u_int  i;
@@ -2114,13 +2114,13 @@ double LaserBoy_segment::max_dark_distance() const
 }
 
 //############################################################################
-double LaserBoy_segment::length_in_time() const
+double Segment::length_in_time() const
 {
     return double(size()) / p_space->sample_rate;
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::add_dwell()
+ErrorCode Segment::add_dwell()
 {
     if(size() > 1)
     {
@@ -2128,12 +2128,12 @@ LaserBoy_Error_Code LaserBoy_segment::add_dwell()
                             j,
                             dwell_vertex_count,
                             dwell_vertex_total;
-        LaserBoy_3D_double  _0,
+        Double3d  _0,
                             _1,
                             _2;
-        LaserBoy_vertex     vertex,
+        Vertex     vertex,
                             black_vertex;
-        LaserBoy_segment    angle_optimized(p_space, palette_index, false);
+        Segment    angle_optimized(p_space, palette_index, false);
         //--------------------------------------------------------------------
         angle_optimized.push_back(front());
         for(i = 1; i < (int)size() - 1; i++)
@@ -2266,12 +2266,12 @@ LaserBoy_Error_Code LaserBoy_segment::add_dwell()
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::add_lit_span_vertices()
+ErrorCode Segment::add_lit_span_vertices()
 {
     if(size() > 1)
     {
         u_int             i;
-        LaserBoy_segment  distance_optimized(p_space, palette_index, false);
+        Segment  distance_optimized(p_space, palette_index, false);
         //--------------------------------------------------------------------
         for(i = 0; i < size() - 1; i++)
         {
@@ -2279,7 +2279,7 @@ LaserBoy_Error_Code LaserBoy_segment::add_lit_span_vertices()
             if(    at(i + 1).is_lit()
                 && vector_magnitude(i) > p_space->lit_delta_max
               )
-                distance_optimized += LaserBoy_segment(p_space, at(i), at(i + 1));
+                distance_optimized += Segment(p_space, at(i), at(i + 1));
         }
         distance_optimized.push_back(at(size() - 1));
         //--------------------------------------------------------------------
@@ -2292,12 +2292,12 @@ LaserBoy_Error_Code LaserBoy_segment::add_lit_span_vertices()
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_segment::add_blank_span_vertices()
+ErrorCode Segment::add_blank_span_vertices()
 {
     if(size() > 1)
     {
         u_int             i;
-        LaserBoy_segment  distance_optimized(p_space, palette_index, false);
+        Segment  distance_optimized(p_space, palette_index, false);
         //--------------------------------------------------------------------
         for(i = 0; i < size() - 1; i++)
         {
@@ -2305,7 +2305,7 @@ LaserBoy_Error_Code LaserBoy_segment::add_blank_span_vertices()
             if(    at(i + 1).is_blank()
                 && vector_magnitude(i) > p_space->blank_delta_max
               )
-                distance_optimized += LaserBoy_segment(p_space, at(i), at(i + 1));
+                distance_optimized += Segment(p_space, at(i), at(i + 1));
         }
         distance_optimized.push_back(at(size() - 1));
         //--------------------------------------------------------------------
@@ -2318,7 +2318,7 @@ LaserBoy_Error_Code LaserBoy_segment::add_blank_span_vertices()
 }
 
 //############################################################################
-void LaserBoy_segment::flip(u_int plane)
+void Segment::flip(u_int plane)
 {
     if(size() > 1)
     {
@@ -2359,7 +2359,7 @@ void LaserBoy_segment::flip(u_int plane)
 }
 
 //############################################################################
-void LaserBoy_segment::quarter_turn(u_int plane, u_int turns)
+void Segment::quarter_turn(u_int plane, u_int turns)
 {
     if(size() > 1)
     {
@@ -2403,7 +2403,7 @@ void LaserBoy_segment::quarter_turn(u_int plane, u_int turns)
 }
 
 //############################################################################
-void LaserBoy_segment::z_order_vertices(unsigned short span)
+void Segment::z_order_vertices(unsigned short span)
 {
     if(size() > 1)
     {
@@ -2416,7 +2416,7 @@ void LaserBoy_segment::z_order_vertices(unsigned short span)
 }
 
 //############################################################################
-void LaserBoy_segment::flatten_z()
+void Segment::flatten_z()
 {
     if(size() > 1)
     {
@@ -2427,23 +2427,23 @@ void LaserBoy_segment::flatten_z()
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate(LaserBoy_3D_double a)
+Bounds Segment::rotate(Double3d a)
 {
     if(size() > 1)
     {
         u_int               i;
-        LaserBoy_Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
-        LaserBoy_3D_double  center = mean_of_coordinates();
+        Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
+        Double3d  center = mean_of_coordinates();
 
         for(i = 0; i < size(); i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates(at(i), center, a), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates(at(i), center, a), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
-            at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates(at(i), center, a),
-                                     (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex_on_coordinates(at(i), center, a),
+                                     (Color)at(i),
                                      at(i).k,
                                      at(i).c
                                    );
@@ -2452,22 +2452,22 @@ LaserBoy_Bounds LaserBoy_segment::rotate(LaserBoy_3D_double a)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_around_origin(LaserBoy_3D_double a)
+Bounds Segment::rotate_around_origin(Double3d a)
 {
     if(size() > 1)
     {
         u_int            i;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
 
         for(i = 0; i < size(); i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex(at(i), a), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(rotate_vertex(at(i), a), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
-            at(i) = LaserBoy_vertex( rotate_vertex(at(i), a),
-                                     (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex(at(i), a),
+                                     (Color)at(i),
                                      at(i).k,
                                      at(i).c
                                    );
@@ -2476,22 +2476,22 @@ LaserBoy_Bounds LaserBoy_segment::rotate_around_origin(LaserBoy_3D_double a)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates(LaserBoy_3D_double p, LaserBoy_3D_double a)
+Bounds Segment::rotate_on_coordinates(Double3d p, Double3d a)
 {
     if(size() > 1)
     {
         u_int            i;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
 
         for(i = 0; i < size(); i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates(at(i), p, a), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates(at(i), p, a), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
-            at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates(at(i), p, a),
-                                     (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex_on_coordinates(at(i), p, a),
+                                     (Color)at(i),
                                      at(i).k,
                                      at(i).c
                                    );
@@ -2500,22 +2500,22 @@ LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates(LaserBoy_3D_double p, La
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates_x(LaserBoy_3D_double p, double a)
+Bounds Segment::rotate_on_coordinates_x(Double3d p, double a)
 {
     if(size() > 1)
     {
         u_int            i;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
 
         for(i = 0; i < size(); i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates_x(at(i), p, a), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates_x(at(i), p, a), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
-            at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates_x(at(i), p, a),
-                                   (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex_on_coordinates_x(at(i), p, a),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c
                                  );
@@ -2524,22 +2524,22 @@ LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates_x(LaserBoy_3D_double p, 
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates_y(LaserBoy_3D_double p, double a)
+Bounds Segment::rotate_on_coordinates_y(Double3d p, double a)
 {
     if(size() > 1)
     {
         u_int            i;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
 
         for(i = 0; i < size(); i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates_y(at(i), p, a), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates_y(at(i), p, a), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
-            at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates_y(at(i), p, a),
-                                     (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex_on_coordinates_y(at(i), p, a),
+                                     (Color)at(i),
                                      at(i).k,
                                      at(i).c
                                    );
@@ -2548,21 +2548,21 @@ LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates_y(LaserBoy_3D_double p, 
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates_z(LaserBoy_3D_double p, double a)
+Bounds Segment::rotate_on_coordinates_z(Double3d p, double a)
 {
     if(size() > 1)
     {
         u_int            i;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
         for(i = 0; i < size(); i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates_z(at(i), p, a), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates_z(at(i), p, a), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
-            at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates_z(at(i), p, a),
-                                     (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex_on_coordinates_z(at(i), p, a),
+                                     (Color)at(i),
                                      at(i).k,
                                      at(i).c
                                    );
@@ -2571,13 +2571,13 @@ LaserBoy_Bounds LaserBoy_segment::rotate_on_coordinates_z(LaserBoy_3D_double p, 
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_around_origin()
+Bounds Segment::rotate_around_origin()
 {
     return rotate_around_origin(p_space->view_angle);
 }
 
 //############################################################################
-void LaserBoy_segment::ripple(int direction, double amplitude, double freq, double phase)
+void Segment::ripple(int direction, double amplitude, double freq, double phase)
 {
     if(size() > 1)
     {
@@ -2605,20 +2605,20 @@ void LaserBoy_segment::ripple(int direction, double amplitude, double freq, doub
 }
 
 //############################################################################
-LaserBoy_palette LaserBoy_segment::as_color_table() const
+Palette Segment::as_color_table() const
 {
-    LaserBoy_palette color_table(p_space);
+    Palette color_table(p_space);
     color_table.reserve(size());
     for(u_int i = 0; i < size(); i++)
         if(at(i).is_lit())
             color_table.push_back(at(i));
         else
-            color_table.push_back(LaserBoy_color(0,0,0));
+            color_table.push_back(Color(0,0,0));
     return color_table;
 }
 
 //############################################################################
-void LaserBoy_segment::strip_color()
+void Segment::strip_color()
 {
     palette_index = LASERBOY_ILDA_DEFAULT;
     if(size() > 1)
@@ -2651,7 +2651,7 @@ void LaserBoy_segment::strip_color()
 }
 
 //############################################################################
-void LaserBoy_segment::strip_color_or()
+void Segment::strip_color_or()
 {
     if(size() > 1)
     {
@@ -2670,7 +2670,7 @@ void LaserBoy_segment::strip_color_or()
 }
 
 //############################################################################
-void LaserBoy_segment::strip_color_avg()
+void Segment::strip_color_avg()
 {
     if(size() > 1)
     {
@@ -2689,7 +2689,7 @@ void LaserBoy_segment::strip_color_avg()
 }
 
 //############################################################################
-void LaserBoy_segment::to_palette_by_index(u_int index)
+void Segment::to_palette_by_index(u_int index)
 {
     if(    (int)index != LASERBOY_TRUE_COLOR
         && (int)index != palette_index
@@ -2704,7 +2704,7 @@ void LaserBoy_segment::to_palette_by_index(u_int index)
 }
 
 //############################################################################
-void LaserBoy_segment::to_target_palette_by_index()
+void Segment::to_target_palette_by_index()
 {
     if(    (int)p_space->target_palette_index != LASERBOY_TRUE_COLOR
         && (int)p_space->target_palette_index != palette_index
@@ -2719,7 +2719,7 @@ void LaserBoy_segment::to_target_palette_by_index()
 }
 
 //############################################################################
-void LaserBoy_segment::best_match_palette(u_int index)
+void Segment::best_match_palette(u_int index)
 {
     if(    (int)index != palette_index
         && index <  p_space->number_of_palettes()
@@ -2743,7 +2743,7 @@ void LaserBoy_segment::best_match_palette(u_int index)
 }
 
 //############################################################################
-void LaserBoy_segment::best_match_target_palette()
+void Segment::best_match_target_palette()
 {
     if(    (int)p_space->target_palette_index != palette_index
         && p_space->target_palette_index < p_space->number_of_palettes()
@@ -2760,7 +2760,7 @@ void LaserBoy_segment::best_match_target_palette()
 }
 
 //############################################################################
-void LaserBoy_segment::convert_black_to_blank()
+void Segment::convert_black_to_blank()
 {
     for(u_int i = 0; i < size(); i++)
     {
@@ -2778,7 +2778,7 @@ void LaserBoy_segment::convert_black_to_blank()
 }
 
 //############################################################################
-void LaserBoy_segment::convert_blank_to_black()
+void Segment::convert_blank_to_black()
 {
     for(u_int i = 1; i < size(); i++) // Leave the zero index blank!
     {
@@ -2795,7 +2795,7 @@ void LaserBoy_segment::convert_blank_to_black()
 }
 
 //############################################################################
-void LaserBoy_segment::set_vertex_to_black(u_int index)
+void Segment::set_vertex_to_black(u_int index)
 {
     if(size() && index < size())
     {
@@ -2808,11 +2808,11 @@ void LaserBoy_segment::set_vertex_to_black(u_int index)
 }
 
 //############################################################################
-void LaserBoy_segment::impose_black_level()
+void Segment::impose_black_level()
 {
     for(u_int i = 0; i < size(); i++)
     {
-        if(at(i).as_LaserBoy_color().intensity() < p_space->black_level)
+        if(at(i).as_Color().intensity() < p_space->black_level)
         {
             at(i).r = 0;
             at(i).g = 0;
@@ -2823,7 +2823,7 @@ void LaserBoy_segment::impose_black_level()
 }
 
 //############################################################################
-void LaserBoy_segment::rainbow_recolor(int effect)
+void Segment::rainbow_recolor(int effect)
 {
     if(size() > 1)
     {
@@ -2916,7 +2916,7 @@ void LaserBoy_segment::rainbow_recolor(int effect)
                     {
                         if(number_of_segments() > 1)
                         {
-                            LaserBoy_frame_set segments = explode_segments();
+                            FrameSet segments = explode_segments();
                             for(i = 0; i < number_of_segments(); i++)
                             {
                                 color_index = u_char(((i * p_space->recolor_span_factor) / number_of_segments()) * span) % span + offset;
@@ -2939,7 +2939,7 @@ void LaserBoy_segment::rainbow_recolor(int effect)
                     {
                         if(number_of_segments() > 1)
                         {
-                            LaserBoy_frame_set segments = explode_segments();
+                            FrameSet segments = explode_segments();
                             for(i = 0; i < segments.number_of_frames(); i++)
                             {
                                 color_index = (i % span) + offset;
@@ -2970,7 +2970,7 @@ void LaserBoy_segment::rainbow_recolor(int effect)
                     {
                         if(number_of_segments() > 1)
                         {
-                            LaserBoy_frame_set segments = explode_segments();
+                            FrameSet segments = explode_segments();
                             for(i = 0; i < segments.number_of_frames(); i++)
                             {
                                 color_index = (rand() % span) + offset;
@@ -2997,7 +2997,7 @@ void LaserBoy_segment::rainbow_recolor(int effect)
 }
 
 //############################################################################
-LaserBoy_segment& LaserBoy_segment::rotate_colors(int steps)
+Segment& Segment::rotate_colors(int steps)
 {
     if(    palette_index != LASERBOY_TRUE_COLOR
         && size() > 1
@@ -3017,7 +3017,7 @@ LaserBoy_segment& LaserBoy_segment::rotate_colors(int steps)
 }
 
 //############################################################################
-bool LaserBoy_segment::find_rgb_in_palette(const LaserBoy_palette& palette)
+bool Segment::find_rgb_in_palette(const Palette& palette)
 {
     u_int         i,
                   j;
@@ -3026,7 +3026,7 @@ bool LaserBoy_segment::find_rgb_in_palette(const LaserBoy_palette& palette)
     //------------------------------------------------------------------------
     for(i = 0; i < size(); i++)
         for(j = 0; j < palette.number_of_colors(); j++)
-            if((LaserBoy_color)at(i) == palette.at(j))
+            if((Color)at(i) == palette.at(j))
             {
                 at(i).c = (u_char)j;
                 match[i] = true;
@@ -3039,7 +3039,7 @@ bool LaserBoy_segment::find_rgb_in_palette(const LaserBoy_palette& palette)
 }
 
 //############################################################################
-void LaserBoy_segment::set_rgb_from_palette()
+void Segment::set_rgb_from_palette()
 {
     for(u_int i = 0; i < size(); i++)
     {
@@ -3051,7 +3051,7 @@ void LaserBoy_segment::set_rgb_from_palette()
 }
 
 //############################################################################
-void LaserBoy_segment::set_palette_to_332()
+void Segment::set_palette_to_332()
 {
     front().c = 0x00;
     for(u_int i = 1; i < size(); i++)
@@ -3063,7 +3063,7 @@ void LaserBoy_segment::set_palette_to_332()
 }
 
 //############################################################################
-void LaserBoy_segment::sync_rgb_and_palette()
+void Segment::sync_rgb_and_palette()
 {
     if(size() > 1)
     {
@@ -3074,19 +3074,19 @@ void LaserBoy_segment::sync_rgb_and_palette()
         {
             u_int             i               ,
                               j               ;
-            LaserBoy_palette  palette(p_space);
+            Palette  palette(p_space);
             //----------------------------------------------------------------
-            palette.push_back((LaserBoy_color)at(first_lit_vector_index()));
+            palette.push_back((Color)at(first_lit_vector_index()));
             //----------------------------------------------------------------
             for(i = first_lit_vector_index() + 1; i < size(); i++)
             {
                 for(j = 0; j < palette.number_of_colors(); j++)
-                    if(at(i).is_lit() && (palette[j] == (LaserBoy_color)at(i)))
+                    if(at(i).is_lit() && (palette[j] == (Color)at(i)))
                         break;
                 if(    j == palette.number_of_colors()
                     && at(i).is_lit()
                   )
-                    palette.push_back((LaserBoy_color)at(i));
+                    palette.push_back((Color)at(i));
                 if(palette.number_of_colors() > LASERBOY_PALETTE_MAX)
                     break;
             }
@@ -3110,7 +3110,7 @@ void LaserBoy_segment::sync_rgb_and_palette()
 }
 
 //############################################################################
-void LaserBoy_segment::bit_reduce_to_palette()
+void Segment::bit_reduce_to_palette()
 {
     if(palette_index == LASERBOY_TRUE_COLOR)
     {
@@ -3122,7 +3122,7 @@ void LaserBoy_segment::bit_reduce_to_palette()
 }
 
 //############################################################################
-void LaserBoy_segment::best_reduce_to_palette()
+void Segment::best_reduce_to_palette()
 {
     if(    number_of_color_vectors() >= 1
 //        && palette_index == LASERBOY_TRUE_COLOR
@@ -3130,24 +3130,24 @@ void LaserBoy_segment::best_reduce_to_palette()
     {
         u_int             i               ,
                           j               ;
-        LaserBoy_palette  palette(p_space);
+        Palette  palette(p_space);
         //--------------------------------------------------------------------
         if(!p_space->allow_lit_black)
             convert_black_to_blank();
         else
             impose_black_level();
         //--------------------------------------------------------------------
-        palette.push_back((LaserBoy_color)at(first_lit_vector_index()));
+        palette.push_back((Color)at(first_lit_vector_index()));
         //--------------------------------------------------------------------
         for(i = first_lit_vector_index() + 1; i < size(); i++)
         {
             for(j = 0; j < palette.number_of_colors(); j++)
-                if(at(i).is_lit() && (palette[j] == (LaserBoy_color)at(i)))
+                if(at(i).is_lit() && (palette[j] == (Color)at(i)))
                     break;
             if(    j == palette.number_of_colors()
                 && at(i).is_lit()
               )
-                palette.push_back((LaserBoy_color)at(i));
+                palette.push_back((Color)at(i));
         }
         //--------------------------------------------------------------------
         palette.best_reduction();
@@ -3162,7 +3162,7 @@ void LaserBoy_segment::best_reduce_to_palette()
 }
 
 //############################################################################
-void LaserBoy_segment::promote_to_true_color()
+void Segment::promote_to_true_color()
 {
     if(palette_index != LASERBOY_TRUE_COLOR)
     {
@@ -3173,14 +3173,14 @@ void LaserBoy_segment::promote_to_true_color()
 }
 
 //############################################################################
-void LaserBoy_segment::shade(u_char shade) // 0 shade is no change 255 is black
+void Segment::shade(u_char shade) // 0 shade is no change 255 is black
 {
     if(shade)
     {
         sync_rgb_and_palette();
         if(palette_index != LASERBOY_TRUE_COLOR)
         {
-            LaserBoy_palette  palette(p_space->palette_picker(palette_index));
+            Palette  palette(p_space->palette_picker(palette_index));
             //----------------------------------------------------------------
             palette.shade(shade);
             //----------------------------------------------------------------
@@ -3204,14 +3204,14 @@ void LaserBoy_segment::shade(u_char shade) // 0 shade is no change 255 is black
 }
 
 //############################################################################
-void LaserBoy_segment::tint(u_char tint) // 0 tint is no change 255 is white
+void Segment::tint(u_char tint) // 0 tint is no change 255 is white
 {
     if(tint)
     {
         sync_rgb_and_palette();
         if(palette_index != LASERBOY_TRUE_COLOR)
         {
-            LaserBoy_palette   palette(p_space->palette_picker(palette_index));
+            Palette   palette(p_space->palette_picker(palette_index));
             //----------------------------------------------------------------
             palette.tint(tint);
             //----------------------------------------------------------------
@@ -3235,10 +3235,10 @@ void LaserBoy_segment::tint(u_char tint) // 0 tint is no change 255 is white
 }
 
 //############################################################################
-bool LaserBoy_segment::color_from_bmp(const string& file)
+bool Segment::color_from_bmp(const string& file)
 {
     char file_name[81];
-    struct LaserBoy_bmp bmp;
+    struct Bitmap bmp;
 
     strcpy(file_name, (file).c_str());
     if(bmp_from_file(&bmp, file_name))
@@ -3251,7 +3251,7 @@ bool LaserBoy_segment::color_from_bmp(const string& file)
 }
 
 //############################################################################
-void LaserBoy_segment::color_from_bmp(struct LaserBoy_bmp* bmp)
+void Segment::color_from_bmp(struct Bitmap* bmp)
 {
     if(size() > 1)
     {
@@ -3259,8 +3259,8 @@ void LaserBoy_segment::color_from_bmp(struct LaserBoy_bmp* bmp)
                           color,
                           factor = (65536 / bmp->xres);
 
-        LaserBoy_segment  line;
-        LaserBoy_vertex   vertex;
+        Segment  line;
+        Vertex   vertex;
         //--------------------------------------------------------------------
         if(bmp->bpp <= 8)
             for(i = 1; i < size(); i++)
@@ -3301,10 +3301,10 @@ void LaserBoy_segment::color_from_bmp(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-bool LaserBoy_segment::subtract_bmp(const string& file)
+bool Segment::subtract_bmp(const string& file)
 {
     char file_name[81];
-    struct LaserBoy_bmp bmp;
+    struct Bitmap bmp;
 
     strcpy(file_name, (file).c_str());
     if(bmp_from_file(&bmp, file_name))
@@ -3317,7 +3317,7 @@ bool LaserBoy_segment::subtract_bmp(const string& file)
 }
 
 //############################################################################
-void LaserBoy_segment::subtract_bmp(struct LaserBoy_bmp* bmp)
+void Segment::subtract_bmp(struct Bitmap* bmp)
 {
     if(size() > 1)
     {
@@ -3325,8 +3325,8 @@ void LaserBoy_segment::subtract_bmp(struct LaserBoy_bmp* bmp)
         u_int             i,
                           pixle_color,
                           factor = (65536 / bmp->xres);
-        LaserBoy_segment  line;
-        LaserBoy_vertex   vertex;
+        Segment  line;
+        Vertex   vertex;
         //--------------------------------------------------------------------
         if(bmp->bpp <= 8)
             for(i = 1; i < size(); i++)
@@ -3381,31 +3381,31 @@ void LaserBoy_segment::subtract_bmp(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::move(LaserBoy_3D_double d, bool check_bounds)
+Bounds Segment::move(Double3d d, bool check_bounds)
 {
     if(size() > 1)
     {
         u_int               i;
-        LaserBoy_Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
         //--------------------------------------------------------------------
         if(check_bounds)
         {
             for(i = 0; i < size(); i++)
             {                                             // double + double
-                if((out_of_bounds = LaserBoy_bounds_check(d + (LaserBoy_3D_double)at(i).as_3D_short(), LASERBOY_CUBE)))
+                if((out_of_bounds = bounds_checkc(d + (Double3d)at(i).as_3D_short(), LASERBOY_CUBE)))
                     return out_of_bounds;
             }
             for(i = 0; i < size(); i++)
-                at(i) = LaserBoy_vertex(d + at(i).as_3D_short(), // double + short
-                                        at(i).as_LaserBoy_color(),
+                at(i) = Vertex(d + at(i).as_3D_short(), // double + short
+                                        at(i).as_Color(),
                                         at(i).k,
                                         at(i).c
                                        );
         }
         else
             for(i = 0; i < size(); i++)
-                at(i) = LaserBoy_vertex(at(i).as_3D_short() + d, // short + double
-                                        at(i).as_LaserBoy_color(),
+                at(i) = Vertex(at(i).as_3D_short() + d, // short + double
+                                        at(i).as_Color(),
                                         at(i).k,
                                         at(i).c
                                        );
@@ -3414,33 +3414,33 @@ LaserBoy_Bounds LaserBoy_segment::move(LaserBoy_3D_double d, bool check_bounds)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::move()
+Bounds Segment::move()
 {
     return move(p_space->view_offset);
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::scale(LaserBoy_3D_double s)
+Bounds Segment::scale(Double3d s)
 {
-    LaserBoy_3D_double center = mean_of_coordinates();
+    Double3d center = mean_of_coordinates();
     return scale_on_coordinates(center, s);
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::scale_on_coordinates(LaserBoy_3D_double p, LaserBoy_3D_double s)
+Bounds Segment::scale_on_coordinates(Double3d p, Double3d s)
 {
     if(size() > 1)
     {
         u_int            i;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
 
         for(i = 0; i < size(); i++)
-            if((out_of_bounds |= LaserBoy_bounds_check((((LaserBoy_3D_double)(at(i).as_3D_short()) - p) * s) + p, LASERBOY_CUBE)))
+            if((out_of_bounds |= bounds_checkc((((Double3d)(at(i).as_3D_short()) - p) * s) + p, LASERBOY_CUBE)))
                 return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
-            at(i) = LaserBoy_vertex((((LaserBoy_3D_double)(at(i).as_3D_short()) - p) * s) + p,
-                                    at(i).as_LaserBoy_color(),
+            at(i) = Vertex((((Double3d)(at(i).as_3D_short()) - p) * s) + p,
+                                    at(i).as_Color(),
                                     at(i).k,
                                     at(i).c
                                    );
@@ -3449,12 +3449,12 @@ LaserBoy_Bounds LaserBoy_segment::scale_on_coordinates(LaserBoy_3D_double p, Las
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::scale_around_origin(LaserBoy_3D_double f)
+Bounds Segment::scale_around_origin(Double3d f)
 {
     if(size() > 1)
     {
-        LaserBoy_segment  segment(*this);
-        LaserBoy_Bounds   out_of_bounds = LASERBOY_IN_BOUNDS;
+        Segment  segment(*this);
+        Bounds   out_of_bounds = LASERBOY_IN_BOUNDS;
         u_int             i,
                           segment_index;
         for(segment_index = 0; segment_index < segment.number_of_segments(); segment_index++)
@@ -3470,15 +3470,15 @@ LaserBoy_Bounds LaserBoy_segment::scale_around_origin(LaserBoy_3D_double f)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::scale_around_origin()
+Bounds Segment::scale_around_origin()
 {
     return scale_around_origin(p_space->view_scale);
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_segment::rectangular_center_of() const
+Double3d Segment::rectangular_center_of() const
 {
-    LaserBoy_3D_double center;
+    Double3d center;
     if(size() > 1)
     {
         int            max_x = -40000, // more negative than any short
@@ -3505,9 +3505,9 @@ LaserBoy_3D_double LaserBoy_segment::rectangular_center_of() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_segment::mean_of_coordinates() const
+Double3d Segment::mean_of_coordinates() const
 {
-    LaserBoy_3D_double mean;
+    Double3d mean;
     if(size() > 1)
     {
         mean = front();
@@ -3519,7 +3519,7 @@ LaserBoy_3D_double LaserBoy_segment::mean_of_coordinates() const
 }
 
 //############################################################################
-u_int LaserBoy_segment::number_of_segments() const // a segment is a series of lit vertices
+u_int Segment::number_of_segments() const // a segment is a series of lit vertices
 {
     u_int i,
           segment_count = 0;
@@ -3539,7 +3539,7 @@ u_int LaserBoy_segment::number_of_segments() const // a segment is a series of l
 }
 
 //############################################################################
-LaserBoy_segment LaserBoy_segment::blend(const LaserBoy_segment& segment, double ratio)
+Segment Segment::blend(const Segment& segment, double ratio)
 {
     if(ratio == 0.0)
         return *this;
@@ -3551,7 +3551,7 @@ LaserBoy_segment LaserBoy_segment::blend(const LaserBoy_segment& segment, double
     {
         u_int            i,
                          diff;
-        LaserBoy_segment this_one(*this),
+        Segment this_one(*this),
                          other_one(segment),
                          combo(p_space);
 
@@ -3586,7 +3586,7 @@ LaserBoy_segment LaserBoy_segment::blend(const LaserBoy_segment& segment, double
 }
 
 //############################################################################
-bool LaserBoy_segment::find_segment_at_index(u_int segment_index, u_int& start, u_int& end) const
+bool Segment::find_segment_at_index(u_int segment_index, u_int& start, u_int& end) const
 {   // the first segment is number zero!
     if(size() > 1)
     {
@@ -3634,7 +3634,7 @@ bool LaserBoy_segment::find_segment_at_index(u_int segment_index, u_int& start, 
 }
 
 //############################################################################
-bool LaserBoy_segment::find_segment_of_vertex(u_int vertex_index, u_int& start, u_int& end, u_int& segment_index) const
+bool Segment::find_segment_of_vertex(u_int vertex_index, u_int& start, u_int& end, u_int& segment_index) const
 {
     start = end = segment_index = 0;
     if(size() > 1)
@@ -3673,13 +3673,13 @@ bool LaserBoy_segment::find_segment_of_vertex(u_int vertex_index, u_int& start, 
 }
 
 //############################################################################
-LaserBoy_segment LaserBoy_segment::copy_segment(u_int segment_index) const
+Segment Segment::copy_segment(u_int segment_index) const
 {
     if(size() > 1)
     {
         u_int             start,
                           end;
-        LaserBoy_segment  segment(p_space, palette_index, false);
+        Segment  segment(p_space, palette_index, false);
         find_segment_at_index(segment_index, start, end);
         segment.reserve(end - start + 1);
         for(u_int i = start; i <= end; i++)
@@ -3690,9 +3690,9 @@ LaserBoy_segment LaserBoy_segment::copy_segment(u_int segment_index) const
 }
 
 //############################################################################
-LaserBoy_frame_set LaserBoy_segment::explode_segments() const
+FrameSet Segment::explode_segments() const
 {
-    LaserBoy_frame_set segments(p_space);
+    FrameSet segments(p_space);
     //------------------------------------------------------------------------
     if(size() > 1)
     {
@@ -3700,7 +3700,7 @@ LaserBoy_frame_set LaserBoy_segment::explode_segments() const
                         j,
                         start,
                         end;
-        LaserBoy_frame  frame(p_space, palette_index, false);
+        Frame  frame(p_space, palette_index, false);
         //--------------------------------------------------------------------
         for(i = 1; i < size(); i++)
         {
@@ -3729,19 +3729,19 @@ LaserBoy_frame_set LaserBoy_segment::explode_segments() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_segment::rectangular_center_of_segment(u_int segment_index) const
+Double3d Segment::rectangular_center_of_segment(u_int segment_index) const
 {
     return (copy_segment(segment_index)).rectangular_center_of();
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_segment::mean_of_coordinates_of_segment(u_int segment_index) const
+Double3d Segment::mean_of_coordinates_of_segment(u_int segment_index) const
 {
     return (copy_segment(segment_index)).mean_of_coordinates();
 }
 
 //############################################################################
-u_int LaserBoy_segment::segment_index_of_vertex(u_int vertex_index) const
+u_int Segment::segment_index_of_vertex(u_int vertex_index) const
 {
     u_int start, end, segment_index;
     find_segment_of_vertex(vertex_index, start, end, segment_index);
@@ -3749,17 +3749,17 @@ u_int LaserBoy_segment::segment_index_of_vertex(u_int vertex_index) const
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::move_segment(u_int segment_index, LaserBoy_3D_double f)
+Bounds Segment::move_segment(u_int segment_index, Double3d f)
 {
     if(size() > 1)
     {
         u_int            i,
                          start,
                          end;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
         find_segment_at_index(segment_index, start, end);
         for(i = start; i <= end; i++)
-            out_of_bounds |= LaserBoy_bounds_check(f + at(i), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(f + at(i), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
@@ -3771,28 +3771,28 @@ LaserBoy_Bounds LaserBoy_segment::move_segment(u_int segment_index, LaserBoy_3D_
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_segment(u_int segment_index, LaserBoy_3D_double a)
+Bounds Segment::rotate_segment(u_int segment_index, Double3d a)
 {
     if(size() > 1)
     {
         u_int              i,
                            start,
                            end;
-        LaserBoy_Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
-        LaserBoy_3D_short  center;
+        Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
+        Short3d  center;
 
         find_segment_at_index(segment_index, start, end);
         center = mean_of_coordinates_of_segment(segment_index);
 
         for(i = start; i <= end; i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates(at(i), center, a), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates(at(i), center, a), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates(at(i), center, a),
-                                   (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex_on_coordinates(at(i), center, a),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c
                                  );
@@ -3801,25 +3801,25 @@ LaserBoy_Bounds LaserBoy_segment::rotate_segment(u_int segment_index, LaserBoy_3
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::rotate_segment_around_origin(u_int segment_index, LaserBoy_3D_double a)
+Bounds Segment::rotate_segment_around_origin(u_int segment_index, Double3d a)
 {
     if(size() > 1)
     {
         u_int            i,
                          start,
                          end;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
 
         find_segment_at_index(segment_index, start, end);
         for(i = start; i <= end; i++)
-            out_of_bounds |= LaserBoy_bounds_check(rotate_vertex(at(i), a), LASERBOY_SPHERE);
+            out_of_bounds |= bounds_checkc(rotate_vertex(at(i), a), LASERBOY_SPHERE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_vertex( rotate_vertex(at(i), a),
-                                   (LaserBoy_color)at(i),
+            at(i) = Vertex( rotate_vertex(at(i), a),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c
                                  );
@@ -3828,28 +3828,28 @@ LaserBoy_Bounds LaserBoy_segment::rotate_segment_around_origin(u_int segment_ind
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::scale_segment(u_int segment_index, LaserBoy_3D_double m)
+Bounds Segment::scale_segment(u_int segment_index, Double3d m)
 {
     if(size() > 1)
     {
         u_int              i,
                            start,
                            end;
-        LaserBoy_Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
-        LaserBoy_3D_short  center;
+        Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
+        Short3d  center;
 
         find_segment_at_index(segment_index, start, end);
         center = mean_of_coordinates_of_segment(segment_index);
 
         for(i = start; i <= end; i++)
-            out_of_bounds |= LaserBoy_bounds_check(scale_vertex_on_coordinates(at(i), center, m), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(scale_vertex_on_coordinates(at(i), center, m), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_vertex(scale_vertex_on_coordinates(at(i), center, m),
-                                    (LaserBoy_color)at(i),
+            at(i) = Vertex(scale_vertex_on_coordinates(at(i), center, m),
+                                    (Color)at(i),
                                     at(i).k,
                                     at(i).c
                                    );
@@ -3858,25 +3858,25 @@ LaserBoy_Bounds LaserBoy_segment::scale_segment(u_int segment_index, LaserBoy_3D
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_segment::scale_segment_around_origin(u_int segment_index, LaserBoy_3D_double m)
+Bounds Segment::scale_segment_around_origin(u_int segment_index, Double3d m)
 {
     if(size() > 1)
     {
         u_int            i,
                          start,
                          end;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
 
         find_segment_at_index(segment_index, start, end);
         for(i = start; i <= end; i++)
-            out_of_bounds |= LaserBoy_bounds_check(m * at(i), LASERBOY_CUBE);
+            out_of_bounds |= bounds_checkc(m * at(i), LASERBOY_CUBE);
         //--------------------------------------------------------------------
         if(out_of_bounds)
             return out_of_bounds;
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_vertex( m * at(i),
-                                   (LaserBoy_color)at(i),
+            at(i) = Vertex( m * at(i),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c
                                  );
@@ -3885,8 +3885,8 @@ LaserBoy_Bounds LaserBoy_segment::scale_segment_around_origin(u_int segment_inde
 }
 
 //############################################################################
-void LaserBoy_segment::to_fstream_wave(fstream&              out,
-                                       LaserBoy_wave_header& header,
+void Segment::to_fstream_wave(fstream&              out,
+                                       WaveHeader& header,
                                        bool                  end_of_frame,
                                        bool                  unique_frame
                                       )
@@ -3940,37 +3940,37 @@ void LaserBoy_segment::to_fstream_wave(fstream&              out,
 
 
 //############################################################################
-LaserBoy_segment blank_segment(LaserBoy_space* ps)
+Segment blank_segment(Space* ps)
 {
-    LaserBoy_segment segment(ps, LASERBOY_ILDA_DEFAULT, false);
+    Segment segment(ps, LASERBOY_ILDA_DEFAULT, false);
     segment.reserve(2);
-    segment.push_back(LaserBoy_vertex(0, 0, 0, 255, 255, 255, 64, 55));
-    segment.push_back(LaserBoy_vertex(0, 0, 0, 255, 255, 255, 64, 55));
+    segment.push_back(Vertex(0, 0, 0, 255, 255, 255, 64, 55));
+    segment.push_back(Vertex(0, 0, 0, 255, 255, 255, 64, 55));
     return segment;
 }
 
 //############################################################################
-LaserBoy_segment NULL_segment(LaserBoy_space* ps) // vector word NULL
+Segment NULL_segment(Space* ps) // vector word NULL
 {
-    LaserBoy_segment segment(ps, LASERBOY_ILDA_DEFAULT, false);
+    Segment segment(ps, LASERBOY_ILDA_DEFAULT, false);
     segment.reserve(17);
-    segment.push_back(LaserBoy_vertex(-19976, -8000, 0, 255, 255, 255, 64, 55));
-    segment.push_back(LaserBoy_vertex(-19976, 10000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( -9976, -8000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( -9976, 10000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( -7976, 10000, 0, 255, 255, 255, 64, 55));
-    segment.push_back(LaserBoy_vertex( -7976, -6000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( -5976, -8000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( -1976, -8000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex(    24, -6000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex(    24, 10000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex(  2024, 10000, 0, 255, 255, 255, 64, 55));
-    segment.push_back(LaserBoy_vertex(  2024, -8000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( 10024, -8000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( 12024, 10000, 0, 255, 255, 255, 64, 55));
-    segment.push_back(LaserBoy_vertex( 12024, -8000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex( 20024, -8000, 0, 255, 255, 255,  0, 55));
-    segment.push_back(LaserBoy_vertex(-19976, -8000, 0, 255, 255, 255, 64, 55));
+    segment.push_back(Vertex(-19976, -8000, 0, 255, 255, 255, 64, 55));
+    segment.push_back(Vertex(-19976, 10000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( -9976, -8000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( -9976, 10000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( -7976, 10000, 0, 255, 255, 255, 64, 55));
+    segment.push_back(Vertex( -7976, -6000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( -5976, -8000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( -1976, -8000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex(    24, -6000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex(    24, 10000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex(  2024, 10000, 0, 255, 255, 255, 64, 55));
+    segment.push_back(Vertex(  2024, -8000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( 10024, -8000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( 12024, 10000, 0, 255, 255, 255, 64, 55));
+    segment.push_back(Vertex( 12024, -8000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex( 20024, -8000, 0, 255, 255, 255,  0, 55));
+    segment.push_back(Vertex(-19976, -8000, 0, 255, 255, 255, 64, 55));
     return segment;
 }
 

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_palette.cpp is part of LaserBoy.
+// palette.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,15 +32,15 @@
 namespace LaserBoy {
 
 //############################################################################
-LaserBoy_palette& LaserBoy_palette::reorder()
+Palette& Palette::reorder()
 {
     if(size())
     {
         u_int           i;
-        LaserBoy_color  black,
+        Color  black,
                         white(255,255,255);
 
-        LaserBoy_palette reordered(p_space);
+        Palette reordered(p_space);
         //--------------------------------------------------------------------
         reordered.reserve(size());
         sort(begin(), end()); // sort this palette
@@ -61,12 +61,12 @@ LaserBoy_palette& LaserBoy_palette::reorder()
 }
 
 //############################################################################
-bool LaserBoy_palette::from_ifstream_ild(ifstream& in,
-                                         const LaserBoy_ild_header& header
+bool Palette::from_ifstream_ild(ifstream& in,
+                                         const ILDHeader& header
                                         )
 {
     u_int           i;
-    LaserBoy_color  color;
+    Color  color;
     //------------------------------------------------------------------------
     clear();
     reserve(header.quantity);
@@ -89,7 +89,7 @@ bool LaserBoy_palette::from_ifstream_ild(ifstream& in,
 }
 
 //############################################################################
-void LaserBoy_palette::to_ofstream_ild(ofstream& out, LaserBoy_ild_header& header) const
+void Palette::to_ofstream_ild(ofstream& out, ILDHeader& header) const
 {
     header.quantity = (u_short)number_of_colors();
     header.to_ofstream_ild(out);
@@ -99,13 +99,13 @@ void LaserBoy_palette::to_ofstream_ild(ofstream& out, LaserBoy_ild_header& heade
 }
 
 //############################################################################
-bool LaserBoy_palette::from_ifstream_txt(ifstream&  in,
+bool Palette::from_ifstream_txt(ifstream&  in,
                                          const int& group_type,
                                          u_int&     line_number
                                         )
 {
     u_int           i = 255;
-    LaserBoy_color  color;
+    Color  color;
     clear();
     while(    color.from_ifstream_txt(in, group_type, line_number)
            && i--
@@ -120,7 +120,7 @@ bool LaserBoy_palette::from_ifstream_txt(ifstream&  in,
 }
 
 //############################################################################
-bool LaserBoy_palette::save_as_txt(const string& file) const
+bool Palette::save_as_txt(const string& file) const
 {
     ofstream out(file.c_str(), ios::out);
     if(out.is_open())
@@ -135,7 +135,7 @@ bool LaserBoy_palette::save_as_txt(const string& file) const
 }
 
 //############################################################################
-void LaserBoy_palette::to_ofstream_txt(ofstream& out) const
+void Palette::to_ofstream_txt(ofstream& out) const
 {
     u_int i;
     //------------------------------------------------------------------------
@@ -161,7 +161,7 @@ void LaserBoy_palette::to_ofstream_txt(ofstream& out) const
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_palette::to_bmp_palette(struct LaserBoy_bmp* bmp) const
+ErrorCode Palette::to_bmp_palette(struct Bitmap* bmp) const
 {
     u_int i;
     if(bmp->bpp == 8)
@@ -179,7 +179,7 @@ LaserBoy_Error_Code LaserBoy_palette::to_bmp_palette(struct LaserBoy_bmp* bmp) c
 }
 
 //############################################################################
-void LaserBoy_palette::find_factors()
+void Palette::find_factors()
 {
     int i;
     //------------------------------------------------------------------------
@@ -212,7 +212,7 @@ void LaserBoy_palette::find_factors()
 }
 
 //############################################################################
-int LaserBoy_palette::best_match(LaserBoy_color rgb)
+int Palette::best_match(Color rgb)
 {
     u_int  i,
            j,
@@ -238,7 +238,7 @@ int LaserBoy_palette::best_match(LaserBoy_color rgb)
 }
 
 //############################################################################
-void LaserBoy_palette::best_reduction()
+void Palette::best_reduction()
 {
     if(size())
     {
@@ -269,13 +269,13 @@ void LaserBoy_palette::best_reduction()
 }
 
 //############################################################################
-void LaserBoy_palette::straight_blend()
+void Palette::straight_blend()
 {
     if(size())
     {
         u_int          i,
                        colors;
-        LaserBoy_color c1, c2, c3, c4, c5, c6, c7;
+        Color c1, c2, c3, c4, c5, c6, c7;
 
         if(at(size() - 1).is_black())
             colors = size() - 1;
@@ -382,19 +382,19 @@ void LaserBoy_palette::straight_blend()
                 break;
         }
     }
-    push_back(LaserBoy_color());
+    push_back(Color());
     find_factors();
     return;
 }
 
 //############################################################################
-void LaserBoy_palette::circular_blend()
+void Palette::circular_blend()
 {
     if(size())
     {
         u_int          i,
                        colors;
-        LaserBoy_color c1, c2, c3, c4, c5, c6, c7, c8;
+        Color c1, c2, c3, c4, c5, c6, c7, c8;
 
         if(at(size() - 1).is_black())
             colors = size() - 1;
@@ -522,13 +522,13 @@ void LaserBoy_palette::circular_blend()
                 break;
         }
     }
-    push_back(LaserBoy_color());
+    push_back(Color());
     find_factors();
     return;
 }
 
 //############################################################################
-void LaserBoy_palette::shade(u_char shade) // 0 shade is no change 255 is black
+void Palette::shade(u_char shade) // 0 shade is no change 255 is black
 {
     if(shade)
     {
@@ -543,7 +543,7 @@ void LaserBoy_palette::shade(u_char shade) // 0 shade is no change 255 is black
 }
 
 //############################################################################
-void LaserBoy_palette::tint(u_char tint) // 0 tint is no change 255 is white
+void Palette::tint(u_char tint) // 0 tint is no change 255 is white
 {
     if(tint)
     {
@@ -558,7 +558,7 @@ void LaserBoy_palette::tint(u_char tint) // 0 tint is no change 255 is white
 }
 
 //############################################################################
-bool LaserBoy_palette::unite(const LaserBoy_palette& palette)
+bool Palette::unite(const Palette& palette)
 {
     if(    palette.number_of_colors() >  0
         && palette.number_of_colors() <= LASERBOY_PALETTE_MAX
@@ -566,7 +566,7 @@ bool LaserBoy_palette::unite(const LaserBoy_palette& palette)
     {
         u_int             i,
                           j;
-        LaserBoy_palette  super_palette(*this);
+        Palette  super_palette(*this);
         //--------------------------------------------------------------------
         super_palette.reserve(LASERBOY_PALETTE_MAX);
         //--------------------------------------------------------------------

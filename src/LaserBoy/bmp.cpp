@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_bmp.cpp is part of LaserBoy.
+// bmp.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,18 +35,18 @@ namespace LaserBoy {
 // UTILITY ROUTINES
 void bmp_fix_rectangle            (struct lb_rectangle* area, int max_x, int max_y);
 // BITMAP IN MEMORY
-void bmp_set_functions            (struct LaserBoy_bmp* bmp, u_short bpp);
-void bmp_malloc                   (struct LaserBoy_bmp* bmp);
-void bmp_find_black_gray_white    (struct LaserBoy_bmp* bmp);
+void bmp_set_functions            (struct Bitmap* bmp, u_short bpp);
+void bmp_malloc                   (struct Bitmap* bmp);
+void bmp_find_black_gray_white    (struct Bitmap* bmp);
 // BITMAP MEMORY AND FILE
-int  bmp_open_for_read            (struct LaserBoy_bmp* bmp, char* file_name);
-int  bmp_read_file_header         (struct LaserBoy_bmp* bmp);
-int  bmp_read_file_palette        (struct LaserBoy_bmp* bmp);
-int  bmp_read_file_image          (struct LaserBoy_bmp* bmp);
-int  bmp_open_for_write           (struct LaserBoy_bmp* bmp, char* file_name);
-int  bmp_write_file_header        (struct LaserBoy_bmp* bmp);
-int  bmp_write_palette            (struct LaserBoy_bmp* bmp);
-int  bmp_write_image              (struct LaserBoy_bmp* bmp);
+int  bmp_open_for_read            (struct Bitmap* bmp, char* file_name);
+int  bmp_read_file_header         (struct Bitmap* bmp);
+int  bmp_read_file_palette        (struct Bitmap* bmp);
+int  bmp_read_file_image          (struct Bitmap* bmp);
+int  bmp_open_for_write           (struct Bitmap* bmp, char* file_name);
+int  bmp_write_file_header        (struct Bitmap* bmp);
+int  bmp_write_palette            (struct Bitmap* bmp);
+int  bmp_write_image              (struct Bitmap* bmp);
 
 //############################################################################
 
@@ -88,7 +88,7 @@ void dump_lb_rectangle(struct lb_rectangle* area, char* message)
 }
 
 //############################################################################
-void bmp_dump_header(struct LaserBoy_bmp* bmp, char* file_name, char* message)
+void bmp_dump_header(struct Bitmap* bmp, char* file_name, char* message)
 {
     printf("\n%s %s\n", message, file_name);
     //printf(  "             B              = %c\n"  , bmp->B              );
@@ -126,7 +126,7 @@ void bmp_dump_header(struct LaserBoy_bmp* bmp, char* file_name, char* message)
 
 
 //############################################################################
-u_int LaserBoy_hue(struct LaserBoy_bmp* bmp, u_short hue)
+u_int fillHue(struct Bitmap* bmp, u_short hue)
 {
     u_short r = 0, g = 0, b = 0;
     u_char  shift;
@@ -166,7 +166,7 @@ u_int LaserBoy_hue(struct LaserBoy_bmp* bmp, u_short hue)
 }
 
 //############################################################################
-u_int LaserBoy_tint(struct LaserBoy_bmp* bmp, u_short hue, u_char tint)
+u_int fillTint(struct Bitmap* bmp, u_short hue, u_char tint)
 {
     u_short r = 0,
             g = 0,
@@ -220,7 +220,7 @@ u_int LaserBoy_tint(struct LaserBoy_bmp* bmp, u_short hue, u_char tint)
 }
 
 //############################################################################
-u_int LaserBoy_shade(struct LaserBoy_bmp* bmp, u_short hue, u_char shade)
+u_int fillShade(struct Bitmap* bmp, u_short hue, u_char shade)
 {
     u_short r = 0,
             g = 0,
@@ -498,7 +498,7 @@ u_char bmp_b_from_palette(u_int palette_value)
 }
 
 //############################################################################
-u_int bmp_put_pixel__1bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
+u_int bmp_put_pixel__1bit(struct Bitmap* bmp, u_int x, u_int y, u_int c)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -521,7 +521,7 @@ u_int bmp_put_pixel__1bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
 }
 
 //############################################################################
-u_int bmp_put_pixel__4bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
+u_int bmp_put_pixel__4bit(struct Bitmap* bmp, u_int x, u_int y, u_int c)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -536,7 +536,7 @@ u_int bmp_put_pixel__4bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
 }
 
 //############################################################################
-u_int bmp_put_pixel__8bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
+u_int bmp_put_pixel__8bit(struct Bitmap* bmp, u_int x, u_int y, u_int c)
 {
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
     {
@@ -547,7 +547,7 @@ u_int bmp_put_pixel__8bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
 }
 
 //############################################################################
-u_int bmp_put_pixel_16bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
+u_int bmp_put_pixel_16bit(struct Bitmap* bmp, u_int x, u_int y, u_int c)
 {
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
     {
@@ -558,7 +558,7 @@ u_int bmp_put_pixel_16bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
 }
 
 //############################################################################
-u_int bmp_put_pixel_24bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
+u_int bmp_put_pixel_24bit(struct Bitmap* bmp, u_int x, u_int y, u_int c)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -573,7 +573,7 @@ u_int bmp_put_pixel_24bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
 }
 
 //############################################################################
-u_int bmp_put_pixel_32bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
+u_int bmp_put_pixel_32bit(struct Bitmap* bmp, u_int x, u_int y, u_int c)
 {
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
     {
@@ -584,7 +584,7 @@ u_int bmp_put_pixel_32bit(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_int c)
 }
 
 //############################################################################
-u_int bmp_get_pixel__1bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel__1bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -606,7 +606,7 @@ u_int bmp_get_pixel__1bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel__4bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel__4bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -620,7 +620,7 @@ u_int bmp_get_pixel__4bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel__8bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel__8bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
         return (u_int)bmp->uchar_row[y][x];
@@ -628,7 +628,7 @@ u_int bmp_get_pixel__8bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel_16bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel_16bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
         return (u_int)bmp->ushort_row[y][x];
@@ -636,7 +636,7 @@ u_int bmp_get_pixel_16bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel_24bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel_24bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -650,7 +650,7 @@ u_int bmp_get_pixel_24bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel_32bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel_32bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
         return bmp->uint_row[y][x];
@@ -658,7 +658,7 @@ u_int bmp_get_pixel_32bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel_rgb__1bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel_rgb__1bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -680,7 +680,7 @@ u_int bmp_get_pixel_rgb__1bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel_rgb__4bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel_rgb__4bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     u_int xx;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -696,7 +696,7 @@ u_int bmp_get_pixel_rgb__4bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel_rgb__8bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel_rgb__8bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
         return bmp->palette[bmp->uchar_row[y][x]];
@@ -704,7 +704,7 @@ u_int bmp_get_pixel_rgb__8bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-u_int bmp_get_pixel_rgb_16bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
+u_int bmp_get_pixel_rgb_16bit(struct Bitmap* bmp, u_int x, u_int y)
 {
     u_char r, g, b;
     if(bmp->data && (x < bmp->xres) && (y < bmp->yres))
@@ -730,7 +730,7 @@ u_int bmp_get_pixel_rgb_16bit(struct LaserBoy_bmp* bmp, u_int x, u_int y)
 }
 
 //############################################################################
-void bmp_init(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_short bpp)
+void bmp_init(struct Bitmap* bmp, u_int x, u_int y, u_short bpp)
 {
     bmp->B          = 'B';
     bmp->M          = 'M';
@@ -801,7 +801,7 @@ void bmp_init(struct LaserBoy_bmp* bmp, u_int x, u_int y, u_short bpp)
 }
 
 //############################################################################
-void bmp_set_functions(struct LaserBoy_bmp* bmp, u_short bpp)
+void bmp_set_functions(struct Bitmap* bmp, u_short bpp)
 {
     switch(bpp)
     {
@@ -866,7 +866,7 @@ void bmp_set_functions(struct LaserBoy_bmp* bmp, u_short bpp)
 }
 
 //############################################################################
-void bmp_malloc(struct LaserBoy_bmp* bmp)
+void bmp_malloc(struct Bitmap* bmp)
 {
     u_int y;
     bmp->data = (u_char*)malloc(bmp->palette_size + bmp->image_size);
@@ -919,7 +919,7 @@ void bmp_malloc(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-void bmp_find_black_gray_white(struct LaserBoy_bmp* bmp)
+void bmp_find_black_gray_white(struct Bitmap* bmp)
 {
     bmp->black = bmp->make_rgb(  0,   0,   0);
     bmp->gray  = bmp->make_rgb(127, 127, 127);
@@ -928,7 +928,7 @@ void bmp_find_black_gray_white(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-long double bmp_put_line(struct LaserBoy_bmp* bmp, int x1, int y1, int x2, int y2, u_int c)
+long double bmp_put_line(struct Bitmap* bmp, int x1, int y1, int x2, int y2, u_int c)
 {
     int          n;
     long double  m,
@@ -984,7 +984,7 @@ long double bmp_put_line(struct LaserBoy_bmp* bmp, int x1, int y1, int x2, int y
 }
 
 //############################################################################
-void bmp_put_line_fast(struct LaserBoy_bmp* bmp, int x1, int y1, int x2, int y2, u_int c)
+void bmp_put_line_fast(struct Bitmap* bmp, int x1, int y1, int x2, int y2, u_int c)
 {
     int    n;
     double m,
@@ -1040,7 +1040,7 @@ void bmp_put_line_fast(struct LaserBoy_bmp* bmp, int x1, int y1, int x2, int y2,
 }
 
 //############################################################################
-long double bmp_put_ray(struct LaserBoy_bmp* bmp, u_int x, u_int y, long double r, long double t, u_int c)
+long double bmp_put_ray(struct Bitmap* bmp, u_int x, u_int y, long double r, long double t, u_int c)
 {
     return bmp_put_line(bmp,
                         x,
@@ -1052,7 +1052,7 @@ long double bmp_put_ray(struct LaserBoy_bmp* bmp, u_int x, u_int y, long double 
 }
 
 //############################################################################
-void bmp_put_ray_fast(struct LaserBoy_bmp* bmp, u_int x, u_int y, long double r, long double t, u_int c)
+void bmp_put_ray_fast(struct Bitmap* bmp, u_int x, u_int y, long double r, long double t, u_int c)
 {
     bmp_put_line_fast(bmp,
                       x,
@@ -1065,7 +1065,7 @@ void bmp_put_ray_fast(struct LaserBoy_bmp* bmp, u_int x, u_int y, long double r,
 }
 
 //############################################################################
-void bmp_put_rectangle(struct LaserBoy_bmp* bmp, int x1, int y1, int x2, int y2, u_int c, int filled)
+void bmp_put_rectangle(struct Bitmap* bmp, int x1, int y1, int x2, int y2, u_int c, int filled)
 {
     if(filled)
     {
@@ -1097,7 +1097,7 @@ void bmp_put_rectangle(struct LaserBoy_bmp* bmp, int x1, int y1, int x2, int y2,
 }
 
 //############################################################################
-void bmp_put_vertex(struct LaserBoy_bmp* bmp, int x, int y, u_int c)
+void bmp_put_vertex(struct Bitmap* bmp, int x, int y, u_int c)
 {
     bmp_put_line_fast(bmp, x - 1, y - 1, x + 1, y - 1, c);
     bmp_put_line_fast(bmp, x - 1, y + 1, x + 1, y + 1, c);
@@ -1107,7 +1107,7 @@ void bmp_put_vertex(struct LaserBoy_bmp* bmp, int x, int y, u_int c)
 }
 
 //############################################################################
-void bmp_put_select(struct LaserBoy_bmp* bmp, int x, int y, u_int c)
+void bmp_put_select(struct Bitmap* bmp, int x, int y, u_int c)
 {
     bmp_put_line_fast(bmp, x - 3, y - 3, x + 3, y - 3, c);
     bmp_put_line_fast(bmp, x - 3, y + 3, x + 3, y + 3, c);
@@ -1117,7 +1117,7 @@ void bmp_put_select(struct LaserBoy_bmp* bmp, int x, int y, u_int c)
 }
 
 //############################################################################
-int bmp_put_byte_pattern(struct LaserBoy_bmp* bmp,
+int bmp_put_byte_pattern(struct Bitmap* bmp,
                          u_char byte,
                          int    x,
                          int    y,
@@ -1162,7 +1162,7 @@ int bmp_put_byte_pattern(struct LaserBoy_bmp* bmp,
 }
 
 //############################################################################
-int bmp_put_ascii(struct LaserBoy_bmp* bmp,
+int bmp_put_ascii(struct Bitmap* bmp,
                   u_char ascii,
                   int    x,
                   int    y,
@@ -1209,7 +1209,7 @@ int bmp_put_ascii(struct LaserBoy_bmp* bmp,
 }
 
 //############################################################################
-int bmp_put_string(struct LaserBoy_bmp* bmp,
+int bmp_put_string(struct Bitmap* bmp,
                    char* str,
                    int   x,
                    int   y,
@@ -1255,7 +1255,7 @@ int bmp_put_string(struct LaserBoy_bmp* bmp,
 }
 
 //############################################################################
-int bmp_printf(struct LaserBoy_bmp* bmp,
+int bmp_printf(struct Bitmap* bmp,
                int   x,
                int   y,
                u_int fc,
@@ -1276,7 +1276,7 @@ int bmp_printf(struct LaserBoy_bmp* bmp,
 
 
 //############################################################################
-void bmp_dump_palette(struct LaserBoy_bmp* bmp)
+void bmp_dump_palette(struct Bitmap* bmp)
 {
     u_int i;
     if(bmp->bpp <= 8)
@@ -1297,7 +1297,7 @@ void bmp_dump_palette(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-void bmp_dump_image(struct LaserBoy_bmp* bmp)
+void bmp_dump_image(struct Bitmap* bmp)
 {
     u_int i;
     printf("\nBITMAP %d x %d : %d bytes:", bmp->xres, bmp->yres, bmp->image_size);
@@ -1314,14 +1314,14 @@ void bmp_dump_image(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-void bmp_clear(struct LaserBoy_bmp* bmp, u_char c)
+void bmp_clear(struct Bitmap* bmp, u_char c)
 {
     memset((void*)bmp->image, c, bmp->image_size);
     return;
 }
 
 //############################################################################
-void bmp_fill(struct LaserBoy_bmp* bmp, u_char r, u_char g, u_char b)
+void bmp_fill(struct Bitmap* bmp, u_char r, u_char g, u_char b)
 {
     u_int x, y;
     for(y = 0; y < bmp->yres; y++)
@@ -1330,7 +1330,7 @@ void bmp_fill(struct LaserBoy_bmp* bmp, u_char r, u_char g, u_char b)
 }
 
 //############################################################################
-void bmp_copy(struct LaserBoy_bmp* target, struct LaserBoy_bmp* original)
+void bmp_copy(struct Bitmap* target, struct Bitmap* original)
 {
     if(    target->bpp  == original->bpp
         && target->xres == original->xres
@@ -1353,10 +1353,10 @@ void bmp_copy(struct LaserBoy_bmp* target, struct LaserBoy_bmp* original)
 }
 
 //############################################################################
-void bmp_flip(struct LaserBoy_bmp* bmp)
+void bmp_flip(struct Bitmap* bmp)
 {
     u_int x, y;
-    struct LaserBoy_bmp flipped = {0};
+    struct Bitmap flipped = {0};
 
     bmp_init(&flipped, bmp->xres, bmp->yres, bmp->bpp);
     if(bmp->bpp <= 8)
@@ -1369,8 +1369,8 @@ void bmp_flip(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-void bmp_into_bmp(struct LaserBoy_bmp* target,
-                  struct LaserBoy_bmp* insert,
+void bmp_into_bmp(struct Bitmap* target,
+                  struct Bitmap* insert,
                   int    scale
                  )
 {
@@ -1430,7 +1430,7 @@ void bmp_into_bmp(struct LaserBoy_bmp* target,
 }
 
 //############################################################################
-void bmp_free(struct LaserBoy_bmp* bmp)
+void bmp_free(struct Bitmap* bmp)
 {
     if(bmp->data     )    free(bmp->data     );
     if(bmp->uchar_row)    free(bmp->uchar_row);
@@ -1456,7 +1456,7 @@ void bmp_free(struct LaserBoy_bmp* bmp)
 //############################################################################
 // BITMAP MEMORY AND FILE
 //############################################################################
-int bmp_from_file(struct LaserBoy_bmp* bmp, char* file_name)
+int bmp_from_file(struct Bitmap* bmp, char* file_name)
 {
     if(bmp_open_for_read(bmp, file_name))
     {
@@ -1474,7 +1474,7 @@ int bmp_from_file(struct LaserBoy_bmp* bmp, char* file_name)
 }
 
 //############################################################################
-int bmp_open_for_read(struct LaserBoy_bmp* bmp, char* file_name)
+int bmp_open_for_read(struct Bitmap* bmp, char* file_name)
 {
     if(0 > (bmp->fd = open(file_name, O_RDONLY | O_BINARY))) // open the bitmap file
     {
@@ -1485,7 +1485,7 @@ int bmp_open_for_read(struct LaserBoy_bmp* bmp, char* file_name)
 }
 
 //############################################################################
-int bmp_read_file_header(struct LaserBoy_bmp* bmp)
+int bmp_read_file_header(struct Bitmap* bmp)
 {
     int bytes_read = 0;
     // file descriptor must be open, valid and in bmp->fd
@@ -1516,7 +1516,7 @@ int bmp_read_file_header(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-int bmp_read_file_palette(struct LaserBoy_bmp* bmp)
+int bmp_read_file_palette(struct Bitmap* bmp)
 {
     if(bmp->data && bmp->bpp <= 8)
     {
@@ -1534,7 +1534,7 @@ int bmp_read_file_palette(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-int bmp_read_file_image(struct LaserBoy_bmp* bmp)
+int bmp_read_file_image(struct Bitmap* bmp)
 {
     if(bmp->data)
     {
@@ -1578,7 +1578,7 @@ int bmp_read_file_image(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-int bmp_open_for_write(struct LaserBoy_bmp* bmp, char* file_name)
+int bmp_open_for_write(struct Bitmap* bmp, char* file_name)
 {
 #ifdef WIN32
     if(0 > (bmp->fd = open(file_name, (O_WRONLY | O_CREAT | O_TRUNC | O_BINARY))))
@@ -1603,7 +1603,7 @@ int bmp_open_for_write(struct LaserBoy_bmp* bmp, char* file_name)
 }
 
 //############################################################################
-int bmp_write_file_header(struct LaserBoy_bmp* bmp)
+int bmp_write_file_header(struct Bitmap* bmp)
 {
     int bytes_written = 0;
     if(bmp->fd)
@@ -1629,14 +1629,14 @@ int bmp_write_file_header(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-int bmp_write_palette(struct LaserBoy_bmp* bmp)
+int bmp_write_palette(struct Bitmap* bmp)
 {
     return (    bmp->palette_size
              == (u_int)write(bmp->fd, (void*)(bmp->palette), bmp->palette_size));
 }
 
 //############################################################################
-int bmp_write_image(struct LaserBoy_bmp* bmp)
+int bmp_write_image(struct Bitmap* bmp)
 {
     u_int   yy,
             j,
@@ -1710,7 +1710,7 @@ int bmp_write_image(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-int bmp_save_as(struct LaserBoy_bmp* bmp, char* file_name)
+int bmp_save_as(struct Bitmap* bmp, char* file_name)
 {
     bmp_open_for_write    (bmp, file_name);
     bmp_write_file_header (bmp           );

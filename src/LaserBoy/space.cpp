@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_space.cpp is part of LaserBoy.
+// space.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@
 namespace LaserBoy {
 
 //############################################################################
-LaserBoy_space::LaserBoy_space(LaserBoy_GUI_base* gui)
-            : LaserBoy_frame_set       (this       )
-            , LaserBoy_palette_set     (this       )
+Space::Space(GUI_base* gui)
+            : FrameSet       (this       )
+            , PaletteSet     (this       )
             , p_GUI                    (gui        )
-            , bmp                      (           ) // LaserBoy_bmp
-            , background               (           ) // LaserBoy_bmp
-            , background_bmp           (           ) // LaserBoy_bmp
+            , bmp                      (           ) // Bitmap
+            , background               (           ) // Bitmap
+            , background_bmp           (           ) // Bitmap
             , bg_file_name             ("."        ) // string
             , install_GUID             (GUID8char())
 //            , color_rescale_file       (NULL       )
@@ -48,7 +48,7 @@ LaserBoy_space::LaserBoy_space(LaserBoy_GUI_base* gui)
             , rendered_black           (           )
             , fulcrum                  (           )
             , view_angle               (           )
-            , view_scale               (1.0        ) // LaserBoy_3D_double
+            , view_scale               (1.0        ) // Double3d
             , view_offset              (           )
             , frame_effect_names       (           )
             , frame_set_effect_names   (           )
@@ -178,9 +178,9 @@ LaserBoy_space::LaserBoy_space(LaserBoy_GUI_base* gui)
     color_rescale[1] = color_rescale_g;
     color_rescale[2] = color_rescale_b;
     color_rescale[3] = color_rescale_i;
-    rendered_bounds  = LaserBoy_color(160, 160, 160);
-    rendered_blank   = LaserBoy_color(128, 128, 128);
-    rendered_black   = LaserBoy_color( 16,  16,  16);
+    rendered_bounds  = Color(160, 160, 160);
+    rendered_blank   = Color(128, 128, 128);
+    rendered_black   = Color( 16,  16,  16);
     load_wtf_file(LASERBOY_WTF_SHARE + "LaserBoy.wtf");
     load_frame_effects      ();
     load_frame_set_effects  ();
@@ -188,7 +188,7 @@ LaserBoy_space::LaserBoy_space(LaserBoy_GUI_base* gui)
 }
 
 //############################################################################
-void LaserBoy_space::clean_screen()
+void Space::clean_screen()
 {
     if(show_background_bitmap)
         bmp_copy(&bmp, &background_bmp);
@@ -197,7 +197,7 @@ void LaserBoy_space::clean_screen()
 }
 
 //############################################################################
-void LaserBoy_space::rename_all_frames(string prefix)
+void Space::rename_all_frames(string prefix)
 {
     char number[8];
     u_int i;
@@ -212,7 +212,7 @@ void LaserBoy_space::rename_all_frames(string prefix)
 }
 
 //############################################################################
-bool LaserBoy_space::omit_palette(int index)
+bool Space::omit_palette(int index)
 {
     u_int  i;
     //------------------------------------------------------------------------
@@ -223,7 +223,7 @@ bool LaserBoy_space::omit_palette(int index)
         if(index == frame_picker(i).palette_index)
             return false;
     //------------------------------------------------------------------------
-    LaserBoy_palette_set::erase(LaserBoy_palette_set::begin() + index);
+    PaletteSet::erase(PaletteSet::begin() + index);
     //------------------------------------------------------------------------
     for(i = 0; i < number_of_frames(); i++)
         if(frame_picker(i).palette_index > index)
@@ -233,7 +233,7 @@ bool LaserBoy_space::omit_palette(int index)
 }
 
 //############################################################################
-void LaserBoy_space::clear_unused_palettes()
+void Space::clear_unused_palettes()
 {
     u_int  i;
     p_GUI->display_state("clearing unused palettes");
@@ -243,7 +243,7 @@ void LaserBoy_space::clear_unused_palettes()
 }
 
 //############################################################################
-void LaserBoy_space::sync_rgb_and_palette()
+void Space::sync_rgb_and_palette()
 {
     int current_frame_index = frame_index;
     p_GUI->display_state("syncing rgb & palettes");
@@ -257,15 +257,15 @@ void LaserBoy_space::sync_rgb_and_palette()
 }
 
 //############################################################################
-void LaserBoy_space::minimize_tables_and_palettes()
+void Space::minimize_tables_and_palettes()
 {
     u_int                 i = 0,
                           j,
                           super_palette_first_frame = 0,
                           super_palette_last_frame  = 0,
                           current_frame_index       = frame_index;
-    LaserBoy_palette_set  reduced_palette_set (this);
-    LaserBoy_palette      super_palette       (this);
+    PaletteSet  reduced_palette_set (this);
+    Palette      super_palette       (this);
     //------------------------------------------------------------------------
     p_GUI->display_state("syncing rgb & palettes");
     for(j = 0; j < number_of_frames(); j++)
@@ -311,13 +311,13 @@ void LaserBoy_space::minimize_tables_and_palettes()
 }
 
 //############################################################################
-void LaserBoy_space::best_reduce_all_to_palette()
+void Space::best_reduce_all_to_palette()
 {
     u_int             i,
                       j;
 
     vector<int>       used_palette_indices;
-    LaserBoy_palette  super_palette(this); // this is p_space!
+    Palette  super_palette(this); // this is p_space!
     //------------------------------------------------------------------------
     p_GUI->display_state("reducing to best palette");
     for(i = 0; i < number_of_frames(); i++)
@@ -350,13 +350,13 @@ void LaserBoy_space::best_reduce_all_to_palette()
     super_palette.name = GUID8char();
     push_back_palette(super_palette);
     //------------------------------------------------------------------------
-    best_match_palette(LaserBoy_palette_set::size() - 1);
+    best_match_palette(PaletteSet::size() - 1);
     //------------------------------------------------------------------------
     return;
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_space::call_frame_effect(string name)
+Bounds Space::call_frame_effect(string name)
 {
     int i;
     //------------------------------------------------------------------------
@@ -370,7 +370,7 @@ LaserBoy_Bounds LaserBoy_space::call_frame_effect(string name)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_space::call_frame_set_effect(string name)
+Bounds Space::call_frame_set_effect(string name)
 {
     int i;
     //------------------------------------------------------------------------
@@ -384,7 +384,7 @@ LaserBoy_Bounds LaserBoy_space::call_frame_set_effect(string name)
 }
 
 //############################################################################
-void LaserBoy_space::load_background_bitmap(struct LaserBoy_bmp* bmp)
+void Space::load_background_bitmap(struct Bitmap* bmp)
 {
     bmp_flip(bmp);
     bmp_copy(&background_bmp, &background); // wipe the screen first!
@@ -394,10 +394,10 @@ void LaserBoy_space::load_background_bitmap(struct LaserBoy_bmp* bmp)
 }
 
 //############################################################################
-bool LaserBoy_space::load_background_bitmap(const string& file)
+bool Space::load_background_bitmap(const string& file)
 {
     char file_name[81];
-    struct LaserBoy_bmp bmp;
+    struct Bitmap bmp;
 
     strcpy(file_name, (file).c_str());
     if(bmp_from_file(&bmp, file_name))
@@ -411,7 +411,7 @@ bool LaserBoy_space::load_background_bitmap(const string& file)
 }
 
 //############################################################################
-void LaserBoy_space::clear_background_bitmap()
+void Space::clear_background_bitmap()
 {
     bmp_fill(&background    , bg_color.r, bg_color.g, bg_color.b);
     bmp_fill(&background_bmp, bg_color.r, bg_color.g, bg_color.b);
@@ -420,7 +420,7 @@ void LaserBoy_space::clear_background_bitmap()
 }
 
 //############################################################################
-void LaserBoy_space::recolor_background()
+void Space::recolor_background()
 {
     bmp_fill(&background    , bg_color.r, bg_color.g, bg_color.b);
     bmp_fill(&background_bmp, bg_color.r, bg_color.g, bg_color.b);
@@ -430,7 +430,7 @@ void LaserBoy_space::recolor_background()
 }
 
 //############################################################################
-bool LaserBoy_space::load_wtf_file(string wtf_file)
+bool Space::load_wtf_file(string wtf_file)
 {
     ifstream in(wtf_file.c_str(), ios::in);
     if(in.is_open())
@@ -1151,7 +1151,7 @@ bool LaserBoy_space::load_wtf_file(string wtf_file)
 }
 
 //############################################################################
-bool LaserBoy_space::save_wtf_file(string wtf_file)
+bool Space::save_wtf_file(string wtf_file)
 {
     ofstream out(wtf_file.c_str(), ios::out);
     if(out.is_open())
@@ -1279,7 +1279,7 @@ bool LaserBoy_space::save_wtf_file(string wtf_file)
 }
 
 //############################################################################
-void LaserBoy_space::load_color_rescale_files()
+void Space::load_color_rescale_files()
 {
     int flags = color_rescales_flags();
     if(flags & LASERBOY_COLOR_RESCALE_R)
@@ -1294,7 +1294,7 @@ void LaserBoy_space::load_color_rescale_files()
 }
 
 //############################################################################
-LaserBoy_Rescale_Error_Code LaserBoy_space::load_color_rescale_file(int color_channel)
+RescaleErrorCode Space::load_color_rescale_file(int color_channel)
 {
     int       i,
               next_char,
@@ -1371,7 +1371,7 @@ LaserBoy_Rescale_Error_Code LaserBoy_space::load_color_rescale_file(int color_ch
 }
 
 //############################################################################
-int LaserBoy_space::color_rescales_flags()
+int Space::color_rescales_flags()
 {
     if(auto_apply_rescales)
     {
@@ -1391,7 +1391,7 @@ int LaserBoy_space::color_rescales_flags()
 }
 
 //############################################################################
-bool LaserBoy_space::apply_wave_offsets_prep(const string& file)
+bool Space::apply_wave_offsets_prep(const string& file)
 {
     fstream  wave_in;
     fstream  wave_out;
@@ -1406,14 +1406,14 @@ bool LaserBoy_space::apply_wave_offsets_prep(const string& file)
         return false;
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     if(wave_in_header.version == "!LaserBoy!")
     {
         undo_wave_temp(wave_in, wave_out, file);
         return false;
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample wave_sample(wave_in_header.num_channels);
+    WaveSample wave_sample(wave_in_header.num_channels);
     //------------------------------------------------------------------------
     wave_out.open(file.c_str(), ios::out | ios::binary);
     if(!wave_out.is_open())
@@ -1431,16 +1431,16 @@ bool LaserBoy_space::apply_wave_offsets_prep(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_space::overwirte_wave_offsets(const string& file)
+bool Space::overwirte_wave_offsets(const string& file)
 {
     fstream  wave_fstream;
     wave_fstream.open(file.c_str(), ios::in | ios::out | ios::binary);
     if(!wave_fstream.is_open())
         return false;
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_header(wave_fstream);
+    WaveHeader wave_header(wave_fstream);
     if(    wave_header.version == "!LaserBoy!"
-        || !(wave_header.LaserBoy_wave_mode & LASERBOY_WAVE_OFFSETS)
+        || !(wave_header.wave_mode & LASERBOY_WAVE_OFFSETS)
       )
         return false;
     //------------------------------------------------------------------------
@@ -1453,7 +1453,7 @@ bool LaserBoy_space::overwirte_wave_offsets(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_space::invert_wave_prep(const string& file)
+bool Space::invert_wave_prep(const string& file)
 {
     fstream  wave_in;
     fstream  wave_out;
@@ -1467,7 +1467,7 @@ bool LaserBoy_space::invert_wave_prep(const string& file)
         undo_wave_temp(wave_in, wave_out, file);
         return false;
     }
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     //------------------------------------------------------------------------
     wave_out.open(file.c_str(), ios::out | ios::binary);
     if(!wave_out.is_open())
@@ -1485,7 +1485,7 @@ bool LaserBoy_space::invert_wave_prep(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_space::invert_signals_prep(const string& file)
+bool Space::invert_signals_prep(const string& file)
 {
     fstream  wave_in;
     fstream  wave_out;
@@ -1499,7 +1499,7 @@ bool LaserBoy_space::invert_signals_prep(const string& file)
         undo_wave_temp(wave_in, wave_out, file);
         return false;
     }
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     //------------------------------------------------------------------------
     wave_out.open(file.c_str(), ios::out | ios::binary);
     if(!wave_out.is_open())
@@ -1517,7 +1517,7 @@ bool LaserBoy_space::invert_signals_prep(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_space::clear_wave_polarity_list(const string& file, bool global_flip_flop)
+bool Space::clear_wave_polarity_list(const string& file, bool global_flip_flop)
 {
     fstream  wave_fstream;
     //------------------------------------------------------------------------
@@ -1525,20 +1525,20 @@ bool LaserBoy_space::clear_wave_polarity_list(const string& file, bool global_fl
     if(!wave_fstream.is_open())
         return false;
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_header(wave_fstream);
+    WaveHeader wave_header(wave_fstream);
     //------------------------------------------------------------------------
     if(wave_header.version == "!LaserBoy!")
         return false;
     //------------------------------------------------------------------------
     if(global_flip_flop)
     {
-        if(wave_header.LaserBoy_wave_mode & LASERBOY_WAVE_POSITIVE)
-            wave_header.LaserBoy_wave_mode &= ~LASERBOY_WAVE_POSITIVE; // flip it to negative
+        if(wave_header.wave_mode & LASERBOY_WAVE_POSITIVE)
+            wave_header.wave_mode &= ~LASERBOY_WAVE_POSITIVE; // flip it to negative
         else
-            wave_header.LaserBoy_wave_mode |= LASERBOY_WAVE_POSITIVE; // flip it to positive
+            wave_header.wave_mode |= LASERBOY_WAVE_POSITIVE; // flip it to positive
     }
     //------------------------------------------------------------------------
-    if(wave_header.LaserBoy_wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
+    if(wave_header.wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
         for(u_int i = 0; i < wave_header.num_channels; i++)
             wave_header.signal_id[i] = abs(wave_header.signal_id[i]);
     //------------------------------------------------------------------------
@@ -1548,7 +1548,7 @@ bool LaserBoy_space::clear_wave_polarity_list(const string& file, bool global_fl
 }
 
 //############################################################################
-bool LaserBoy_space::apply_color_rescales_prep(const string& file)
+bool Space::apply_color_rescales_prep(const string& file)
 {
     fstream  wave_in;
     fstream  wave_out;
@@ -1563,7 +1563,7 @@ bool LaserBoy_space::apply_color_rescales_prep(const string& file)
         return false;
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     if(    wave_in_header.version == "!LaserBoy!"
         || wave_in_header.num_channels < 6
       )
@@ -1572,7 +1572,7 @@ bool LaserBoy_space::apply_color_rescales_prep(const string& file)
         return false;
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample wave_sample(wave_in_header.num_channels);
+    WaveSample wave_sample(wave_in_header.num_channels);
     //------------------------------------------------------------------------
     wave_out.open(file.c_str(), ios::out | ios::binary);
     if(!wave_out.is_open())
@@ -1590,7 +1590,7 @@ bool LaserBoy_space::apply_color_rescales_prep(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_space::omit_color_rescales(const string& file)
+bool Space::omit_color_rescales(const string& file)
 {
     fstream  wave_in;
     fstream  wave_out;
@@ -1605,7 +1605,7 @@ bool LaserBoy_space::omit_color_rescales(const string& file)
         return false;
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     if(    wave_in_header.version == "!LaserBoy!"
         || wave_in_header.num_channels < 6
       )
@@ -1614,7 +1614,7 @@ bool LaserBoy_space::omit_color_rescales(const string& file)
         return false;
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample wave_sample(wave_in_header.num_channels);
+    WaveSample wave_sample(wave_in_header.num_channels);
     //------------------------------------------------------------------------
     wave_out.open(file.c_str(), ios::out | ios::binary);
     if(!wave_out.is_open())
@@ -1623,14 +1623,14 @@ bool LaserBoy_space::omit_color_rescales(const string& file)
         return false;
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample sample(wave_in_header.num_channels);
-    LaserBoy_wave_header wave_out_header(wave_in_header);
+    WaveSample sample(wave_in_header.num_channels);
+    WaveHeader wave_out_header(wave_in_header);
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
-    wave_out_header.LaserBoy_wave_mode &= ~LASERBOY_COLOR_RESCALE_R;
-    wave_out_header.LaserBoy_wave_mode &= ~LASERBOY_COLOR_RESCALE_G;
-    wave_out_header.LaserBoy_wave_mode &= ~LASERBOY_COLOR_RESCALE_B;
-    wave_out_header.LaserBoy_wave_mode &= ~LASERBOY_COLOR_RESCALE_I;
+    wave_out_header.wave_mode &= ~LASERBOY_COLOR_RESCALE_R;
+    wave_out_header.wave_mode &= ~LASERBOY_COLOR_RESCALE_G;
+    wave_out_header.wave_mode &= ~LASERBOY_COLOR_RESCALE_B;
+    wave_out_header.wave_mode &= ~LASERBOY_COLOR_RESCALE_I;
     //------------------------------------------------------------------------
     wave_out_header.to_fstream_wave(wave_out); // take up the space!
     //------------------------------------------------------------------------
@@ -1651,7 +1651,7 @@ bool LaserBoy_space::omit_color_rescales(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_space::save_color_rescales(const string& file, const string& out_name)
+bool Space::save_color_rescales(const string& file, const string& out_name)
 {
     bool      saved_something = false;
     int       i;
@@ -1662,11 +1662,11 @@ bool LaserBoy_space::save_color_rescales(const string& file, const string& out_n
     if(!wave_fstream.is_open())
         return false;
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_header(wave_fstream);
+    WaveHeader wave_header(wave_fstream);
     if(wave_header.version == "!LaserBoy!")
         return false;
     //------------------------------------------------------------------------
-    if(wave_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+    if(wave_header.wave_mode & LASERBOY_COLOR_RESCALE_R)
     {
         out.open((out_name + "_red_rescale.txt").c_str(), ios::out);
         out << "#\n"
@@ -1685,7 +1685,7 @@ bool LaserBoy_space::save_color_rescales(const string& file, const string& out_n
         saved_something = true;
     }
     //------------------------------------------------------------------------
-    if(wave_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+    if(wave_header.wave_mode & LASERBOY_COLOR_RESCALE_G)
     {
         out.open((out_name + "_green_rescale.txt").c_str(), ios::out);
         out << "#\n"
@@ -1704,7 +1704,7 @@ bool LaserBoy_space::save_color_rescales(const string& file, const string& out_n
         saved_something = true;
     }
     //------------------------------------------------------------------------
-    if(wave_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+    if(wave_header.wave_mode & LASERBOY_COLOR_RESCALE_B)
     {
         out.open((out_name + "_blue_rescale.txt").c_str(), ios::out);
         out << "#\n"
@@ -1723,7 +1723,7 @@ bool LaserBoy_space::save_color_rescales(const string& file, const string& out_n
         saved_something = true;
     }
     //------------------------------------------------------------------------
-    if(wave_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+    if(wave_header.wave_mode & LASERBOY_COLOR_RESCALE_I)
     {
         out.open((out_name + "_aux_rescale.txt").c_str(), ios::out);
         out << "#\n"
@@ -1747,13 +1747,13 @@ bool LaserBoy_space::save_color_rescales(const string& file, const string& out_n
 }
 
 //############################################################################
-bool LaserBoy_space::black_level_to_wave_prep(const string& file_in, const string& file_out)
+bool Space::black_level_to_wave_prep(const string& file_in, const string& file_out)
 {
     fstream  wave_in;
     fstream  wave_out;
     //------------------------------------------------------------------------
     wave_in.open(file_in.c_str(), ios::in | ios::binary);
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     //------------------------------------------------------------------------
     if(wave_in_header.version == "!LaserBoy!")
         return false;
@@ -1768,13 +1768,13 @@ bool LaserBoy_space::black_level_to_wave_prep(const string& file_in, const strin
 }
 
 //############################################################################
-bool LaserBoy_space::bit_resolution_to_wave_prep(const string& file_in, const string& file_out)
+bool Space::bit_resolution_to_wave_prep(const string& file_in, const string& file_out)
 {
     fstream  wave_in;
     fstream  wave_out;
     //------------------------------------------------------------------------
     wave_in.open(file_in.c_str(), ios::in | ios::binary);
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     //------------------------------------------------------------------------
     if(wave_in_header.version == "!LaserBoy!")
         return false;
@@ -1789,7 +1789,7 @@ bool LaserBoy_space::bit_resolution_to_wave_prep(const string& file_in, const st
 }
 
 //############################################################################
-bool LaserBoy_space::split_wave_XY_r_g_b_i_LR_prep(      string file,
+bool Space::split_wave_XY_r_g_b_i_LR_prep(      string file,
                                                    const string& dir_wave,
                                                    const string& dir_unformatted,
                                                    const string& dir_audio
@@ -1807,7 +1807,7 @@ bool LaserBoy_space::split_wave_XY_r_g_b_i_LR_prep(      string file,
     if(!wave_in.is_open())
         return false;
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     if(wave_in_header.num_channels < 6)
     {
         wave_in.close();
@@ -1867,7 +1867,7 @@ bool LaserBoy_space::split_wave_XY_r_g_b_i_LR_prep(      string file,
 }
 
 //############################################################################
-bool LaserBoy_space::split_wave_XY_rg_bi_LR_prep(      string  file,
+bool Space::split_wave_XY_rg_bi_LR_prep(      string  file,
                                                  const string& dir_wave,
                                                  const string& dir_unformatted,
                                                  const string& dir_audio
@@ -1883,7 +1883,7 @@ bool LaserBoy_space::split_wave_XY_rg_bi_LR_prep(      string  file,
     if(!wave_in.is_open())
         return false;
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_in_header(wave_in);
+    WaveHeader wave_in_header(wave_in);
     if(wave_in_header.num_channels < 6)
     {
         wave_in.close();
@@ -1935,7 +1935,7 @@ bool LaserBoy_space::split_wave_XY_rg_bi_LR_prep(      string  file,
 }
 
 //############################################################################
-bool LaserBoy_space::join_XY_r_g_b_i_waves_prep(const string& file_XY,
+bool Space::join_XY_r_g_b_i_waves_prep(const string& file_XY,
                                                 const string& file_r,
                                                 const string& file_g,
                                                 const string& file_b,
@@ -1982,7 +1982,7 @@ bool LaserBoy_space::join_XY_r_g_b_i_waves_prep(const string& file_XY,
 }
 
 //############################################################################
-bool LaserBoy_space::join_XY_rg_b_waves_prep(const string& file_XY,
+bool Space::join_XY_rg_b_waves_prep(const string& file_XY,
                                              const string& file_rg,
                                              const string& file_b,
                                              const string& file_out,
@@ -2019,7 +2019,7 @@ bool LaserBoy_space::join_XY_rg_b_waves_prep(const string& file_XY,
 }
 
 //############################################################################
-bool LaserBoy_space::join_XY_rg_b_LR_waves_prep(const string& file_XY,
+bool Space::join_XY_rg_b_LR_waves_prep(const string& file_XY,
                                                 const string& file_rg,
                                                 const string& file_b,
                                                 const string& file_LR,
@@ -2088,7 +2088,7 @@ bool LaserBoy_space::join_XY_rg_b_LR_waves_prep(const string& file_XY,
 }
 
 //############################################################################
-bool LaserBoy_space::add_audio_to_wave_prep(const string& file_laser,
+bool Space::add_audio_to_wave_prep(const string& file_laser,
                                             const string& file_audio,
                                             const string& file_out
                                            )
@@ -2101,7 +2101,7 @@ bool LaserBoy_space::add_audio_to_wave_prep(const string& file_laser,
         in_laser.open(file_laser.c_str(), ios::in | ios::binary);
         if(in_laser.is_open())
         {
-            LaserBoy_wave_header wave_in_header_laser(in_laser);
+            WaveHeader wave_in_header_laser(in_laser);
             fstream out;
             out.open(file_out.c_str(), ios::out | ios::binary);
             //----------------------------------------------------------------
@@ -2127,11 +2127,11 @@ bool LaserBoy_space::add_audio_to_wave_prep(const string& file_laser,
             && in_audio.is_open()
           )
         {
-            LaserBoy_wave_header wave_in_header_laser(in_laser),
+            WaveHeader wave_in_header_laser(in_laser),
                                  wave_in_header_audio(in_audio);
 
             fstream              out;
-            LaserBoy_wave_header wave_out_header(wave_in_header_laser, 0); // 8ch.
+            WaveHeader wave_out_header(wave_in_header_laser, 0); // 8ch.
             wave_out_header.num_samples = 0;
             //----------------------------------------------------------------
             out.open(file_out.c_str(), ios::out | ios::binary);
@@ -2157,9 +2157,9 @@ bool LaserBoy_space::add_audio_to_wave_prep(const string& file_laser,
 }
 
 //############################################################################
-void LaserBoy_space::apply_wave_offsets(fstream&             wave_in,
+void Space::apply_wave_offsets(fstream&             wave_in,
                                         fstream&             wave_out,
-                                        LaserBoy_wave_header wave_in_header
+                                        WaveHeader wave_in_header
                                        )
 {
     int                            i                     ,
@@ -2171,13 +2171,13 @@ void LaserBoy_space::apply_wave_offsets(fstream&             wave_in,
                                    offset_applied_min    ,
                                    offset_applied     [8];
 
-    LaserBoy_wave_sample_pointer   roll_over             ;
-    LaserBoy_wave_sample_pointer  *sample_window         ;
-    LaserBoy_wave_sample           wave_sample(wave_in_header.num_channels);
-    LaserBoy_wave_header           wave_out_header(wave_in_header);
+    WaveSamplePointer   roll_over             ;
+    WaveSamplePointer  *sample_window         ;
+    WaveSample           wave_sample(wave_in_header.num_channels);
+    WaveHeader           wave_out_header(wave_in_header);
     //------------------------------------------------------------------------
     wave_out_header.num_samples = 0;
-    wave_out_header.LaserBoy_wave_mode |= LASERBOY_WAVE_OFFSETS;
+    wave_out_header.wave_mode |= LASERBOY_WAVE_OFFSETS;
     //------------------------------------------------------------------------
     for(i = 0; i < wave_in_header.num_channels; i++)
         offset_applied[i] = wave_in_header.offset[i] - wave_offsets[i];
@@ -2204,9 +2204,9 @@ void LaserBoy_space::apply_wave_offsets(fstream&             wave_in,
         offset_applied[i] = offset_applied_max - offset_applied[i];
     }
     //------------------------------------------------------------------------
-    sample_window = new LaserBoy_wave_sample_pointer[span];
+    sample_window = new WaveSamplePointer[span];
     for(i = 0; i < span; i++)
-        sample_window[i] = new LaserBoy_wave_sample(wave_in_header.num_channels); // span element array of (6 or 8 channel LaserBoy_wave_samples)
+        sample_window[i] = new WaveSample(wave_in_header.num_channels); // span element array of (6 or 8 channel WaveSamples)
     //------------------------------------------------------------------------
     wave_out_header.to_fstream_wave(wave_out); // take up the space!
     //------------------------------------------------------------------------
@@ -2236,21 +2236,21 @@ void LaserBoy_space::apply_wave_offsets(fstream&             wave_in,
 }
 
 //############################################################################
-void LaserBoy_space::invert_wave(fstream&             wave_in,
+void Space::invert_wave(fstream&             wave_in,
                                  fstream&             wave_out,
-                                 LaserBoy_wave_header wave_in_header
+                                 WaveHeader wave_in_header
                                 )
 {
-    LaserBoy_wave_sample wave_sample    (wave_in_header.num_channels);
-    LaserBoy_wave_header wave_out_header(wave_in_header);
+    WaveSample wave_sample    (wave_in_header.num_channels);
+    WaveHeader wave_out_header(wave_in_header);
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
     if(wave_in_header.version != "!LaserBoy!")
     {
-        if(wave_in_header.LaserBoy_wave_mode & LASERBOY_WAVE_POSITIVE)
-            wave_out_header.LaserBoy_wave_mode &= ~LASERBOY_WAVE_POSITIVE;
+        if(wave_in_header.wave_mode & LASERBOY_WAVE_POSITIVE)
+            wave_out_header.wave_mode &= ~LASERBOY_WAVE_POSITIVE;
         else
-            wave_out_header.LaserBoy_wave_mode |= LASERBOY_WAVE_POSITIVE;
+            wave_out_header.wave_mode |= LASERBOY_WAVE_POSITIVE;
     }
     //------------------------------------------------------------------------
     wave_out_header.to_fstream_wave(wave_out); // take up the space!
@@ -2269,18 +2269,18 @@ void LaserBoy_space::invert_wave(fstream&             wave_in,
 }
 
 //############################################################################
-void LaserBoy_space::invert_signals(fstream&             wave_in,
+void Space::invert_signals(fstream&             wave_in,
                                     fstream&             wave_out,
-                                    LaserBoy_wave_header wave_in_header
+                                    WaveHeader wave_in_header
                                    )
 {
-    LaserBoy_wave_sample wave_sample    (wave_in_header.num_channels);
-    LaserBoy_wave_header wave_out_header(wave_in_header);
+    WaveSample wave_sample    (wave_in_header.num_channels);
+    WaveHeader wave_out_header(wave_in_header);
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
     if(wave_in_header.version != "!LaserBoy!")
     {
-        wave_out_header.LaserBoy_wave_mode |= LASERBOY_WAVE_SIGNAL_MATRIX;
+        wave_out_header.wave_mode |= LASERBOY_WAVE_SIGNAL_MATRIX;
         for(u_int i = 0; i < wave_out_header.num_channels; i++)
             if(signal_polarity[i] == 1)
                 wave_out_header.signal_id[i] = -wave_out_header.signal_id[i];
@@ -2302,9 +2302,9 @@ void LaserBoy_space::invert_signals(fstream&             wave_in,
 }
 
 //############################################################################
-void LaserBoy_space::black_level_to_wave(fstream&             wave_in,
+void Space::black_level_to_wave(fstream&             wave_in,
                                          fstream&             wave_out,
-                                         LaserBoy_wave_header wave_in_header
+                                         WaveHeader wave_in_header
                                         )
 {
 static const int // channel tags
@@ -2316,16 +2316,16 @@ static const int // channel tags
           g,
           b;
     //------------------------------------------------------------------------
-    wave_in_header.LaserBoy_wave_mode |= LASERBOY_WAVE_SIGNAL_MATRIX;
+    wave_in_header.wave_mode |= LASERBOY_WAVE_SIGNAL_MATRIX;
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample wave_sample    (wave_in_header.num_channels);
-    LaserBoy_wave_header wave_out_header(wave_in_header);
+    WaveSample wave_sample    (wave_in_header.num_channels);
+    WaveHeader wave_out_header(wave_in_header);
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
     wave_out_header.to_fstream_wave(wave_out); // take up the space!
     //------------------------------------------------------------------------
     p_GUI->display_state("imposing black level on wave");
-    if(wave_in_header.LaserBoy_wave_mode & LASERBOY_WAVE_POSITIVE)
+    if(wave_in_header.wave_mode & LASERBOY_WAVE_POSITIVE)
         while(wave_sample.from_fstream_wave(wave_in))
         {
             r = g = b = 0;
@@ -2381,17 +2381,17 @@ static const int // channel tags
 }
 
 //############################################################################
-void LaserBoy_space::bit_resolution_to_wave(fstream&             wave_in,
+void Space::bit_resolution_to_wave(fstream&             wave_in,
                                             fstream&             wave_out,
-                                            LaserBoy_wave_header wave_in_header
+                                            WaveHeader wave_in_header
                                            )
 {
     //------------------------------------------------------------------------
-    wave_in_header.LaserBoy_wave_mode |= LASERBOY_WAVE_SIGNAL_MATRIX;
-    wave_in_header.LaserBoy_wave_mode |= LASERBOY_SIGNAL_BIT_RESOLUTION;
+    wave_in_header.wave_mode |= LASERBOY_WAVE_SIGNAL_MATRIX;
+    wave_in_header.wave_mode |= LASERBOY_SIGNAL_BIT_RESOLUTION;
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample wave_sample    (wave_in_header.num_channels);
-    LaserBoy_wave_header wave_out_header(wave_in_header);
+    WaveSample wave_sample    (wave_in_header.num_channels);
+    WaveHeader wave_out_header(wave_in_header);
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
     for(u_int i = 0; i < wave_out_header.num_channels; i++)
@@ -2413,38 +2413,38 @@ void LaserBoy_space::bit_resolution_to_wave(fstream&             wave_in,
 }
 
 //############################################################################
-void LaserBoy_space::apply_color_rescales(fstream&             wave_in,
+void Space::apply_color_rescales(fstream&             wave_in,
                                           fstream&             wave_out,
-                                          LaserBoy_wave_header wave_in_header
+                                          WaveHeader wave_in_header
                                          )
 {
     int i;
-    LaserBoy_wave_sample sample_in(wave_in_header.num_channels),
+    WaveSample sample_in(wave_in_header.num_channels),
                          sample_out(wave_in_header.num_channels);
 
-    LaserBoy_wave_header wave_out_header(wave_in_header);
+    WaveHeader wave_out_header(wave_in_header);
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
-    wave_out_header.LaserBoy_wave_mode &= ~(    LASERBOY_COLOR_RESCALE_R
+    wave_out_header.wave_mode &= ~(    LASERBOY_COLOR_RESCALE_R
                                               | LASERBOY_COLOR_RESCALE_G
                                               | LASERBOY_COLOR_RESCALE_B
                                               | LASERBOY_COLOR_RESCALE_I
                                            ); // clear those bits
-    wave_out_header.LaserBoy_wave_mode |= color_rescales_flags(); // set them
+    wave_out_header.wave_mode |= color_rescales_flags(); // set them
     //------------------------------------------------------------------------
-    if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+    if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_R)
         for(i = 0; i < 256; i++)
             wave_out_header.color_rescale_r[i] = color_rescale_r[i];
     //------------------------------------------------------------------------
-    if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+    if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_G)
         for(i = 0; i < 256; i++)
             wave_out_header.color_rescale_g[i] = color_rescale_g[i];
     //------------------------------------------------------------------------
-    if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+    if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_B)
         for(i = 0; i < 256; i++)
             wave_out_header.color_rescale_b[i] = color_rescale_b[i];
     //------------------------------------------------------------------------
-    if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+    if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_I)
         for(i = 0; i < 256; i++)
             wave_out_header.color_rescale_i[i] = color_rescale_i[i];
     //------------------------------------------------------------------------
@@ -2453,71 +2453,71 @@ void LaserBoy_space::apply_color_rescales(fstream&             wave_in,
     p_GUI->display_state("color rescaling wave");
     while(sample_in.from_fstream_wave(wave_in))
     {
-        if(wave_in_header.LaserBoy_wave_mode & LASERBOY_WAVE_NEGATIVE)
+        if(wave_in_header.wave_mode & LASERBOY_WAVE_NEGATIVE)
             sample_in.negate();
         sample_out = sample_in;
         //--------------------------------------------------------------------
-        if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+        if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_R)
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_R)
                 sample_out.channel[2] = wave_out_header.color_rescale_r[rescale_to_index(wave_in_header.color_rescale_r, sample_in.channel[2])];
             else
                 sample_out.channel[2] = wave_out_header.color_rescale_r[(sample_in.channel[2] >> 7) & 0x000000ff];
         }
         else
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_R)
                 sample_out.channel[2] = rescale_to_index(wave_in_header.color_rescale_r, sample_in.channel[2]) << 7;
             else
                 sample_out.channel[2] = sample_in.channel[2];
         }
         //--------------------------------------------------------------------
-        if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+        if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_G)
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_G)
                 sample_out.channel[3] = wave_out_header.color_rescale_g[rescale_to_index(wave_in_header.color_rescale_g, sample_in.channel[3])];
             else
                 sample_out.channel[3] = wave_out_header.color_rescale_g[(sample_in.channel[3] >> 7) & 0x000000ff];
         }
         else
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_G)
                 sample_out.channel[3] = rescale_to_index(wave_in_header.color_rescale_g, sample_in.channel[3]) << 7;
             else
                 sample_out.channel[3] = sample_in.channel[3];
         }
         //--------------------------------------------------------------------
-        if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+        if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_B)
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_B)
                 sample_out.channel[4] = wave_out_header.color_rescale_b[rescale_to_index(wave_in_header.color_rescale_b, sample_in.channel[4])];
             else
                 sample_out.channel[4] = wave_out_header.color_rescale_b[(sample_in.channel[4] >> 7) & 0x000000ff];
         }
         else
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_B)
                 sample_out.channel[4] = rescale_to_index(wave_in_header.color_rescale_b, sample_in.channel[4]) << 7;
             else
                 sample_out.channel[4] = sample_in.channel[4];
         }
         //--------------------------------------------------------------------
-        if(wave_out_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+        if(wave_out_header.wave_mode & LASERBOY_COLOR_RESCALE_I)
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                 sample_out.channel[5] = wave_out_header.color_rescale_i[rescale_to_index(wave_in_header.color_rescale_i, sample_in.channel[5])];
             else
                 sample_out.channel[5] = wave_out_header.color_rescale_i[(sample_in.channel[5] >> 7) & 0x000000ff];
         }
         else
         {
-            if(wave_in_header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+            if(wave_in_header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                 sample_out.channel[5] = rescale_to_index(wave_in_header.color_rescale_i, sample_in.channel[5]) << 7;
             else
                 sample_out.channel[5] = sample_in.channel[5];
         }
         //--------------------------------------------------------------------
-        if(wave_in_header.LaserBoy_wave_mode & LASERBOY_WAVE_NEGATIVE)
+        if(wave_in_header.wave_mode & LASERBOY_WAVE_NEGATIVE)
             sample_out.negate();
         sample_out.to_fstream_wave(wave_out, wave_out_header);
         if(!(wave_out_header.num_samples % 4800))
@@ -2530,7 +2530,7 @@ void LaserBoy_space::apply_color_rescales(fstream&             wave_in,
 }
 
 //############################################################################
-void LaserBoy_space::split_wave_XY_r_g_b_i_LR(LaserBoy_wave_header wave_in_header,
+void Space::split_wave_XY_r_g_b_i_LR(WaveHeader wave_in_header,
                                               fstream&             wave_in,
                                               fstream&             wave_out_XY,
                                               fstream&             wave_out_r,
@@ -2540,14 +2540,14 @@ void LaserBoy_space::split_wave_XY_r_g_b_i_LR(LaserBoy_wave_header wave_in_heade
                                               fstream&             wave_out_LR
                                              )
 {
-    LaserBoy_wave_header  wave_out_header_XY(wave_in_header.sample_rate, wave_in_header.LaserBoy_wave_mode, 2, LASERBOY_WAVE_VERSION),
-                          wave_out_header_r (wave_in_header.sample_rate, wave_in_header.LaserBoy_wave_mode, 1, LASERBOY_WAVE_VERSION),
-                          wave_out_header_g (wave_in_header.sample_rate, wave_in_header.LaserBoy_wave_mode, 1, LASERBOY_WAVE_VERSION),
-                          wave_out_header_b (wave_in_header.sample_rate, wave_in_header.LaserBoy_wave_mode, 1, LASERBOY_WAVE_VERSION),
-                          wave_out_header_i (wave_in_header.sample_rate, wave_in_header.LaserBoy_wave_mode, 1, LASERBOY_WAVE_VERSION),
+    WaveHeader  wave_out_header_XY(wave_in_header.sample_rate, wave_in_header.wave_mode, 2, LASERBOY_WAVE_VERSION),
+                          wave_out_header_r (wave_in_header.sample_rate, wave_in_header.wave_mode, 1, LASERBOY_WAVE_VERSION),
+                          wave_out_header_g (wave_in_header.sample_rate, wave_in_header.wave_mode, 1, LASERBOY_WAVE_VERSION),
+                          wave_out_header_b (wave_in_header.sample_rate, wave_in_header.wave_mode, 1, LASERBOY_WAVE_VERSION),
+                          wave_out_header_i (wave_in_header.sample_rate, wave_in_header.wave_mode, 1, LASERBOY_WAVE_VERSION),
                           wave_out_header_LR(wave_in_header.sample_rate, LASERBOY_WAVE_NO_MODE            , 2, "!LaserBoy!");
 
-    LaserBoy_wave_sample  wave_sample(wave_in_header.num_channels),
+    WaveSample  wave_sample(wave_in_header.num_channels),
                           stereo_sample(2),
                           mono_sample  (1);
     //------------------------------------------------------------------------
@@ -2663,7 +2663,7 @@ void LaserBoy_space::split_wave_XY_r_g_b_i_LR(LaserBoy_wave_header wave_in_heade
 }
 
 //############################################################################
-void LaserBoy_space::split_wave_XY_rg_bi_LR(LaserBoy_wave_header wave_in_header,
+void Space::split_wave_XY_rg_bi_LR(WaveHeader wave_in_header,
                                             fstream&             wave_in,
                                             fstream&             wave_out_XY,
                                             fstream&             wave_out_rg,
@@ -2671,14 +2671,14 @@ void LaserBoy_space::split_wave_XY_rg_bi_LR(LaserBoy_wave_header wave_in_header,
                                             fstream&             wave_out_LR
                                            )
 {
-    LaserBoy_wave_header  wave_out_header_XY(wave_in_header.sample_rate, LASERBOY_WAVE_NO_MODE, 2, "!LaserBoy!"),
+    WaveHeader  wave_out_header_XY(wave_in_header.sample_rate, LASERBOY_WAVE_NO_MODE, 2, "!LaserBoy!"),
                           wave_out_header_rg(wave_in_header.sample_rate, LASERBOY_WAVE_NO_MODE, 2, "!LaserBoy!"),
                           wave_out_header_bi(wave_in_header.sample_rate, LASERBOY_WAVE_NO_MODE, 2, "!LaserBoy!"),
                           wave_out_header_LR(wave_in_header.sample_rate, LASERBOY_WAVE_NO_MODE, 2, "!LaserBoy!");
 
-    LaserBoy_wave_sample  stereo_sample(2);
+    WaveSample  stereo_sample(2);
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample wave_sample(wave_in_header.num_channels);
+    WaveSample wave_sample(wave_in_header.num_channels);
     //------------------------------------------------------------------------
     p_GUI->display_state("splitting wave");
     while(wave_sample.from_fstream_wave(wave_in))
@@ -2716,7 +2716,7 @@ void LaserBoy_space::split_wave_XY_rg_bi_LR(LaserBoy_wave_header wave_in_header,
 }
 
 //############################################################################
-void LaserBoy_space::join_XY_r_g_b_i_waves(fstream& in_XY,
+void Space::join_XY_r_g_b_i_waves(fstream& in_XY,
                                            fstream& in_r,
                                            fstream& in_g,
                                            fstream& in_b,
@@ -2725,20 +2725,20 @@ void LaserBoy_space::join_XY_r_g_b_i_waves(fstream& in_XY,
                                            bool     global_polartity
                                           )
 {
-    LaserBoy_wave_sample sample_XYrgbi(6),
+    WaveSample sample_XYrgbi(6),
                          sample_XY    (2),
                          sample_r     (1),
                          sample_g     (1),
                          sample_b     (1),
                          sample_i     (1);
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_in_header_XY(in_XY),
+    WaveHeader wave_in_header_XY(in_XY),
                          wave_in_header_r (in_r ),
                          wave_in_header_g (in_g ),
                          wave_in_header_b (in_b ),
                          wave_in_header_i (in_i );
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_out_header  (  wave_in_header_XY.sample_rate,
+    WaveHeader wave_out_header  (  wave_in_header_XY.sample_rate,
                                              ((global_polartity)?(LASERBOY_WAVE_NEGATIVE):(LASERBOY_WAVE_POSITIVE))
                                            | LASERBOY_WAVE_OFFSETS
                                            | LASERBOY_WAVE_SIGNAL_MATRIX
@@ -2801,25 +2801,25 @@ void LaserBoy_space::join_XY_r_g_b_i_waves(fstream& in_XY,
 }
 
 //############################################################################
-void LaserBoy_space::join_XY_rg_b_waves(fstream& in_XY,
+void Space::join_XY_rg_b_waves(fstream& in_XY,
                                         fstream& in_rg,
                                         fstream& in_b,
                                         fstream& out,
                                         bool     global_polartity
                                        )
 {
-    LaserBoy_wave_header wave_in_header_XY(in_XY),
+    WaveHeader wave_in_header_XY(in_XY),
                          wave_in_header_rg(in_rg),
                          wave_in_header_b (in_b );
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample sample_XYrgb (6),
+    WaveSample sample_XYrgb (6),
                          sample_XY    (2),
                          sample_rg    (2),
                          sample_bi    (2),
                          sample_b     (1),
                          sample_0     (1); // silent sample
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_out_header  (  wave_in_header_XY.sample_rate,
+    WaveHeader wave_out_header  (  wave_in_header_XY.sample_rate,
                                              ((global_polartity)?(LASERBOY_WAVE_NEGATIVE):(LASERBOY_WAVE_POSITIVE))
                                            | LASERBOY_WAVE_OFFSETS
                                            | LASERBOY_WAVE_SIGNAL_MATRIX
@@ -2894,7 +2894,7 @@ void LaserBoy_space::join_XY_rg_b_waves(fstream& in_XY,
 }
 
 //############################################################################
-void LaserBoy_space::join_XY_rg_b_LR_waves(fstream& in_XY,
+void Space::join_XY_rg_b_LR_waves(fstream& in_XY,
                                            fstream& in_rg,
                                            fstream& in_b,
                                            fstream& in_LR,
@@ -2902,12 +2902,12 @@ void LaserBoy_space::join_XY_rg_b_LR_waves(fstream& in_XY,
                                            bool     global_polartity
                                           )
 {
-    LaserBoy_wave_header wave_in_header_XY(in_XY),
+    WaveHeader wave_in_header_XY(in_XY),
                          wave_in_header_rg(in_rg),
                          wave_in_header_LR(in_LR),
                          wave_in_header_b (in_b );
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample sample_XYrgb_LR (8),
+    WaveSample sample_XYrgb_LR (8),
                          sample_XY       (2),
                          sample_rg       (2),
                          sample_bi       (2),
@@ -2915,7 +2915,7 @@ void LaserBoy_space::join_XY_rg_b_LR_waves(fstream& in_XY,
                          sample_0        (1), // silent sample
                          sample_LR       (2);
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_out_header  (  wave_in_header_XY.sample_rate,
+    WaveHeader wave_out_header  (  wave_in_header_XY.sample_rate,
                                              ((global_polartity)?(LASERBOY_WAVE_NEGATIVE):(LASERBOY_WAVE_POSITIVE))
                                            | LASERBOY_WAVE_OFFSETS
                                            | LASERBOY_WAVE_SIGNAL_MATRIX
@@ -3002,25 +3002,25 @@ void LaserBoy_space::join_XY_rg_b_LR_waves(fstream& in_XY,
 }
 
 //############################################################################
-void LaserBoy_space::join_XY_rg_b_00_waves(fstream& in_XY,
+void Space::join_XY_rg_b_00_waves(fstream& in_XY,
                                            fstream& in_rg,
                                            fstream& in_b,
                                            fstream& out,
                                            bool     global_polartity
                                           )
 {
-    LaserBoy_wave_sample sample_XYrgb_00 (8),
+    WaveSample sample_XYrgb_00 (8),
                          sample_XY       (2),
                          sample_rg       (2),
                          sample_b        (1),
                          sample_0        (1), // silent sample
                          sample_00       (2);
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_in_header_XY(in_XY),
+    WaveHeader wave_in_header_XY(in_XY),
                          wave_in_header_rg(in_rg),
                          wave_in_header_b (in_b );
     //------------------------------------------------------------------------
-    LaserBoy_wave_header wave_out_header  (  wave_in_header_XY.sample_rate,
+    WaveHeader wave_out_header  (  wave_in_header_XY.sample_rate,
                                              ((global_polartity)?(LASERBOY_WAVE_NEGATIVE):(LASERBOY_WAVE_POSITIVE))
                                            | LASERBOY_WAVE_OFFSETS
                                            | LASERBOY_WAVE_SIGNAL_MATRIX
@@ -3089,18 +3089,18 @@ void LaserBoy_space::join_XY_rg_b_00_waves(fstream& in_XY,
 }
 
 //############################################################################
-void LaserBoy_space::add_audio_to_wave(LaserBoy_wave_header wave_in_header_laser,
-                                       LaserBoy_wave_header wave_in_header_audio,
+void Space::add_audio_to_wave(WaveHeader wave_in_header_laser,
+                                       WaveHeader wave_in_header_audio,
                                        fstream&             in_laser,
                                        fstream&             in_audio,
                                        fstream&             out
                                       )
 {
-    LaserBoy_wave_sample sample_laser      (6), // 6 chennels
+    WaveSample sample_laser      (6), // 6 chennels
                          sample_audio      (2), // 2 chennels
                          sample_laser_audio(8); // 8 chennels
 
-    LaserBoy_wave_header wave_out_header   (wave_in_header_laser, 0); // 8ch.
+    WaveHeader wave_out_header   (wave_in_header_laser, 0); // 8ch.
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
     wave_out_header.to_fstream_wave(out); // take up the space!
@@ -3120,16 +3120,16 @@ void LaserBoy_space::add_audio_to_wave(LaserBoy_wave_header wave_in_header_laser
 }
 
 //############################################################################
-void LaserBoy_space::add_silence_to_wave(LaserBoy_wave_header wave_in_header_laser,
+void Space::add_silence_to_wave(WaveHeader wave_in_header_laser,
                                          fstream&             in_laser,
                                          fstream&             out
                                         )
 {
-    LaserBoy_wave_sample sample_laser      (6), // 6 chennels
+    WaveSample sample_laser      (6), // 6 chennels
                          sample_audio      (2), // 2 chennels (zero)
                          sample_laser_audio(8); // 8 chennels
 
-    LaserBoy_wave_header wave_out_header(wave_in_header_laser, 0); // 8ch.
+    WaveHeader wave_out_header(wave_in_header_laser, 0); // 8ch.
     wave_out_header.num_samples = 0;
     //------------------------------------------------------------------------
     wave_out_header.to_fstream_wave(out); // take up the space!
@@ -3147,7 +3147,7 @@ void LaserBoy_space::add_silence_to_wave(LaserBoy_wave_header wave_in_header_las
 }
 /*
 //############################################################################
-void LaserBoy_space::format_wave(LaserBoy_wave_header wave_in_header,
+void Space::format_wave(WaveHeader wave_in_header,
                                  fstream&             in,
                                  fstream&             out,
                                  bool                 global_polartity,
@@ -3155,8 +3155,8 @@ void LaserBoy_space::format_wave(LaserBoy_wave_header wave_in_header,
                                  int                  channel_5
                                 )
 {
-    LaserBoy_wave_sample sample(wave_in_header.num_channels);
-    LaserBoy_wave_header wave_out_header(  wave_in_header.sample_rate,
+    WaveSample sample(wave_in_header.num_channels);
+    WaveHeader wave_out_header(  wave_in_header.sample_rate,
                                            ((global_polartity)?(LASERBOY_WAVE_NEGATIVE):(LASERBOY_WAVE_POSITIVE))
                                          | LASERBOY_WAVE_OFFSETS
                                          | LASERBOY_WAVE_SIGNAL_MATRIX,
@@ -3217,7 +3217,7 @@ void LaserBoy_space::format_wave(LaserBoy_wave_header wave_in_header,
 }
 */
 //############################################################################
-string LaserBoy_space::LaserBoy_wave_signal_id_to_name(const short& signal_id) const
+string Space::LaserBoy_wave_signal_id_to_name(const short& signal_id) const
 {
     switch(abs(signal_id)) // sign indicates polarity of channel data
     {
@@ -3332,7 +3332,7 @@ string LaserBoy_space::LaserBoy_wave_signal_id_to_name(const short& signal_id) c
 }
 
 //############################################################################
-string LaserBoy_space::LaserBoy_wave_LSB_tag_to_name(const u_short& LSB_tag) const
+string Space::LaserBoy_wave_LSB_tag_to_name(const u_short& LSB_tag) const
 {
     switch(LSB_tag)
     {
@@ -3362,7 +3362,7 @@ string LaserBoy_space::LaserBoy_wave_LSB_tag_to_name(const u_short& LSB_tag) con
 }
 
 //############################################################################
-string LaserBoy_space::LaserBoy_dots_setting_id_to_name(const int& id) const
+string Space::LaserBoy_dots_setting_id_to_name(const int& id) const
 {
     switch(id)
     {
@@ -3384,34 +3384,34 @@ string LaserBoy_space::LaserBoy_dots_setting_id_to_name(const int& id) const
 
 /*
 //############################################################################
-void LaserBoy_space::tell(LaserBoy_wave_header header, string label) const
+void Space::tell(WaveHeader header, string label) const
 {
     cout << "----------------------------------------------------------" << ENDL;
     cout << label << ENDL;
     cout << "             num_samples : " << header.num_samples     << ENDL;
     cout << "             sample_rate : " << header.sample_rate     << ENDL;
-    cout << "      LaserBoy_wave_mode : ";
+    cout << "      wave_mode : ";
     //------------------------------------------------------------------------
     if(header.version != "!LaserBoy!")
     {
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_POSITIVE        )
+        if(header.wave_mode & LASERBOY_WAVE_POSITIVE        )
             cout << "LASERBOY_WAVE_POSITIVE" << ENDL;
         else
             cout << "LASERBOY_WAVE_NEGATIVE" << ENDL;
 
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_END_OF_FRAME    )
+        if(header.wave_mode & LASERBOY_WAVE_END_OF_FRAME    )
             cout << "                           LASERBOY_WAVE_END_OF_FRAME"     << ENDL;
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_UNIQUE_FRAME    )
+        if(header.wave_mode & LASERBOY_WAVE_UNIQUE_FRAME    )
             cout << "                           LASERBOY_WAVE_UNIQUE_FRAME"     << ENDL;
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_UNIQUE_VERTEX   )
+        if(header.wave_mode & LASERBOY_WAVE_UNIQUE_VERTEX   )
             cout << "                           LASERBOY_WAVE_UNIQUE_VERTEX"    << ENDL;
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_OFFSETS         )
+        if(header.wave_mode & LASERBOY_WAVE_OFFSETS         )
             cout << "                           LASERBOY_WAVE_OFFSETS"          << ENDL;
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_OPTIMIZED       )
+        if(header.wave_mode & LASERBOY_WAVE_OPTIMIZED       )
             cout << "                           LASERBOY_WAVE_OPTIMIZED"        << ENDL;
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX   )
+        if(header.wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX   )
             cout << "                           LASERBOY_WAVE_SIGNAL_MATRIX"    << ENDL;
-        if(header.LaserBoy_wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
+        if(header.wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
             cout << "                           LASERBOY_SIGNAL_BIT_RESOLUTION" << ENDL;
         //--------------------------------------------------------------------
         cout << "            num_channels : " << header.num_channels    << ENDL;
@@ -3425,18 +3425,18 @@ void LaserBoy_space::tell(LaserBoy_wave_header header, string label) const
             cout << setw(4)
                  << i
                  << " : ";
-            if(header.LaserBoy_wave_mode & LASERBOY_WAVE_OFFSETS)
+            if(header.wave_mode & LASERBOY_WAVE_OFFSETS)
                  cout << setw(4) << (int)header.offset[i];
             else
                  cout << " na ";
             cout << " : ";
 
-            if(header.LaserBoy_wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
+            if(header.wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
                  cout << setw(4) << (int)header.resolution[i];
             else
                  cout << "    ";
 
-            if(header.LaserBoy_wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
+            if(header.wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
                 cout << " : "
                      << ((header.signal_id[i] >= 0) ? ("pos") : ("neg"))
                      << " : "
@@ -3448,7 +3448,7 @@ void LaserBoy_space::tell(LaserBoy_wave_header header, string label) const
                 cout << ENDL;
         }
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_OPTIMIZED)
+        if(header.wave_mode & LASERBOY_WAVE_OPTIMIZED)
         {
             cout << ENDL;
             cout << "    lit_dwell_overhang : " << header.parms.lit_dwell_overhang     << ENDL;

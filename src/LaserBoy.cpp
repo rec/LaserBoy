@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
         yres = atoi(argv[2]);
     }
 
-    LaserBoy::LaserBoy_SDL_GUI app(xres, yres);
+    LaserBoy::SDL_GUI app(xres, yres);
 
     return app.start_menu_loop();
 }

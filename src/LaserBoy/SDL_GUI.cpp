@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_SDL_GUI.cpp is part of LaserBoy.
+// SDL_GUI.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 namespace LaserBoy {
 
 //############################################################################
-void bmp_clone_SDL_Surface(struct LaserBoy_bmp* bmp, struct SDL_Surface* screen, int copy)
+void bmp_clone_SDL_Surface(struct Bitmap* bmp, struct SDL_Surface* screen, int copy)
 {
     bmp_init(bmp, screen->w, screen->h, screen->format->BitsPerPixel);
     if(screen->format->BitsPerPixel <= 8)
@@ -43,7 +43,7 @@ void bmp_clone_SDL_Surface(struct LaserBoy_bmp* bmp, struct SDL_Surface* screen,
 }
 
 //############################################################################
-void bmp_to_SDL_Surface(struct LaserBoy_bmp* bmp, struct SDL_Surface* screen)
+void bmp_to_SDL_Surface(struct Bitmap* bmp, struct SDL_Surface* screen)
 {
     if(screen->format->BitsPerPixel <= 8)
         memcpy((void*)(screen->format->palette->colors),
@@ -61,7 +61,7 @@ void bmp_to_SDL_Surface(struct LaserBoy_bmp* bmp, struct SDL_Surface* screen)
 }
 
 //############################################################################
-void SDL_Surface_to_bmp(struct SDL_Surface* screen, struct LaserBoy_bmp* bmp)
+void SDL_Surface_to_bmp(struct SDL_Surface* screen, struct Bitmap* bmp)
 {
     if(screen->format->BitsPerPixel <= 8)
         memcpy((void*)(bmp->palette),
@@ -83,8 +83,8 @@ static void SDL_bailout(int rc)
 }
 
 //############################################################################
-LaserBoy_SDL_GUI::LaserBoy_SDL_GUI(int x, int y)
-                : LaserBoy_GUI_base(x, y)
+SDL_GUI::SDL_GUI(int x, int y)
+                : GUI_base(x, y)
                 , screen(NULL)
 {
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -116,17 +116,17 @@ LaserBoy_SDL_GUI::LaserBoy_SDL_GUI(int x, int y)
 }
 
 //############################################################################
-LaserBoy_SDL_GUI::~LaserBoy_SDL_GUI()
+SDL_GUI::~SDL_GUI()
 {
     SDL_FreeSurface(screen);
     SDL_Quit       ();
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::capture_screen()
+void SDL_GUI::capture_screen()
 {
     u_int x, y;
-    struct LaserBoy_bmp screen_capture = {0};
+    struct Bitmap screen_capture = {0};
     bmp_init(&screen_capture, space.p_bmp()->xres, space.p_bmp()->yres, 24);
     for(y = 0; y < space.p_bmp()->yres; y++)
         for(x = 0; x < space.p_bmp()->xres; x++)
@@ -144,7 +144,7 @@ void LaserBoy_SDL_GUI::capture_screen()
 
 
 //############################################################################
-string LaserBoy_SDL_GUI::display_prompt_file_with_auto_complete(const string& prompt, const string& part)
+string SDL_GUI::display_prompt_file_with_auto_complete(const string& prompt, const string& part)
 {
     bool   done         = false;
     u_int  x_off        = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -275,7 +275,7 @@ string LaserBoy_SDL_GUI::display_prompt_file_with_auto_complete(const string& pr
 }
 
 //############################################################################
-string LaserBoy_SDL_GUI::display_prompt_dir_with_auto_complete(const string& prompt)
+string SDL_GUI::display_prompt_dir_with_auto_complete(const string& prompt)
 {
     bool   done         = false;
     u_int  x_off        = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -409,7 +409,7 @@ string LaserBoy_SDL_GUI::display_prompt_dir_with_auto_complete(const string& pro
 }
 
 //############################################################################
-string LaserBoy_SDL_GUI::display_prompt_f_effect_with_auto_complete(const string& prompt)
+string SDL_GUI::display_prompt_f_effect_with_auto_complete(const string& prompt)
 {
     bool   done           = false;
     u_int  x_off          = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -539,7 +539,7 @@ string LaserBoy_SDL_GUI::display_prompt_f_effect_with_auto_complete(const string
 }
 
 //############################################################################
-string LaserBoy_SDL_GUI::display_prompt_fs_effect_with_auto_complete(const string& prompt)
+string SDL_GUI::display_prompt_fs_effect_with_auto_complete(const string& prompt)
 {
     bool   done         = false;
     u_int  x_off        = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -669,7 +669,7 @@ string LaserBoy_SDL_GUI::display_prompt_fs_effect_with_auto_complete(const strin
 }
 
 //############################################################################
-string LaserBoy_SDL_GUI::display_prompt_and_echo_name(const string& prompt)
+string SDL_GUI::display_prompt_and_echo_name(const string& prompt)
 {
     bool   done         = false;
     int    x_off        = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -767,7 +767,7 @@ string LaserBoy_SDL_GUI::display_prompt_and_echo_name(const string& prompt)
 }
 
 //############################################################################
-string LaserBoy_SDL_GUI::display_prompt_and_echo_string(const string& prompt)
+string SDL_GUI::display_prompt_and_echo_string(const string& prompt)
 {
     bool   done         = false;
     int    x_off        = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -881,7 +881,7 @@ string LaserBoy_SDL_GUI::display_prompt_and_echo_string(const string& prompt)
 }
 
 //############################################################################
-double LaserBoy_SDL_GUI::display_prompt_and_echo_double(const string& prompt, double value)
+double SDL_GUI::display_prompt_and_echo_double(const string& prompt, double value)
 {
     bool   done         = false;
     int    x_off        = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -999,7 +999,7 @@ double LaserBoy_SDL_GUI::display_prompt_and_echo_double(const string& prompt, do
 }
 
 //############################################################################
-int LaserBoy_SDL_GUI::display_prompt_and_echo_int(const string& prompt, int default_value)
+int SDL_GUI::display_prompt_and_echo_int(const string& prompt, int default_value)
 {
     bool   done         = false;
     int    x_off        = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
@@ -1114,7 +1114,7 @@ int LaserBoy_SDL_GUI::display_prompt_and_echo_int(const string& prompt, int defa
 }
 
 //############################################################################
-int LaserBoy_SDL_GUI::display_prompt_and_echo_nibble(const string& prompt)
+int SDL_GUI::display_prompt_and_echo_nibble(const string& prompt)
 {
     bool   done         = false;
     u_int  result       = 0x00, // dud return value
@@ -1182,7 +1182,7 @@ int LaserBoy_SDL_GUI::display_prompt_and_echo_nibble(const string& prompt)
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::display_prompt_and_echo_bool(const string& prompt)
+bool SDL_GUI::display_prompt_and_echo_bool(const string& prompt)
 {
     int    x_off  = LASERBOY_STATS_DISPLAY_OFFSET * space.font_size_factor,
            y_off  = space.bmp.yres - 24 * space.font_size_factor;
@@ -1216,7 +1216,7 @@ bool LaserBoy_SDL_GUI::display_prompt_and_echo_bool(const string& prompt)
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::report_ild_file_open(LaserBoy_frame_set& frame_set, const string& file_name)
+bool SDL_GUI::report_ild_file_open(FrameSet& frame_set, const string& file_name)
 {
     long int       bytes_skipped = 0;
     ostringstream  output_message;
@@ -1283,7 +1283,7 @@ bool LaserBoy_SDL_GUI::report_ild_file_open(LaserBoy_frame_set& frame_set, const
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::display_error(const string& error)
+void SDL_GUI::display_error(const string& error)
 {
     space.TUI_clue = "oops!";
     //------------------------------------------------------------------------
@@ -1313,7 +1313,7 @@ void LaserBoy_SDL_GUI::display_error(const string& error)
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::display_message(const string& message)
+void SDL_GUI::display_message(const string& message)
 {
     space.TUI_clue = "Notice!";
     //------------------------------------------------------------------------
@@ -1343,7 +1343,7 @@ void LaserBoy_SDL_GUI::display_message(const string& message)
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::wait_4_Esc()
+void SDL_GUI::wait_4_Esc()
 {
     while(true)
     {
@@ -1357,7 +1357,7 @@ void LaserBoy_SDL_GUI::wait_4_Esc()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::wait_4_any_key()
+void SDL_GUI::wait_4_any_key()
 {
     while(true)
     {
@@ -1371,7 +1371,7 @@ void LaserBoy_SDL_GUI::wait_4_any_key()
 //############################################################################
 // wave functions that require direct access to space.bmp
 //############################################################################
-bool LaserBoy_SDL_GUI::display_wave()
+bool SDL_GUI::display_wave()
 {
     fstream  in;
     do // clear key strokes from event queue!
@@ -1383,9 +1383,9 @@ bool LaserBoy_SDL_GUI::display_wave()
     if(!in.is_open())
         return false;
 
-    LaserBoy_wave_header header(in);
+    WaveHeader header(in);
     if(    header.version == "!LaserBoy!"
-        || !(header.LaserBoy_wave_mode & LASERBOY_WAVE_END_OF_FRAME)
+        || !(header.wave_mode & LASERBOY_WAVE_END_OF_FRAME)
       )
         display_unframed_wave(in, header);
     else
@@ -1395,7 +1395,7 @@ bool LaserBoy_SDL_GUI::display_wave()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::display_unframed_wave()
+bool SDL_GUI::display_unframed_wave()
 {
     fstream in;
     do // clear key strokes from event queue!
@@ -1407,14 +1407,14 @@ bool LaserBoy_SDL_GUI::display_unframed_wave()
     if(!in.is_open())
         return false;
 
-    LaserBoy_wave_header header(in);
+    WaveHeader header(in);
     display_unframed_wave(in, header);
     in.close();
     return true;
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::display_LaserBoy_wave(fstream& in, LaserBoy_wave_header header)
+void SDL_GUI::display_LaserBoy_wave(fstream& in, WaveHeader header)
 {
     bool                     playing      = true         ;
 
@@ -1436,10 +1436,10 @@ void LaserBoy_SDL_GUI::display_LaserBoy_wave(fstream& in, LaserBoy_wave_header h
                                                                space.bg_color.b
                                                               );
     double                  scale  = screen->h / 65536.0;
-    struct  LaserBoy_bmp    frame_buffer = {0}          ;
+    struct  Bitmap    frame_buffer = {0}          ;
 
-    LaserBoy_wave_sample_pointer   roll_over    ;
-    LaserBoy_wave_sample_pointer*  sample_window;
+    WaveSamplePointer   roll_over    ;
+    WaveSamplePointer*  sample_window;
     //------------------------------------------------------------------------
     if(header.num_channels < 6)
     {
@@ -1457,7 +1457,7 @@ void LaserBoy_SDL_GUI::display_LaserBoy_wave(fstream& in, LaserBoy_wave_header h
         return;
     }
     //------------------------------------------------------------------------
-    if(!header.LaserBoy_wave_mode & LASERBOY_WAVE_OFFSETS) // if no offsets in header
+    if(!header.wave_mode & LASERBOY_WAVE_OFFSETS) // if no offsets in header
         for(i = 0; i < 6; i++)
             header.offset[i] = 0; // give me some!
     //------------------------------------------------------------------------
@@ -1477,9 +1477,9 @@ void LaserBoy_SDL_GUI::display_LaserBoy_wave(fstream& in, LaserBoy_wave_header h
     green = -header.offset[3] + 1;
     blue  = -header.offset[4] + 1;
     //------------------------------------------------------------------------
-    sample_window = new LaserBoy_wave_sample_pointer[span]; // at least 2
+    sample_window = new WaveSamplePointer[span]; // at least 2
     for(i = 0; i < span; i++)
-        sample_window[i] = new LaserBoy_wave_sample(header.num_channels);
+        sample_window[i] = new WaveSample(header.num_channels);
     //------------------------------------------------------------------------
     bmp_clone_SDL_Surface(&frame_buffer, screen, 0);
     bmp_fill(&frame_buffer, space.bg_color.r, space.bg_color.g, space.bg_color.b);
@@ -1500,15 +1500,15 @@ void LaserBoy_SDL_GUI::display_LaserBoy_wave(fstream& in, LaserBoy_wave_header h
         //--------------------------------------------------------------------
         sample_count++;
         //--------------------------------------------------------------------
-        color = frame_buffer.make_rgb((   (header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+        color = frame_buffer.make_rgb((   (header.wave_mode & LASERBOY_COLOR_RESCALE_R)
                                         ? (rescale_to_index(header.color_rescale_r, sample_window[red]->channel[2]))
                                         : (sample_window[red]->channel[2] >> 7)
                                       ),
-                                      (   (header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+                                      (   (header.wave_mode & LASERBOY_COLOR_RESCALE_G)
                                         ? (rescale_to_index(header.color_rescale_g, sample_window[green]->channel[3]))
                                         : (sample_window[green]->channel[3] >> 7)
                                       ),
-                                      (   (header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+                                      (   (header.wave_mode & LASERBOY_COLOR_RESCALE_B)
                                         ? (rescale_to_index(header.color_rescale_b, sample_window[blue]->channel[4]))
                                         : (sample_window[blue]->channel[4] >> 7)
                                       )
@@ -1584,7 +1584,7 @@ void LaserBoy_SDL_GUI::display_LaserBoy_wave(fstream& in, LaserBoy_wave_header h
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::display_unframed_wave(fstream& in, LaserBoy_wave_header header)
+void SDL_GUI::display_unframed_wave(fstream& in, WaveHeader header)
 {
     bool                     playing      = true         ;
 
@@ -1603,10 +1603,10 @@ void LaserBoy_SDL_GUI::display_unframed_wave(fstream& in, LaserBoy_wave_header h
                              color        = space.bmp.white;
 
     double                   scale  = screen->h / 65536.0;
-    struct  LaserBoy_bmp     frame_buffer = {0}          ;
+    struct  Bitmap     frame_buffer = {0}          ;
 
-    LaserBoy_wave_sample_pointer   roll_over    ;
-    LaserBoy_wave_sample_pointer*  sample_window;
+    WaveSamplePointer   roll_over    ;
+    WaveSamplePointer*  sample_window;
     //------------------------------------------------------------------------
     offset_max = space.wave_offsets[0];
     for(i = 1; i < 6; i++)
@@ -1635,9 +1635,9 @@ void LaserBoy_SDL_GUI::display_unframed_wave(fstream& in, LaserBoy_wave_header h
     green = -header.offset[3] + 1;
     blue  = -header.offset[4] + 1;
     //------------------------------------------------------------------------
-    sample_window = new LaserBoy_wave_sample_pointer[span]; // at least 2
+    sample_window = new WaveSamplePointer[span]; // at least 2
     for(i = 0; i < span; i++)
-        sample_window[i] = new LaserBoy_wave_sample(header.num_channels);
+        sample_window[i] = new WaveSample(header.num_channels);
     //------------------------------------------------------------------------
     bmp_clone_SDL_Surface(&frame_buffer, screen, 0);
     bmp_fill(&frame_buffer, space.bg_color.r, space.bg_color.g, space.bg_color.b);
@@ -1741,7 +1741,7 @@ void LaserBoy_SDL_GUI::display_unframed_wave(fstream& in, LaserBoy_wave_header h
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::check_for_common_nav_keys(SDLKey key)
+void SDL_GUI::check_for_common_nav_keys(SDLKey key)
 {
     switch(key)
     {
@@ -1806,7 +1806,7 @@ void LaserBoy_SDL_GUI::check_for_common_nav_keys(SDLKey key)
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::animate_forward()
+void SDL_GUI::animate_forward()
 {
     u_int  time_zero;
     SDL_Delay(250);
@@ -1836,7 +1836,7 @@ void LaserBoy_SDL_GUI::animate_forward()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::animate_reverse()
+void SDL_GUI::animate_reverse()
 {
     u_int  time_zero;
     SDL_Delay(250);
@@ -1866,7 +1866,7 @@ void LaserBoy_SDL_GUI::animate_reverse()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::rotate_forward()
+void SDL_GUI::rotate_forward()
 {
     u_int  time_zero;
     SDL_Delay(250);
@@ -1896,7 +1896,7 @@ void LaserBoy_SDL_GUI::rotate_forward()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::rotate_reverse()
+void SDL_GUI::rotate_reverse()
 {
     u_int  time_zero;
     SDL_Delay(250);
@@ -1926,7 +1926,7 @@ void LaserBoy_SDL_GUI::rotate_reverse()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::animate_rotate_forward()
+void SDL_GUI::animate_rotate_forward()
 {
     u_int  time_zero;
     SDL_Delay(250);
@@ -1957,7 +1957,7 @@ void LaserBoy_SDL_GUI::animate_rotate_forward()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::animate_rotate_reverse()
+void SDL_GUI::animate_rotate_reverse()
 {
     u_int  time_zero;
     SDL_Delay(250);
@@ -1988,7 +1988,7 @@ void LaserBoy_SDL_GUI::animate_rotate_reverse()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::system_settings_menu()
+void SDL_GUI::system_settings_menu()
 {
     bool   in_menu = true;
     int    temp_int;
@@ -2291,7 +2291,7 @@ void LaserBoy_SDL_GUI::system_settings_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::edit_background_color_menu()
+void SDL_GUI::edit_background_color_menu()
 {
     space.clean_screen();
     space.render_space();
@@ -2321,7 +2321,7 @@ void LaserBoy_SDL_GUI::edit_background_color_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::signal_if_not_z_menu()
+void SDL_GUI::signal_if_not_z_menu()
 {
     bool bad_key   = true;
     space.TUI_clue = "signal if not Z";
@@ -2377,7 +2377,7 @@ void LaserBoy_SDL_GUI::signal_if_not_z_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::dots_setting_menu()
+void SDL_GUI::dots_setting_menu()
 {
     bool bad_key   = true;
     space.TUI_clue = "dots setting";
@@ -2418,7 +2418,7 @@ void LaserBoy_SDL_GUI::dots_setting_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::bit_resolution_menu()
+void SDL_GUI::bit_resolution_menu()
 {
     int temp_int;
     do
@@ -2500,7 +2500,7 @@ void LaserBoy_SDL_GUI::bit_resolution_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::visuals_settings_menu()
+void SDL_GUI::visuals_settings_menu()
 {
     bool in_menu = true;
     //------------------------------------------------------------------------
@@ -2735,7 +2735,7 @@ void LaserBoy_SDL_GUI::visuals_settings_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::switch_settings_menu()
+void SDL_GUI::switch_settings_menu()
 {
     bool in_menu   = true;
     //------------------------------------------------------------------------
@@ -3001,7 +3001,7 @@ void LaserBoy_SDL_GUI::switch_settings_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::apply_view_menu()
+void SDL_GUI::apply_view_menu()
 {
     bool in_menu = true;
     space.simplify_view_angle();
@@ -3264,7 +3264,7 @@ void LaserBoy_SDL_GUI::apply_view_menu()
                     space.render_space();
                     display_space();
                     { // scope
-                        LaserBoy_frame_set current(space);
+                        FrameSet current(space);
                         if(!space.rotate_around_origin())
                         {
                             space.view_angle = 0.0;
@@ -3294,7 +3294,7 @@ void LaserBoy_SDL_GUI::apply_view_menu()
                     space.render_space();
                     display_space();
                     { // scope
-                        LaserBoy_frame_set current(space);
+                        FrameSet current(space);
                         if(!space.move())
                         {
                             space.view_offset = 0;
@@ -3324,7 +3324,7 @@ void LaserBoy_SDL_GUI::apply_view_menu()
                     space.render_space();
                     display_space();
                     { // scope
-                        LaserBoy_frame_set current(space);
+                        FrameSet current(space);
                         if(!space.scale_around_origin())
                         {
                             space.view_scale = 1.0;
@@ -3362,7 +3362,7 @@ void LaserBoy_SDL_GUI::apply_view_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::palette_transforms_menu()
+void SDL_GUI::palette_transforms_menu()
 {
     bool in_menu                 = true,
          show_menu_was           = space.show_menu,
@@ -3853,7 +3853,7 @@ void LaserBoy_SDL_GUI::palette_transforms_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::add_color_to_target_palette_menu()
+void SDL_GUI::add_color_to_target_palette_menu()
 {
     if(space.target_palette().number_of_colors() >= 255)
     {
@@ -3888,13 +3888,13 @@ void LaserBoy_SDL_GUI::add_color_to_target_palette_menu()
         space.target_palette() = space.palette_picker(temp);
         space.target_palette().name = name;
     }
-    space.target_palette().add_color(LaserBoy_color((u_char)r, (u_char)g, (u_char)b));
+    space.target_palette().add_color(Color((u_char)r, (u_char)g, (u_char)b));
     space.TUI_clue = "new color";
     return;
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::insert_color_in_target_palette_menu()
+void SDL_GUI::insert_color_in_target_palette_menu()
 {
     if(space.target_palette().number_of_colors() >= 255)
     {
@@ -3929,7 +3929,7 @@ void LaserBoy_SDL_GUI::insert_color_in_target_palette_menu()
         space.target_palette() = space.palette_picker(temp);
         space.target_palette().name = name;
     }
-    space.target_palette().insert_color(LaserBoy_color((u_char)r, (u_char)g, (u_char)b), space.selected_color_index);
+    space.target_palette().insert_color(Color((u_char)r, (u_char)g, (u_char)b), space.selected_color_index);
     int frame_index = space.frame_index;
     space.sync_rgb_and_palette();
     space.frame_index = frame_index;
@@ -3938,7 +3938,7 @@ void LaserBoy_SDL_GUI::insert_color_in_target_palette_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::edit_color_in_target_palette_menu()
+void SDL_GUI::edit_color_in_target_palette_menu()
 {
     if(space.selected_color_index > space.target_palette().number_of_colors())
     {
@@ -3984,7 +3984,7 @@ void LaserBoy_SDL_GUI::edit_color_in_target_palette_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::frame_transforms_menu()
+void SDL_GUI::frame_transforms_menu()
 {
     bool in_menu           = true,
          show_vertices_was = space.show_vertices,
@@ -4343,9 +4343,9 @@ void LaserBoy_SDL_GUI::frame_transforms_menu()
                 //------------------------------------------------------------
                 case 'n':
                 {
-                    LaserBoy_segment origin;
-                    origin.push_back(LaserBoy_vertex());
-                    origin.push_back(LaserBoy_vertex());
+                    Segment origin;
+                    origin.push_back(Vertex());
+                    origin.push_back(Vertex());
                     if(space.current_frame().reorder_segments(origin))
                     {
                         display_error("vertex count overflow");
@@ -4552,7 +4552,7 @@ void LaserBoy_SDL_GUI::frame_transforms_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::frame_set_transforms_menu()
+void SDL_GUI::frame_set_transforms_menu()
 {
     bool in_menu       = true,
          show_menu_was = space.show_menu;
@@ -4652,7 +4652,7 @@ void LaserBoy_SDL_GUI::frame_set_transforms_menu()
                     space.render_space();
                     display_space();
                     {
-                        LaserBoy_frame_set frame_set(space.selected_frames());
+                        FrameSet frame_set(space.selected_frames());
                         space.delete_selected_frames();
                         frame_set += space;
                         space = frame_set;
@@ -4665,7 +4665,7 @@ void LaserBoy_SDL_GUI::frame_set_transforms_menu()
                     space.render_space();
                     display_space();
                     {
-                        LaserBoy_frame_set frame_set(space.selected_frames());
+                        FrameSet frame_set(space.selected_frames());
                         space.delete_selected_frames();
                         space += frame_set;
                     }
@@ -4674,8 +4674,8 @@ void LaserBoy_SDL_GUI::frame_set_transforms_menu()
                 //------------------------------------------------------------
                 case '9':
                     {
-                        LaserBoy_frame_set frame_set(&space);
-                        frame_set += LaserBoy_frame(&space, space.target_palette_index, true); // not quite an empty frame!
+                        FrameSet frame_set(&space);
+                        frame_set += Frame(&space, space.target_palette_index, true); // not quite an empty frame!
                         space = frame_set + space;
                     }
                     space.TUI_clue = "add frame to begining";
@@ -4684,10 +4684,10 @@ void LaserBoy_SDL_GUI::frame_set_transforms_menu()
                 case '0':
                     {
                         u_int              i;
-                        LaserBoy_frame_set frame_set(&space);
+                        FrameSet frame_set(&space);
                         for(i = 0; i <= space.frame_index; i++)
                             frame_set += space[i];
-                        frame_set += LaserBoy_frame(&space, space.target_palette_index, true);
+                        frame_set += Frame(&space, space.target_palette_index, true);
                         for(i = space.frame_index + 1; i < space.number_of_frames(); i++)
                             frame_set += space[i];
                         space = frame_set;
@@ -4697,8 +4697,8 @@ void LaserBoy_SDL_GUI::frame_set_transforms_menu()
                 //------------------------------------------------------------
                 case 'a':
                     {
-                        LaserBoy_frame frame(&space, space.target_palette_index, true);
-                        LaserBoy_frame_set frame_set(space);
+                        Frame frame(&space, space.target_palette_index, true);
+                        FrameSet frame_set(space);
                         frame_set += frame;
                         space = frame_set;
                     }
@@ -4824,7 +4824,7 @@ void LaserBoy_SDL_GUI::frame_set_transforms_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_color_blank_menu()
+void SDL_GUI::draw_color_blank_menu()
 {
     bool    in_menu           = true,
             show_vertices_was = space.show_vertices,
@@ -4836,7 +4836,7 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
             show_menu_was     = space.show_menu;
     int     temp_int;
     double  temp_double;
-    LaserBoy_3D_double temp_3D_float;
+    Double3d temp_3D_float;
     //------------------------------------------------------------------------
     space.show_menu         = true;
     space.show_vertices     = true;
@@ -5324,7 +5324,7 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
                                                          space.current_frame().at(space.current_frame().spider - 1),
                                                          space.rotation_step
                                                         );
-                        if(!LaserBoy_bounds_check(temp_3D_float, LASERBOY_CUBE))
+                        if(!bounds_checkc(temp_3D_float, LASERBOY_CUBE))
                             space.current_frame().at(space.current_frame().spider) = temp_3D_float;
                         space.TUI_clue = "+ rotate on Z axis";
                     }
@@ -5341,7 +5341,7 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
                                                          space.current_frame().at(space.current_frame().spider - 1),
                                                          -space.rotation_step
                                                         );
-                        if(!LaserBoy_bounds_check(temp_3D_float, LASERBOY_CUBE))
+                        if(!bounds_checkc(temp_3D_float, LASERBOY_CUBE))
                             space.current_frame().at(space.current_frame().spider) = temp_3D_float;
                         space.TUI_clue = "- rotate on Z axis";
                     }
@@ -5357,7 +5357,7 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
                                                          space.current_frame().at(space.current_frame().spider - 1),
                                                          space.rotation_step
                                                         );
-                        if(!LaserBoy_bounds_check(temp_3D_float, LASERBOY_CUBE))
+                        if(!bounds_checkc(temp_3D_float, LASERBOY_CUBE))
                             space.current_frame().at(space.current_frame().spider) = temp_3D_float;
                         space.TUI_clue = "+ rotate on Y axis";
                     }
@@ -5373,7 +5373,7 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
                                                          space.current_frame().at(space.current_frame().spider - 1),
                                                          -space.rotation_step
                                                         );
-                        if(!LaserBoy_bounds_check(temp_3D_float, LASERBOY_CUBE))
+                        if(!bounds_checkc(temp_3D_float, LASERBOY_CUBE))
                             space.current_frame().at(space.current_frame().spider) = temp_3D_float;
                         space.TUI_clue = "- rotate on Y axis";
                     }
@@ -5387,9 +5387,9 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
                     temp_3D_float
                     = scale_vertex_on_coordinates(space.current_frame().at(space.current_frame().spider),
                                                   space.current_frame().at(space.current_frame().spider - 1),
-                                                  LaserBoy_3D_double(space.magnitude_step_up, space.magnitude_step_up, space.magnitude_step_up)
+                                                  Double3d(space.magnitude_step_up, space.magnitude_step_up, space.magnitude_step_up)
                                                  );
-                    if(!LaserBoy_bounds_check(temp_3D_float, LASERBOY_CUBE))
+                    if(!bounds_checkc(temp_3D_float, LASERBOY_CUBE))
                         space.current_frame().at(space.current_frame().spider) = temp_3D_float;
                         space.TUI_clue = "+ magnitude of vector";
                     }
@@ -5403,9 +5403,9 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
                         temp_3D_float
                         = scale_vertex_on_coordinates(space.current_frame().at(space.current_frame().spider),
                                                       space.current_frame().at(space.current_frame().spider - 1),
-                                                      LaserBoy_3D_double(space.magnitude_step_dn, space.magnitude_step_dn, space.magnitude_step_dn)
+                                                      Double3d(space.magnitude_step_dn, space.magnitude_step_dn, space.magnitude_step_dn)
                                                      );
-                        if(!LaserBoy_bounds_check(temp_3D_float, LASERBOY_CUBE))
+                        if(!bounds_checkc(temp_3D_float, LASERBOY_CUBE))
                             space.current_frame().at(space.current_frame().spider) = temp_3D_float;
                         space.TUI_clue = "- magnitude of vector";
                     }
@@ -5444,7 +5444,7 @@ void LaserBoy_SDL_GUI::draw_color_blank_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::move_scale_rotate_menu()
+void SDL_GUI::move_scale_rotate_menu()
 {
     bool    in_menu              = true,
             show_vertices_was    = space.show_vertices,
@@ -5708,7 +5708,7 @@ void LaserBoy_SDL_GUI::move_scale_rotate_menu()
                     offset = display_prompt_and_echo_int("set center X");
                     if(prompt_escaped)
                         break;
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(offset - space.current_frame().selected_segment().mean_of_coordinates().x,
+                    if(!space.current_frame().move_selection(Double3d(offset - space.current_frame().selected_segment().mean_of_coordinates().x,
                                                                                 0,
                                                                                 0
                                                                                )
@@ -5727,7 +5727,7 @@ void LaserBoy_SDL_GUI::move_scale_rotate_menu()
                     offset = display_prompt_and_echo_int("set center Y");
                     if(prompt_escaped)
                         break;
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(0,
+                    if(!space.current_frame().move_selection(Double3d(0,
                                                                             offset - space.current_frame().selected_segment().mean_of_coordinates().y,
                                                                             0
                                                                            )
@@ -5746,7 +5746,7 @@ void LaserBoy_SDL_GUI::move_scale_rotate_menu()
                     offset = display_prompt_and_echo_int("set center Z");
                     if(prompt_escaped)
                         break;
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(0,
+                    if(!space.current_frame().move_selection(Double3d(0,
                                                                                 0,
                                                                                 offset - space.current_frame().selected_segment().mean_of_coordinates().z
                                                                                )
@@ -5762,210 +5762,210 @@ void LaserBoy_SDL_GUI::move_scale_rotate_menu()
                     break;
                 //------------------------------------------------------------
                 case 'x':
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(space.displacement_step, 0, 0)))
+                    if(!space.current_frame().move_selection(Double3d(space.displacement_step, 0, 0)))
                         space.TUI_clue = "+ X move";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'X':
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(-space.displacement_step, 0, 0)))
+                    if(!space.current_frame().move_selection(Double3d(-space.displacement_step, 0, 0)))
                         space.TUI_clue = "- X move";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'y':
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(0, space.displacement_step, 0)))
+                    if(!space.current_frame().move_selection(Double3d(0, space.displacement_step, 0)))
                         space.TUI_clue = "+ Y move";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'Y':
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(0, -space.displacement_step, 0)))
+                    if(!space.current_frame().move_selection(Double3d(0, -space.displacement_step, 0)))
                         space.TUI_clue = "- Y move";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'z':
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(0, 0, space.displacement_step)))
+                    if(!space.current_frame().move_selection(Double3d(0, 0, space.displacement_step)))
                         space.TUI_clue = "+ Z move";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'Z':
-                    if(!space.current_frame().move_selection(LaserBoy_3D_double(0, 0,-space.displacement_step)))
+                    if(!space.current_frame().move_selection(Double3d(0, 0,-space.displacement_step)))
                         space.TUI_clue = "- Z move";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'f':
-                    if(!space.current_frame().rotate_selection(LaserBoy_3D_double(0, 0, space.rotation_step)))
+                    if(!space.current_frame().rotate_selection(Double3d(0, 0, space.rotation_step)))
                         space.TUI_clue = "+ rotate Z";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'F':
-                    if(!space.current_frame().rotate_selection(LaserBoy_3D_double(0, 0, -space.rotation_step)))
+                    if(!space.current_frame().rotate_selection(Double3d(0, 0, -space.rotation_step)))
                         space.TUI_clue = "- rotate Z";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'g':
-                    if(!space.current_frame().rotate_selection(LaserBoy_3D_double(0, space.rotation_step, 0)))
+                    if(!space.current_frame().rotate_selection(Double3d(0, space.rotation_step, 0)))
                         space.TUI_clue = "+ rotate y";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'G':
-                    if(!space.current_frame().rotate_selection(LaserBoy_3D_double(0,-space.rotation_step, 0)))
+                    if(!space.current_frame().rotate_selection(Double3d(0,-space.rotation_step, 0)))
                         space.TUI_clue = "- rotate y";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'r':
-                    if(!space.current_frame().rotate_selection_on_fulcrum(LaserBoy_3D_double(0, 0, space.rotation_step)))
+                    if(!space.current_frame().rotate_selection_on_fulcrum(Double3d(0, 0, space.rotation_step)))
                         space.TUI_clue = "+ rotate Z on fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'R':
-                    if(!space.current_frame().rotate_selection_on_fulcrum(LaserBoy_3D_double(0, 0, -space.rotation_step)))
+                    if(!space.current_frame().rotate_selection_on_fulcrum(Double3d(0, 0, -space.rotation_step)))
                         space.TUI_clue = "- rotate Z on fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 't':
-                    if(!space.current_frame().rotate_selection_on_fulcrum(LaserBoy_3D_double(0, space.rotation_step, 0)))
+                    if(!space.current_frame().rotate_selection_on_fulcrum(Double3d(0, space.rotation_step, 0)))
                         space.TUI_clue = "+ rotate Y on fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'T':
-                    if(!space.current_frame().rotate_selection_on_fulcrum(LaserBoy_3D_double(0, -space.rotation_step, 0)))
+                    if(!space.current_frame().rotate_selection_on_fulcrum(Double3d(0, -space.rotation_step, 0)))
                         space.TUI_clue = "- rotate Y on fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case '9':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(space.magnitude_step_up, 1, 1)))
+                    if(!space.current_frame().scale_selection(Double3d(space.magnitude_step_up, 1, 1)))
                         space.TUI_clue = "+ scale X";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case '(':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(space.magnitude_step_dn, 1, 1)))
+                    if(!space.current_frame().scale_selection(Double3d(space.magnitude_step_dn, 1, 1)))
                         space.TUI_clue = "- scale X";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case '0':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(1, space.magnitude_step_up, 1)))
+                    if(!space.current_frame().scale_selection(Double3d(1, space.magnitude_step_up, 1)))
                         space.TUI_clue = "+ scale Y";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case ')':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(1, space.magnitude_step_dn, 1)))
+                    if(!space.current_frame().scale_selection(Double3d(1, space.magnitude_step_dn, 1)))
                         space.TUI_clue = "- scale Y";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case '-':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(1, 1, space.magnitude_step_up)))
+                    if(!space.current_frame().scale_selection(Double3d(1, 1, space.magnitude_step_up)))
                         space.TUI_clue = "+ scale Z";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case '_':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(1, 1, space.magnitude_step_dn)))
+                    if(!space.current_frame().scale_selection(Double3d(1, 1, space.magnitude_step_dn)))
                         space.TUI_clue = "- scale Z";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case '=':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(space.magnitude_step_up, space.magnitude_step_up, space.magnitude_step_up)))
+                    if(!space.current_frame().scale_selection(Double3d(space.magnitude_step_up, space.magnitude_step_up, space.magnitude_step_up)))
                         space.TUI_clue = "+ scale XYZ";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case '+':
-                    if(!space.current_frame().scale_selection(LaserBoy_3D_double(space.magnitude_step_dn, space.magnitude_step_dn, space.magnitude_step_dn)))
+                    if(!space.current_frame().scale_selection(Double3d(space.magnitude_step_dn, space.magnitude_step_dn, space.magnitude_step_dn)))
                         space.TUI_clue = "- scale XYZ";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'v':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(space.magnitude_step_up, 1, 1)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(space.magnitude_step_up, 1, 1)))
                         space.TUI_clue = "+ scale X by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'V':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(space.magnitude_step_dn, 1, 1)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(space.magnitude_step_dn, 1, 1)))
                         space.TUI_clue = "- scale X by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'b':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(1, space.magnitude_step_up, 1)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(1, space.magnitude_step_up, 1)))
                         space.TUI_clue = "+ scale Y by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'B':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(1, space.magnitude_step_dn, 1)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(1, space.magnitude_step_dn, 1)))
                         space.TUI_clue = "- scale Y by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'n':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(1, 1, space.magnitude_step_up)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(1, 1, space.magnitude_step_up)))
                         space.TUI_clue = "+ size Z by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'N':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(1, 1, space.magnitude_step_dn)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(1, 1, space.magnitude_step_dn)))
                         space.TUI_clue = "- scale Z by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'm':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(space.magnitude_step_up, space.magnitude_step_up, space.magnitude_step_up)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(space.magnitude_step_up, space.magnitude_step_up, space.magnitude_step_up)))
                         space.TUI_clue = "+ scale XYZ by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
                     break;
                 //------------------------------------------------------------
                 case 'M':
-                    if(!space.current_frame().scale_selection_on_fulcrum(LaserBoy_3D_double(space.magnitude_step_dn, space.magnitude_step_dn, space.magnitude_step_dn)))
+                    if(!space.current_frame().scale_selection_on_fulcrum(Double3d(space.magnitude_step_dn, space.magnitude_step_dn, space.magnitude_step_dn)))
                         space.TUI_clue = "- scale XYZ by fulcrum";
                     else
                         space.TUI_clue = "out of bounds!";
@@ -6086,7 +6086,7 @@ void LaserBoy_SDL_GUI::move_scale_rotate_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::direct_draw_segments_menu()
+void SDL_GUI::direct_draw_segments_menu()
 {
     bool    in_menu           = true,
             show_palette_was  = space.show_palette,
@@ -6379,9 +6379,9 @@ void LaserBoy_SDL_GUI::direct_draw_segments_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_point_menu()
+void SDL_GUI::draw_point_menu()
 {
-    LaserBoy_vertex _0;
+    Vertex _0;
 
     space.clean_screen();
     space.render_space();
@@ -6429,9 +6429,9 @@ void LaserBoy_SDL_GUI::draw_point_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_line_menu()
+void SDL_GUI::draw_line_menu()
 {
-    LaserBoy_vertex _0,
+    Vertex _0,
                     _1;
 
     space.clean_screen();
@@ -6498,9 +6498,9 @@ void LaserBoy_SDL_GUI::draw_line_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_rectangle_menu()
+void SDL_GUI::draw_rectangle_menu()
 {
-    LaserBoy_vertex _0,
+    Vertex _0,
                     _1,
                     _2;
 
@@ -6566,9 +6566,9 @@ void LaserBoy_SDL_GUI::draw_rectangle_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_polygon_menu()
+void SDL_GUI::draw_polygon_menu()
 {
-    LaserBoy_3D_short center,
+    Short3d center,
                       vertex;
 
     space.clean_screen();
@@ -6599,7 +6599,7 @@ void LaserBoy_SDL_GUI::draw_polygon_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center,
                                               vertex,
                                               number_of_sides
@@ -6610,11 +6610,11 @@ void LaserBoy_SDL_GUI::draw_polygon_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_polyline_menu()
+void SDL_GUI::draw_polyline_menu()
 {
     int             number_of_vertecies = 0;
     char            text_number[16];
-    LaserBoy_vertex _0,
+    Vertex _0,
                     _1;
     _1.unblank();
     if(space.current_frame().palette_index == LASERBOY_TRUE_COLOR)
@@ -6672,9 +6672,9 @@ void LaserBoy_SDL_GUI::draw_polyline_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_polystar_menu()
+void SDL_GUI::draw_polystar_menu()
 {
-    LaserBoy_3D_short center,
+    Short3d center,
                       vertex;
 
     space.clean_screen();
@@ -6712,7 +6712,7 @@ void LaserBoy_SDL_GUI::draw_polystar_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center,
                                               vertex,
                                               number_of_points,
@@ -6724,9 +6724,9 @@ void LaserBoy_SDL_GUI::draw_polystar_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_circular_arc_menu()
+void SDL_GUI::draw_circular_arc_menu()
 {
-    LaserBoy_3D_short center,
+    Short3d center,
                       radius;
 
     space.clean_screen();
@@ -6759,16 +6759,16 @@ void LaserBoy_SDL_GUI::draw_circular_arc_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space, center, radius, arc_angle);
+    space.current_frame() += Segment(&space, center, radius, arc_angle);
 
     space.TUI_clue = "circular arc";
     return;
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_elliptical_arc_menu()
+void SDL_GUI::draw_elliptical_arc_menu()
 {
-    LaserBoy_3D_short center,
+    Short3d center,
                       radius;
 
     space.clean_screen();
@@ -6807,16 +6807,16 @@ void LaserBoy_SDL_GUI::draw_elliptical_arc_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space, center, radius, arc_angle, radii_ratio);
+    space.current_frame() += Segment(&space, center, radius, arc_angle, radii_ratio);
 
     space.TUI_clue = "elliptical arc";
     return;
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_rhodonea_menu()
+void SDL_GUI::draw_rhodonea_menu()
 {
-    LaserBoy_3D_short center;
+    Short3d center;
 
     space.clean_screen();
     space.render_space();
@@ -6848,7 +6848,7 @@ void LaserBoy_SDL_GUI::draw_rhodonea_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center,
                                               radius,
                                               pedals_numerator,
@@ -6860,9 +6860,9 @@ void LaserBoy_SDL_GUI::draw_rhodonea_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_epicycloid_menu()
+void SDL_GUI::draw_epicycloid_menu()
 {
-    LaserBoy_3D_short center;
+    Short3d center;
 
     space.clean_screen();
     space.render_space();
@@ -6888,7 +6888,7 @@ void LaserBoy_SDL_GUI::draw_epicycloid_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center_radius,
                                               center,
                                               roller_radius,
@@ -6900,9 +6900,9 @@ void LaserBoy_SDL_GUI::draw_epicycloid_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_epitrochoid_menu()
+void SDL_GUI::draw_epitrochoid_menu()
 {
-    LaserBoy_3D_short center;
+    Short3d center;
 
     space.clean_screen();
     space.render_space();
@@ -6934,7 +6934,7 @@ void LaserBoy_SDL_GUI::draw_epitrochoid_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center_radius,
                                               center,
                                               roller_radius,
@@ -6946,9 +6946,9 @@ void LaserBoy_SDL_GUI::draw_epitrochoid_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_hypocycloid_menu()
+void SDL_GUI::draw_hypocycloid_menu()
 {
-    LaserBoy_3D_short center;
+    Short3d center;
 
     space.clean_screen();
     space.render_space();
@@ -6974,7 +6974,7 @@ void LaserBoy_SDL_GUI::draw_hypocycloid_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center_radius,
                                               roller_radius,
                                               roller_radius,
@@ -6986,9 +6986,9 @@ void LaserBoy_SDL_GUI::draw_hypocycloid_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_hypotrochoid_menu()
+void SDL_GUI::draw_hypotrochoid_menu()
 {
-    LaserBoy_3D_short center;
+    Short3d center;
 
     space.clean_screen();
     space.render_space();
@@ -7020,7 +7020,7 @@ void LaserBoy_SDL_GUI::draw_hypotrochoid_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center_radius,
                                               roller_radius,
                                               roller_offset,
@@ -7032,9 +7032,9 @@ void LaserBoy_SDL_GUI::draw_hypotrochoid_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_lissajous_menu()
+void SDL_GUI::draw_lissajous_menu()
 {
-    LaserBoy_3D_short center;
+    Short3d center;
 
     space.clean_screen();
     space.render_space();
@@ -7090,7 +7090,7 @@ void LaserBoy_SDL_GUI::draw_lissajous_menu()
     if(prompt_escaped)
         return;
 
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               center,
                                               amplitude_x,
                                               amplitude_y,
@@ -7105,17 +7105,17 @@ void LaserBoy_SDL_GUI::draw_lissajous_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_harmonograph_menu()
+void SDL_GUI::draw_harmonograph_menu()
 {
     return;
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_mono_spaced_font_menu()
+void SDL_GUI::draw_mono_spaced_font_menu()
 {
     char buffer[30];
     string prompt;
-    LaserBoy_3D_short _0,
+    Short3d _0,
                       _1;
 
     space.clean_screen();
@@ -7164,7 +7164,7 @@ void LaserBoy_SDL_GUI::draw_mono_spaced_font_menu()
     if(prompt_escaped)
         return;
     //------------------------------------------------------------------------
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               _0,
                                               _1,
                                               LASERBOY_ILD_SHARE + font,
@@ -7176,11 +7176,11 @@ void LaserBoy_SDL_GUI::draw_mono_spaced_font_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::draw_variable_spaced_font_menu()
+void SDL_GUI::draw_variable_spaced_font_menu()
 {
     char buffer[30];
     string prompt;
-    LaserBoy_3D_short _0,
+    Short3d _0,
                       _1;
 
     space.clean_screen();
@@ -7229,7 +7229,7 @@ void LaserBoy_SDL_GUI::draw_variable_spaced_font_menu()
     if(prompt_escaped)
         return;
     //------------------------------------------------------------------------
-    space.current_frame() += LaserBoy_segment(&space,
+    space.current_frame() += Segment(&space,
                                               _0,
                                               _1,
                                               LASERBOY_ILD_SHARE + font,
@@ -7242,7 +7242,7 @@ void LaserBoy_SDL_GUI::draw_variable_spaced_font_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::wave_utilities_menu()
+void SDL_GUI::wave_utilities_menu()
 {
     bool in_menu   = true,
          good_call = false;
@@ -7523,7 +7523,7 @@ void LaserBoy_SDL_GUI::wave_utilities_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::split_or_join_waves_menu()
+void SDL_GUI::split_or_join_waves_menu()
 {
     bool   in_menu = true;
     space.TUI_clue = "split or join waves";
@@ -7633,7 +7633,7 @@ void LaserBoy_SDL_GUI::split_or_join_waves_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::wave_show_settings_menu()
+void SDL_GUI::wave_show_settings_menu()
 {
     bool   in_menu = true;
     //------------------------------------------------------------------------
@@ -7709,7 +7709,7 @@ void LaserBoy_SDL_GUI::wave_show_settings_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::show_wave_options_menu()
+void SDL_GUI::show_wave_options_menu()
 {
     while(true)
     {
@@ -7810,7 +7810,7 @@ void LaserBoy_SDL_GUI::show_wave_options_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::set_wave_offsets_menu()
+void SDL_GUI::set_wave_offsets_menu()
 {
     int temp_int;
     //------------------------------------------------------------------------
@@ -7866,9 +7866,9 @@ void LaserBoy_SDL_GUI::set_wave_offsets_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::set_color_rescales_menu()
+void SDL_GUI::set_color_rescales_menu()
 {
-    LaserBoy_Rescale_Error_Code  rescale_file_error;
+    RescaleErrorCode  rescale_file_error;
     string                       file_name;
     //------------------------------------------------------------------------
     space.get_directory_list(LASERBOY_RESCALE_SHARE, ".txt");
@@ -7963,7 +7963,7 @@ void LaserBoy_SDL_GUI::set_color_rescales_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::apply_color_rescales_menu()
+void SDL_GUI::apply_color_rescales_menu()
 {
     bool good_call = false;
     space.get_directory_list(LASERBOY_WAV_SHARE, ".wav");
@@ -7993,7 +7993,7 @@ void LaserBoy_SDL_GUI::apply_color_rescales_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::omit_color_rescales_menu()
+void SDL_GUI::omit_color_rescales_menu()
 {
     bool good_call = false;
     space.get_directory_list(LASERBOY_WAV_SHARE, ".wav");
@@ -8023,7 +8023,7 @@ void LaserBoy_SDL_GUI::omit_color_rescales_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::set_signal_polarities_menu()
+void SDL_GUI::set_signal_polarities_menu()
 {
     short  wave_channels;
     //------------------------------------------------------------------------
@@ -8115,7 +8115,7 @@ void LaserBoy_SDL_GUI::set_signal_polarities_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::clear_wave_polarities_menu()
+void SDL_GUI::clear_wave_polarities_menu()
 {
     space.get_directory_list(LASERBOY_WAV_SHARE, ".wav");
     //------------------------------------------------------------------------
@@ -8157,7 +8157,7 @@ void LaserBoy_SDL_GUI::clear_wave_polarities_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::black_level_to_wave_menu()
+void SDL_GUI::black_level_to_wave_menu()
 {
     space.get_directory_list(LASERBOY_WAV_SHARE, ".wav");
     //------------------------------------------------------------------------
@@ -8205,7 +8205,7 @@ void LaserBoy_SDL_GUI::black_level_to_wave_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::bit_resolution_to_wave_menu()
+void SDL_GUI::bit_resolution_to_wave_menu()
 {
     space.get_directory_list(LASERBOY_WAV_SHARE, ".wav");
     //------------------------------------------------------------------------
@@ -8251,7 +8251,7 @@ void LaserBoy_SDL_GUI::bit_resolution_to_wave_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::join_XY_r_g_b_i_waves_menu()
+void SDL_GUI::join_XY_r_g_b_i_waves_menu()
 {
     space.get_directory_list(LASERBOY_UNFORMATTED_SHARE, ".wav");
     //------------------------------------------------------------------------
@@ -8366,7 +8366,7 @@ void LaserBoy_SDL_GUI::join_XY_r_g_b_i_waves_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::join_XY_rg_b_waves_menu()
+void SDL_GUI::join_XY_rg_b_waves_menu()
 {
     space.get_directory_list(LASERBOY_UNFORMATTED_SHARE, ".wav");
     //------------------------------------------------------------------------
@@ -8452,7 +8452,7 @@ void LaserBoy_SDL_GUI::join_XY_rg_b_waves_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::join_XY_rg_b_LR_waves_menu()
+void SDL_GUI::join_XY_rg_b_LR_waves_menu()
 {
     space.get_directory_list(LASERBOY_UNFORMATTED_SHARE, ".wav");
     space.TUI_clue = "join XY rg b LR";
@@ -8564,7 +8564,7 @@ void LaserBoy_SDL_GUI::join_XY_rg_b_LR_waves_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::add_audio_to_wave_menu()
+void SDL_GUI::add_audio_to_wave_menu()
 {
     space.get_directory_list(LASERBOY_WAV_SHARE, ".wav");
 
@@ -8645,7 +8645,7 @@ void LaserBoy_SDL_GUI::add_audio_to_wave_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::file_open_menu()
+void SDL_GUI::file_open_menu()
 {
     bool bad_key = true;
     while(bad_key)
@@ -8730,7 +8730,7 @@ void LaserBoy_SDL_GUI::file_open_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::ild_file_open_menu()
+bool SDL_GUI::ild_file_open_menu()
 {
     bool bad_key = true;
 
@@ -8772,7 +8772,7 @@ bool LaserBoy_SDL_GUI::ild_file_open_menu()
                 space.clean_screen();
                 display_space();
                 { // scope
-                    LaserBoy_frame_set frame_set(&space);
+                    FrameSet frame_set(&space);
                     if(!report_ild_file_open(frame_set, file_name))
                         return false;
                     space.frame_index = 0;
@@ -8787,7 +8787,7 @@ bool LaserBoy_SDL_GUI::ild_file_open_menu()
                 space.clean_screen();
                 display_space();
                 { // scope
-                    LaserBoy_frame_set frame_set(&space);
+                    FrameSet frame_set(&space);
                     if(!report_ild_file_open(frame_set, file_name))
                         return false;
                     space.frame_index = 0;
@@ -8804,7 +8804,7 @@ bool LaserBoy_SDL_GUI::ild_file_open_menu()
                 display_space();
                 { // scope
                     u_int              i;
-                    LaserBoy_frame_set frame_set(&space),
+                    FrameSet frame_set(&space),
                                        result(&space);
                     if(!report_ild_file_open(frame_set, file_name))
                         return false;
@@ -8826,7 +8826,7 @@ bool LaserBoy_SDL_GUI::ild_file_open_menu()
                 space.clean_screen();
                 display_space();
                 {
-                    LaserBoy_frame_set frame_set(&space);
+                    FrameSet frame_set(&space);
                     if(!report_ild_file_open(frame_set, file_name))
                         return false;
                     space.frame_index = 0;
@@ -8841,7 +8841,7 @@ bool LaserBoy_SDL_GUI::ild_file_open_menu()
                 space.clean_screen();
                 display_space();
                 {
-                    LaserBoy_frame_set frame_set(&space);
+                    FrameSet frame_set(&space);
                     if(!report_ild_file_open(frame_set, file_name))
                         return false;
                     space.frame_index = 0;
@@ -8857,7 +8857,7 @@ bool LaserBoy_SDL_GUI::ild_file_open_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::dxf_file_open_menu()
+bool SDL_GUI::dxf_file_open_menu()
 {
     bool   bad_key = true;
     space.get_directory_list(LASERBOY_DXF_SHARE, ".dxf");
@@ -8966,7 +8966,7 @@ bool LaserBoy_SDL_GUI::dxf_file_open_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::wav_file_open_menu()
+bool SDL_GUI::wav_file_open_menu()
 {
     bool bad_key = true;
 
@@ -9092,7 +9092,7 @@ bool LaserBoy_SDL_GUI::wav_file_open_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::wav_unformatted_open_menu(bool append)
+bool SDL_GUI::wav_unformatted_open_menu(bool append)
 {
     space.get_directory_list(LASERBOY_UNFORMATTED_SHARE, ".wav");
     space.clean_screen();
@@ -9124,7 +9124,7 @@ bool LaserBoy_SDL_GUI::wav_unformatted_open_menu(bool append)
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::wav_qm_open_menu(bool append)
+bool SDL_GUI::wav_qm_open_menu(bool append)
 {
     space.get_directory_list(LASERBOY_UNFORMATTED_SHARE, ".wav");
     space.clean_screen();
@@ -9155,7 +9155,7 @@ bool LaserBoy_SDL_GUI::wav_qm_open_menu(bool append)
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::txt_file_open_menu()
+bool SDL_GUI::txt_file_open_menu()
 {
     bool          bad_key = true;
     int           current_palette_count = space.number_of_palettes(),
@@ -9202,7 +9202,7 @@ bool LaserBoy_SDL_GUI::txt_file_open_menu()
                 space.TUI_clue = "txt replace";
                 display_space();
                 {
-                    LaserBoy_frame_set current(&space);
+                    FrameSet current(&space);
                     current = space; // make a copy
                     space.from_txt_file(LASERBOY_TXT_SHARE + file_name);
                     new_palette_count = space.number_of_palettes() - current_palette_count;
@@ -9300,7 +9300,7 @@ bool LaserBoy_SDL_GUI::txt_file_open_menu()
                 space.TUI_clue = "txt prepend";
                 display_space();
                 { // scope
-                    LaserBoy_frame_set insert(&space);
+                    FrameSet insert(&space);
                     insert.from_txt_file(LASERBOY_TXT_SHARE + file_name);
                     new_frame_count   = insert.number_of_frames();
                     new_palette_count = space.number_of_palettes() - current_palette_count;
@@ -9399,7 +9399,7 @@ bool LaserBoy_SDL_GUI::txt_file_open_menu()
                 display_space();
                 { // scope
                     u_int              i;
-                    LaserBoy_frame_set insert(&space),
+                    FrameSet insert(&space),
                                        result(&space);
                     insert.from_txt_file(LASERBOY_TXT_SHARE + file_name);
                     new_palette_count = space.number_of_palettes() - current_palette_count;
@@ -9504,7 +9504,7 @@ bool LaserBoy_SDL_GUI::txt_file_open_menu()
                 display_space();
                 { // scope
                     u_int              i;
-                    LaserBoy_frame_set insert(&space),
+                    FrameSet insert(&space),
                                        result(&space);
                     insert.from_txt_file(LASERBOY_TXT_SHARE + file_name);
                     new_palette_count = space.number_of_palettes() - current_palette_count;
@@ -9763,7 +9763,7 @@ bool LaserBoy_SDL_GUI::txt_file_open_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::bmp_file_open_menu()
+bool SDL_GUI::bmp_file_open_menu()
 {
     bool bad_key = true;
     space.get_directory_list(LASERBOY_BMP_SHARE, ".bmp");
@@ -9885,7 +9885,7 @@ bool LaserBoy_SDL_GUI::bmp_file_open_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::save_as_file_menu()
+void SDL_GUI::save_as_file_menu()
 {
     bool bad_key = true;
     while(bad_key)
@@ -9987,7 +9987,7 @@ void LaserBoy_SDL_GUI::save_as_file_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::save_as_ild_menu()
+bool SDL_GUI::save_as_ild_menu()
 {
     bool   bad_key = true;
     space.get_directory_list(LASERBOY_ILD_SHARE, ".ild");
@@ -10145,7 +10145,7 @@ bool LaserBoy_SDL_GUI::save_as_ild_menu()
                 }
                 else
                 {
-                    LaserBoy_Bounds out_of_bounds = space.call_frame_effect(file_name);
+                    Bounds out_of_bounds = space.call_frame_effect(file_name);
                     if(out_of_bounds & LASERBOY_EFFECT_NAME_NOT_FOUND)
                     {
                         display_error(file_name + " is not a registered LaserBoy frame effect");
@@ -10185,7 +10185,7 @@ bool LaserBoy_SDL_GUI::save_as_ild_menu()
                 }
                 else
                 {
-                    LaserBoy_Bounds out_of_bounds = space.call_frame_set_effect(file_name);
+                    Bounds out_of_bounds = space.call_frame_set_effect(file_name);
                     if(out_of_bounds & LASERBOY_EFFECT_NAME_NOT_FOUND)
                     {
                         display_error(file_name + " is not a registered LaserBoy frame effect");
@@ -10214,7 +10214,7 @@ bool LaserBoy_SDL_GUI::save_as_ild_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::save_as_dxf_menu()
+bool SDL_GUI::save_as_dxf_menu()
 {
     bool   bad_key = true;
     space.TUI_clue = "save dxf";
@@ -10351,7 +10351,7 @@ bool LaserBoy_SDL_GUI::save_as_dxf_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::save_as_wav_menu()
+bool SDL_GUI::save_as_wav_menu()
 {
     bool    bad_key = true;
     string  file_name;
@@ -10728,7 +10728,7 @@ bool LaserBoy_SDL_GUI::save_as_wav_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::save_as_txt_menu()
+bool SDL_GUI::save_as_txt_menu()
 {
     bool   bad_key = true;
     space.TUI_clue = "save ASCII";
@@ -11008,7 +11008,7 @@ bool LaserBoy_SDL_GUI::save_as_txt_menu()
 }
 
 //############################################################################
-bool LaserBoy_SDL_GUI::save_as_bmp_menu()
+bool SDL_GUI::save_as_bmp_menu()
 {
     bool   bad_key = true;
     space.TUI_clue = "save bmp";
@@ -11118,7 +11118,7 @@ bool LaserBoy_SDL_GUI::save_as_bmp_menu()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::display_rescale_file_error(LaserBoy_Rescale_Error_Code error)
+void SDL_GUI::display_rescale_file_error(RescaleErrorCode error)
 {
     switch(error)
     {
@@ -11145,9 +11145,9 @@ void LaserBoy_SDL_GUI::display_rescale_file_error(LaserBoy_Rescale_Error_Code er
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::process_terminate_request()
+void SDL_GUI::process_terminate_request()
 {
-    LaserBoy_color bg_was = space.bg_color;
+    Color bg_was = space.bg_color;
     //------------------------------------------------------------------------
     space.bg_color = (u_int)0x00ff0000;
     space.TUI_clue = "terminating";
@@ -11170,7 +11170,7 @@ void LaserBoy_SDL_GUI::process_terminate_request()
 }
 
 //############################################################################
-void LaserBoy_SDL_GUI::Laserboy_terminating()
+void SDL_GUI::Laserboy_terminating()
 {
     space.bg_color = (u_int)0x000000ff;
     space.TUI_clue = "terminating";
@@ -11197,7 +11197,7 @@ void LaserBoy_SDL_GUI::Laserboy_terminating()
 }
 
 //############################################################################
-int LaserBoy_SDL_GUI::start_menu_loop()
+int SDL_GUI::start_menu_loop()
 {
     char           formatted_string[80] = {0};
     long int       bytes_skipped = 0;
@@ -11205,7 +11205,7 @@ int LaserBoy_SDL_GUI::start_menu_loop()
 
     running = true;
     string version_string;
-    if(    !LaserBoy_version_check(version_string, space.install_GUID, space.app_runs_count) // zero means we got a version_string
+    if(    !version_check(version_string, space.install_GUID, space.app_runs_count) // zero means we got a version_string
         && (version_string.size() == 19)
         && (version_string != LASERBOY_VERSION)
         && (version_string.substr(0, 9) == "LaserBoy-")

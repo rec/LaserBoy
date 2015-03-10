@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 2013 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_utility.hpp is part of LaserBoy.
+// utility.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@
 namespace LaserBoy {
 
 //############################################################################
-inline int linear_steps(const LaserBoy_3D_double p1,
-                        const LaserBoy_3D_double p2,
+inline int linear_steps(const Double3d p1,
+                        const Double3d p2,
                         const double delta_max
                        )
 {
@@ -83,7 +83,7 @@ inline int end_dwell_vertices(double angle,
 }
 
 //############################################################################
-inline double three_point_angle(LaserBoy_3D_double _0, LaserBoy_3D_double _1, LaserBoy_3D_double _2)
+inline double three_point_angle(Double3d _0, Double3d _1, Double3d _2)
 {
     return delta_angle( _0 | _2, // distance between vertices 0,2
                         _0 | _1,
@@ -92,9 +92,9 @@ inline double three_point_angle(LaserBoy_3D_double _0, LaserBoy_3D_double _1, La
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex(LaserBoy_3D_double p, LaserBoy_3D_double a)
+inline Double3d rotate_vertex(Double3d p, Double3d a)
 {
-    LaserBoy_3D_double  sin_a(sin(a.x), sin(a.y), sin(a.z)),
+    Double3d  sin_a(sin(a.x), sin(a.y), sin(a.z)),
                         cos_a(cos(a.x), cos(a.y), cos(a.z)),
                         rotated;
     //------------------------------------------------------------------------
@@ -108,11 +108,11 @@ inline LaserBoy_3D_double rotate_vertex(LaserBoy_3D_double p, LaserBoy_3D_double
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex_around_x(LaserBoy_3D_double p, double a)
+inline Double3d rotate_vertex_around_x(Double3d p, double a)
 {
     double              sin_a(sin(a)),
                         cos_a(cos(a));
-    LaserBoy_3D_double  rotated(p);
+    Double3d  rotated(p);
     //------------------------------------------------------------------------
     rotated.y = p.y * cos_a - p.z * sin_a;
     rotated.z = p.z * cos_a + p.y * sin_a; // rotate around x
@@ -120,11 +120,11 @@ inline LaserBoy_3D_double rotate_vertex_around_x(LaserBoy_3D_double p, double a)
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex_around_y(LaserBoy_3D_double p, double a)
+inline Double3d rotate_vertex_around_y(Double3d p, double a)
 {
     double              sin_a(sin(a)),
                         cos_a(cos(a));
-    LaserBoy_3D_double  rotated(p);
+    Double3d  rotated(p);
     //------------------------------------------------------------------------
     rotated.x = p.x * cos_a - p.z * sin_a;
     rotated.z = p.z * cos_a + p.x * sin_a; // rotate around y
@@ -132,11 +132,11 @@ inline LaserBoy_3D_double rotate_vertex_around_y(LaserBoy_3D_double p, double a)
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex_around_z(LaserBoy_3D_double p, double a)
+inline Double3d rotate_vertex_around_z(Double3d p, double a)
 {
     double              sin_a(sin(a)),
                         cos_a(cos(a));
-    LaserBoy_3D_double  rotated(p);
+    Double3d  rotated(p);
     //------------------------------------------------------------------------
     rotated.x = p.x * cos_a - p.y * sin_a;
     rotated.y = p.y * cos_a + p.x * sin_a; // rotate around z
@@ -144,42 +144,42 @@ inline LaserBoy_3D_double rotate_vertex_around_z(LaserBoy_3D_double p, double a)
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex_on_coordinates(LaserBoy_3D_double p1, LaserBoy_3D_double p2, LaserBoy_3D_double a)
+inline Double3d rotate_vertex_on_coordinates(Double3d p1, Double3d p2, Double3d a)
 {
     return rotate_vertex(p1 - p2, a) + p2;
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex_on_coordinates_x(LaserBoy_3D_double p1, LaserBoy_3D_double p2, double a)
+inline Double3d rotate_vertex_on_coordinates_x(Double3d p1, Double3d p2, double a)
 {
     return rotate_vertex_around_x(p1 - p2, a) + p2;
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex_on_coordinates_y(LaserBoy_3D_double p1, LaserBoy_3D_double p2, double a)
+inline Double3d rotate_vertex_on_coordinates_y(Double3d p1, Double3d p2, double a)
 {
     return rotate_vertex_around_y(p1 - p2, a) + p2;
 }
 
 //############################################################################
-inline LaserBoy_3D_double rotate_vertex_on_coordinates_z(LaserBoy_3D_double p1, LaserBoy_3D_double p2, double a)
+inline Double3d rotate_vertex_on_coordinates_z(Double3d p1, Double3d p2, double a)
 {
     return rotate_vertex_around_z(p1 - p2, a) + p2;
 }
 
 //############################################################################
-inline LaserBoy_3D_double scale_vertex_on_coordinates(LaserBoy_3D_double p1, LaserBoy_3D_double p2, LaserBoy_3D_double m)
+inline Double3d scale_vertex_on_coordinates(Double3d p1, Double3d p2, Double3d m)
 {
     return (m * (p1 - p2)) + p2;
 }
 
 //############################################################################
-inline LaserBoy_Bounds LaserBoy_bounds_check(const LaserBoy_3D_double& f,
-                                             const LaserBoy_3D_double& max,
-                                             const LaserBoy_3D_double& min
+inline Bounds bounds_checkc(const Double3d& f,
+                                             const Double3d& max,
+                                             const Double3d& min
                                             )
 {
-    LaserBoy_Bounds bounds_flags = LASERBOY_IN_BOUNDS;
+    Bounds bounds_flags = LASERBOY_IN_BOUNDS;
 
     if(f.x > max.x)  bounds_flags |= LASERBOY_OUT_POS_X;
     if(f.x < min.x)  bounds_flags |= LASERBOY_OUT_NEG_X;
@@ -194,9 +194,9 @@ inline LaserBoy_Bounds LaserBoy_bounds_check(const LaserBoy_3D_double& f,
 }
 
 //############################################################################
-inline LaserBoy_Bounds LaserBoy_bounds_check(const LaserBoy_3D_double& f, const int& space)
+inline Bounds bounds_checkc(const Double3d& f, const int& space)
 {
-    LaserBoy_3D_double max, min;
+    Double3d max, min;
     switch(space)
     {
         case LASERBOY_CUBE          : max =  32767.0;
@@ -216,7 +216,7 @@ inline LaserBoy_Bounds LaserBoy_bounds_check(const LaserBoy_3D_double& f, const 
                                       break;
         //--------------------------------------------------------------------
     }
-    return LaserBoy_bounds_check(f, max, min);
+    return bounds_checkc(f, max, min);
 }
 
 } // namespace LaserBoy

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_frame_effects.cpp is part of LaserBoy.
+// frame_effects.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@
 namespace LaserBoy {
 
 //############################################################################
-LaserBoy_Bounds tranz(LaserBoy_frame* p_frame)
+Bounds tranz(Frame* p_frame)
 {
     int                i;
     double             amplitude = 0,
                        phase = half_pi;
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(i = 0; i < 60; i++)
@@ -139,13 +139,13 @@ LaserBoy_Bounds tranz(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds train(LaserBoy_frame* p_frame)
+Bounds train(Frame* p_frame)
 {
     u_int               frame_count       ,
                         vertex_count      ;
-    LaserBoy_3D_short   temp_position     ;
-    LaserBoy_frame      frame(*p_frame)   ;
-    LaserBoy_frame_set  out(frame.p_space);
+    Short3d   temp_position     ;
+    Frame      frame(*p_frame)   ;
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 0; frame_count < frame.size(); frame_count++)
@@ -161,14 +161,14 @@ LaserBoy_Bounds train(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds gleam(LaserBoy_frame* p_frame)
+Bounds gleam(Frame* p_frame)
 {
     u_int               frame_count         ,
                         vertex_count        ,
                         counter             ;
-    LaserBoy_frame      frame_1(*p_frame)   ,
+    Frame      frame_1(*p_frame)   ,
                         frame_2(*p_frame)   ;
-    LaserBoy_frame_set  out(frame_1.p_space);
+    FrameSet  out(frame_1.p_space);
     //------------------------------------------------------------------------
     frame_1.promote_to_true_color();
     frame_2.promote_to_true_color();
@@ -198,15 +198,15 @@ LaserBoy_Bounds gleam(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds stars(LaserBoy_frame* p_frame) // individual segments must have no size (dots!)
+Bounds stars(Frame* p_frame) // individual segments must have no size (dots!)
 {
     u_int              frame_count,
                        segment_index;
-    LaserBoy_3D_short  d,
+    Short3d  d,
                        center;
-    LaserBoy_3D_double s(1.1, 1.1, 1.1);
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Double3d s(1.1, 1.1, 1.1);
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 0; frame_count < 199; frame_count++)
@@ -230,12 +230,12 @@ LaserBoy_Bounds stars(LaserBoy_frame* p_frame) // individual segments must have 
 }
 
 //############################################################################
-LaserBoy_Bounds shrink(LaserBoy_frame* p_frame)
+Bounds shrink(Frame* p_frame)
 {
     u_int              frame_count;
-    LaserBoy_3D_double s(0.96, 0.96, 0.96);
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Double3d s(0.96, 0.96, 0.96);
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 0; frame_count < 149; frame_count++)
@@ -248,13 +248,13 @@ LaserBoy_Bounds shrink(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds fill(LaserBoy_frame* p_frame)
+Bounds fill(Frame* p_frame)
 {
     u_int              i,
                        segment_index;
-    LaserBoy_3D_double s;
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Double3d s;
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     for(segment_index = 0; segment_index < (*p_frame).number_of_segments(); segment_index++)
     {
@@ -275,12 +275,12 @@ LaserBoy_Bounds fill(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds squeez(LaserBoy_frame* p_frame)
+Bounds squeez(Frame* p_frame)
 {
     u_int              frame_count;
-    LaserBoy_3D_double s;
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set temp(frame.p_space),
+    Double3d s;
+    Frame     frame(*p_frame);
+    FrameSet temp(frame.p_space),
                        out(frame.p_space);
     //------------------------------------------------------------------------
     s.x = 0.93;
@@ -350,15 +350,15 @@ LaserBoy_Bounds squeez(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds around(LaserBoy_frame* p_frame)
+Bounds around(Frame* p_frame)
 {
     u_int              frame_count,
                        segment_index,
                        total_segments;
-    LaserBoy_Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
-    LaserBoy_3D_double a(0, 0, pi/20);
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
+    Double3d a(0, 0, pi/20);
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     total_segments = frame.number_of_segments();
@@ -412,13 +412,13 @@ LaserBoy_Bounds around(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds rotate(LaserBoy_frame* p_frame)
+Bounds rotate(Frame* p_frame)
 {
     u_int              frame_count;
-    LaserBoy_3D_double a;
-    LaserBoy_Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Double3d a;
+    Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     a.x = -pi/100;
     a.y = 0;
@@ -469,13 +469,13 @@ LaserBoy_Bounds rotate(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds rock(LaserBoy_frame* p_frame)
+Bounds rock(Frame* p_frame)
 {
     int                i;
-    LaserBoy_3D_double a(0, 0, one_degree);
-    LaserBoy_Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Double3d a(0, 0, one_degree);
+    Bounds    out_of_bounds = LASERBOY_IN_BOUNDS;
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     for(i = 0; i < 45; i++)
     {
@@ -506,14 +506,14 @@ LaserBoy_Bounds rock(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds bounce(LaserBoy_frame* p_frame)
+Bounds bounce(Frame* p_frame)
 {
     u_int              frame_count;
-    LaserBoy_Bounds    out_of_bounds;
-    LaserBoy_3D_double r;
-    LaserBoy_3D_short  d;
-    LaserBoy_frame     frame(*p_frame);
-    LaserBoy_frame_set out(frame.p_space);
+    Bounds    out_of_bounds;
+    Double3d r;
+    Short3d  d;
+    Frame     frame(*p_frame);
+    FrameSet out(frame.p_space);
     //------------------------------------------------------------------------
     d.x = short(random_neg_to_pos_1() * 3000);
     d.y = short(random_neg_to_pos_1() * 3000);
@@ -560,16 +560,16 @@ LaserBoy_Bounds bounce(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds spin(LaserBoy_frame* p_frame)
+Bounds spin(Frame* p_frame)
 {
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     u_int               frame_count,
                         segment_index,
                         total_segments = frame.number_of_segments();
-    LaserBoy_Bounds     out_of_bounds;
-    LaserBoy_3D_double* r = new LaserBoy_3D_double[total_segments];
-    LaserBoy_3D_short*  d = new LaserBoy_3D_short[total_segments];
+    Bounds     out_of_bounds;
+    Double3d* r = new Double3d[total_segments];
+    Short3d*  d = new Short3d[total_segments];
     //------------------------------------------------------------------------
     for(segment_index = 0; segment_index < total_segments; segment_index++)
     {
@@ -624,14 +624,14 @@ LaserBoy_Bounds spin(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds _break(LaserBoy_frame* p_frame)
+Bounds _break(Frame* p_frame)
 {
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     u_int               frame_count,
                         segment_index;
-    LaserBoy_Bounds     out_of_bounds;
-    LaserBoy_3D_short*  d = new LaserBoy_3D_short[frame.number_of_segments()];
+    Bounds     out_of_bounds;
+    Short3d*  d = new Short3d[frame.number_of_segments()];
     //------------------------------------------------------------------------
     for(segment_index = 0; segment_index < frame.number_of_segments(); segment_index++)
     {
@@ -670,12 +670,12 @@ LaserBoy_Bounds _break(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds rainbow(LaserBoy_frame* p_frame)
+Bounds rainbow(Frame* p_frame)
 {
     int                 i,
                         span =   p_frame->p_space->current_palette().last
                                - p_frame->p_space->current_palette().first;
-    LaserBoy_frame_set  out(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     out += *p_frame;
     for(i = 1; i <= span; i++)
@@ -688,11 +688,11 @@ LaserBoy_Bounds rainbow(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds fade(LaserBoy_frame* p_frame)
+Bounds fade(Frame* p_frame)
 {
     int                 i;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     out += frame;
@@ -707,11 +707,11 @@ LaserBoy_Bounds fade(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds bleach(LaserBoy_frame* p_frame)
+Bounds bleach(Frame* p_frame)
 {
     int                 i;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     out += frame;
@@ -726,13 +726,13 @@ LaserBoy_Bounds bleach(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds move_l2r(LaserBoy_frame* p_frame)
+Bounds move_l2r(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_3D_short   d;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Short3d   d;
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     d.x = -662;
@@ -764,13 +764,13 @@ LaserBoy_Bounds move_l2r(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds move_t2b(LaserBoy_frame* p_frame)
+Bounds move_t2b(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_3D_short   d;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Short3d   d;
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     d.y = 662;
@@ -802,12 +802,12 @@ LaserBoy_Bounds move_t2b(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds wipe(LaserBoy_frame* p_frame)
+Bounds wipe(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     out += frame;
@@ -823,12 +823,12 @@ LaserBoy_Bounds wipe(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds radial_wipe(LaserBoy_frame* p_frame)
+Bounds radial_wipe(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     out += frame;
@@ -844,12 +844,12 @@ LaserBoy_Bounds radial_wipe(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds angle_wipe(LaserBoy_frame* p_frame)
+Bounds angle_wipe(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     frame.flip(0);
@@ -867,11 +867,11 @@ LaserBoy_Bounds angle_wipe(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds draw(LaserBoy_frame* p_frame)
+Bounds draw(Frame* p_frame)
 {
     u_int               i;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  out(p_frame->p_space);
+    Frame      frame(p_frame->p_space);
+    FrameSet  out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame += p_frame->front();
     frame += p_frame->front();
@@ -887,14 +887,14 @@ LaserBoy_Bounds draw(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds wobble(LaserBoy_frame* p_frame)
+Bounds wobble(Frame* p_frame)
 {
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     u_int               frame_count,
                         segment_index;
-    LaserBoy_Bounds     out_of_bounds;
-    LaserBoy_3D_double* a = new LaserBoy_3D_double[frame.number_of_segments()];
+    Bounds     out_of_bounds;
+    Double3d* a = new Double3d[frame.number_of_segments()];
     //------------------------------------------------------------------------
     for(segment_index = 0; segment_index < frame.number_of_segments(); segment_index++)
     {
@@ -933,13 +933,13 @@ LaserBoy_Bounds wobble(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds wiggle(LaserBoy_frame* p_frame)
+Bounds wiggle(Frame* p_frame)
 {
     u_int               frame_count,
                         segment_index;
-    LaserBoy_3D_double  d;
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Double3d  d;
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 1; frame_count < 199; frame_count++)
@@ -960,14 +960,14 @@ LaserBoy_Bounds wiggle(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds throb(LaserBoy_frame* p_frame)
+Bounds throb(Frame* p_frame)
 {
     bool                flip_flop = false;
     u_int               frame_count,
                         segment_index;
     double              s;
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 1; frame_count < 199; frame_count++)
@@ -990,14 +990,14 @@ LaserBoy_Bounds throb(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds pop(LaserBoy_frame* p_frame)
+Bounds pop(Frame* p_frame)
 {
     bool                flip_flop = false;
     u_int               frame_count,
                         segment_index;
     double              s;
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 1; frame_count < 199; frame_count++)
@@ -1020,14 +1020,14 @@ LaserBoy_Bounds pop(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds jazz(LaserBoy_frame* p_frame)
+Bounds jazz(Frame* p_frame)
 {
     bool                flip_flop = false;
     u_int               frame_count,
                         segment_index;
     double              s;
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 1; frame_count < 199; frame_count++)
@@ -1050,14 +1050,14 @@ LaserBoy_Bounds jazz(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds bump(LaserBoy_frame* p_frame)
+Bounds bump(Frame* p_frame)
 {
     bool                flip_flop = false;
     u_int               frame_count,
                         segment_index;
     double              s;
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 1; frame_count < 199; frame_count++)
@@ -1080,15 +1080,15 @@ LaserBoy_Bounds bump(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds scan(LaserBoy_frame* p_frame)
+Bounds scan(Frame* p_frame)
 {
     u_int               frame_count,
                         segment_index;
-    LaserBoy_Bounds     out_of_bounds;
-    LaserBoy_3D_short   d(1200,  666,     0);
-    LaserBoy_3D_double  a(   0,    0, pi/30);
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Bounds     out_of_bounds;
+    Short3d   d(1200,  666,     0);
+    Double3d  a(   0,    0, pi/30);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 0; frame_count < 199; frame_count++)
@@ -1117,14 +1117,14 @@ LaserBoy_Bounds scan(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds fall(LaserBoy_frame* p_frame)
+Bounds fall(Frame* p_frame)
 {
-    LaserBoy_frame       frame(*p_frame);
-    LaserBoy_Bounds      out_of_bounds;
-    LaserBoy_3D_double   d(0.0, 0.0, 0.0);
+    Frame       frame(*p_frame);
+    Bounds      out_of_bounds;
+    Double3d   d(0.0, 0.0, 0.0);
     int                  frame_count,
                          segment_index;
-    LaserBoy_frame_set   segments = frame.explode_segments(),
+    FrameSet   segments = frame.explode_segments(),
                          out(frame.p_space);
     out += frame;
     for(frame_count = 1; frame_count < 399; frame_count++)
@@ -1158,18 +1158,18 @@ LaserBoy_Bounds fall(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds rain(LaserBoy_frame* p_frame)
+Bounds rain(Frame* p_frame)
 {
-    LaserBoy_frame             frame(*p_frame);
-    LaserBoy_Bounds            out_of_bounds;
-    vector<LaserBoy_3D_double> d;
+    Frame             frame(*p_frame);
+    Bounds            out_of_bounds;
+    vector<Double3d> d;
     int                        frame_count,
                                segment_index;
-    LaserBoy_frame_set         segments = frame.explode_segments(),
+    FrameSet         segments = frame.explode_segments(),
                                out(frame.p_space);
     for(segment_index = 0; segment_index < (int)segments.number_of_frames(); segment_index++)
     {
-        d.push_back(LaserBoy_3D_double());
+        d.push_back(Double3d());
         d.back().y = (random_01() - 1.1) * 400;
     }
     out += frame;
@@ -1195,12 +1195,12 @@ LaserBoy_Bounds rain(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds melt(LaserBoy_frame* p_frame)
+Bounds melt(Frame* p_frame)
 {
     int                 frame_count,
                         i;
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 1; frame_count < 199; frame_count++)
@@ -1278,12 +1278,12 @@ LaserBoy_Bounds melt(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds squirm(LaserBoy_frame* p_frame)
+Bounds squirm(Frame* p_frame)
 {
     int                 frame_count,
                         i;
-    LaserBoy_frame      frame(*p_frame);
-    LaserBoy_frame_set  out(frame.p_space);
+    Frame      frame(*p_frame);
+    FrameSet  out(frame.p_space);
     //------------------------------------------------------------------------
     out += frame;
     for(frame_count = 1; frame_count < 199; frame_count++)
@@ -1352,14 +1352,14 @@ LaserBoy_Bounds squirm(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds twist(LaserBoy_frame* p_frame)
+Bounds twist(Frame* p_frame)
 {
     int                   i,
                           j;
-    LaserBoy_Bounds       out_of_bounds;
-    LaserBoy_3D_double    rotated_coordinate;
-    LaserBoy_frame        frame(p_frame->p_space);
-    LaserBoy_frame_set    out(p_frame->p_space);
+    Bounds       out_of_bounds;
+    Double3d    rotated_coordinate;
+    Frame        frame(p_frame->p_space);
+    FrameSet    out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     out += frame;
@@ -1369,7 +1369,7 @@ LaserBoy_Bounds twist(LaserBoy_frame* p_frame)
             if(frame.at(j).x <= (short)((i * 163.84) - 32767.0))
             {
                 rotated_coordinate = rotate_vertex_around_x(frame.at(j), pi/200.0);
-                out_of_bounds = LaserBoy_bounds_check(rotated_coordinate, LASERBOY_CUBE);
+                out_of_bounds = bounds_checkc(rotated_coordinate, LASERBOY_CUBE);
                 if(out_of_bounds)
                     return out_of_bounds;
                 else
@@ -1383,7 +1383,7 @@ LaserBoy_Bounds twist(LaserBoy_frame* p_frame)
             if(frame.at(j).x >= (short)((i * 163.84) - 32767.0))
             {
                 rotated_coordinate = rotate_vertex_around_x(frame.at(j), pi/200.0);
-                out_of_bounds = LaserBoy_bounds_check(rotated_coordinate, LASERBOY_CUBE);
+                out_of_bounds = bounds_checkc(rotated_coordinate, LASERBOY_CUBE);
                 if(out_of_bounds)
                     return out_of_bounds;
                 else
@@ -1398,14 +1398,14 @@ LaserBoy_Bounds twist(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds warp(LaserBoy_frame* p_frame)
+Bounds warp(Frame* p_frame)
 {
     int                   i,
                           j;
-    LaserBoy_Bounds       out_of_bounds;
-    LaserBoy_3D_double    rotated_coordinate;
-    LaserBoy_frame        frame(p_frame->p_space);
-    LaserBoy_frame_set    out(p_frame->p_space);
+    Bounds       out_of_bounds;
+    Double3d    rotated_coordinate;
+    Frame        frame(p_frame->p_space);
+    FrameSet    out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     out += frame;
@@ -1415,7 +1415,7 @@ LaserBoy_Bounds warp(LaserBoy_frame* p_frame)
             if(frame.at(j).magnitude() >= (i * 81.92))
             {
                 rotated_coordinate = rotate_vertex_around_x(frame.at(j), pi/200.0);
-                out_of_bounds = LaserBoy_bounds_check(rotated_coordinate, LASERBOY_CUBE);
+                out_of_bounds = bounds_checkc(rotated_coordinate, LASERBOY_CUBE);
                 if(out_of_bounds)
                     return out_of_bounds;
                 else
@@ -1429,7 +1429,7 @@ LaserBoy_Bounds warp(LaserBoy_frame* p_frame)
             if(frame.at(j).magnitude() <= (i * 81.92))
             {
                 rotated_coordinate = rotate_vertex_around_x(frame.at(j), pi/200.0);
-                out_of_bounds = LaserBoy_bounds_check(rotated_coordinate, LASERBOY_CUBE);
+                out_of_bounds = bounds_checkc(rotated_coordinate, LASERBOY_CUBE);
                 if(out_of_bounds)
                     return out_of_bounds;
                 else
@@ -1442,14 +1442,14 @@ LaserBoy_Bounds warp(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds swirl(LaserBoy_frame* p_frame)
+Bounds swirl(Frame* p_frame)
 {
     int                   i,
                           j;
-    LaserBoy_Bounds       out_of_bounds;
-    LaserBoy_3D_double    rotated_coordinate;
-    LaserBoy_frame        frame(p_frame->p_space);
-    LaserBoy_frame_set    out(p_frame->p_space);
+    Bounds       out_of_bounds;
+    Double3d    rotated_coordinate;
+    Frame        frame(p_frame->p_space);
+    FrameSet    out(p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
     out += frame;
@@ -1459,7 +1459,7 @@ LaserBoy_Bounds swirl(LaserBoy_frame* p_frame)
             if(frame.at(j).magnitude() <= (i * 81.92))
             {
                 rotated_coordinate = rotate_vertex_around_z(frame.at(j), pi/200.0);
-                out_of_bounds = LaserBoy_bounds_check(rotated_coordinate, LASERBOY_CUBE);
+                out_of_bounds = bounds_checkc(rotated_coordinate, LASERBOY_CUBE);
                 if(out_of_bounds)
                     return out_of_bounds;
                 else
@@ -1473,7 +1473,7 @@ LaserBoy_Bounds swirl(LaserBoy_frame* p_frame)
             if(frame.at(j).magnitude() >= (i * 81.92))
             {
                 rotated_coordinate = rotate_vertex_around_z(frame.at(j), pi/200.0);
-                out_of_bounds = LaserBoy_bounds_check(rotated_coordinate, LASERBOY_CUBE);
+                out_of_bounds = bounds_checkc(rotated_coordinate, LASERBOY_CUBE);
                 if(out_of_bounds)
                     return out_of_bounds;
                 else
@@ -1488,14 +1488,14 @@ LaserBoy_Bounds swirl(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds half_cylinder(LaserBoy_frame* p_frame)
+Bounds half_cylinder(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_3D_short   d;
+    Short3d   d;
     double              angle;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  temp (p_frame->p_space),
+    Frame      frame(p_frame->p_space);
+    FrameSet  temp (p_frame->p_space),
                         out  (p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
@@ -1530,7 +1530,7 @@ LaserBoy_Bounds half_cylinder(LaserBoy_frame* p_frame)
         for(j = 0; j < (int)temp[i].size(); j++)
         {
             angle = (((temp[i].at(j).x + 32767.0) / 65535.0) * pi) + pi; // pi to 2pi
-            frame += LaserBoy_vertex(cos(angle) * 32767.0,
+            frame += Vertex(cos(angle) * 32767.0,
                                      temp[i].at(j).y,
                                      sin(angle) * -32767.0,
                                      temp[i].at(j).r,
@@ -1548,14 +1548,14 @@ LaserBoy_Bounds half_cylinder(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds cylinder(LaserBoy_frame* p_frame)
+Bounds cylinder(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_3D_short   d;
+    Short3d   d;
     double              angle;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  temp (p_frame->p_space),
+    Frame      frame(p_frame->p_space);
+    FrameSet  temp (p_frame->p_space),
                         out  (p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
@@ -1590,7 +1590,7 @@ LaserBoy_Bounds cylinder(LaserBoy_frame* p_frame)
         for(j = 0; j < (int)temp[i].size(); j++)
         {
             angle = (((temp[i].at(j).x + 32767.0) / 32767.0) * pi) + pi; // pi to 3pi
-            frame += LaserBoy_vertex(cos(angle) * 32767.0,
+            frame += Vertex(cos(angle) * 32767.0,
                                      temp[i].at(j).y,
                                      sin(angle) * -32767.0,
                                      temp[i].at(j).r,
@@ -1608,15 +1608,15 @@ LaserBoy_Bounds cylinder(LaserBoy_frame* p_frame)
 }
 
 //############################################################################
-LaserBoy_Bounds hemisphere(LaserBoy_frame* p_frame)
+Bounds hemisphere(Frame* p_frame)
 {
     int                 i,
                         j;
-    LaserBoy_3D_short   d;
+    Short3d   d;
     double              angle_theta,
                         angle_row;
-    LaserBoy_frame      frame(p_frame->p_space);
-    LaserBoy_frame_set  temp (p_frame->p_space),
+    Frame      frame(p_frame->p_space);
+    FrameSet  temp (p_frame->p_space),
                         out  (p_frame->p_space);
     //------------------------------------------------------------------------
     frame = *p_frame;
@@ -1652,7 +1652,7 @@ LaserBoy_Bounds hemisphere(LaserBoy_frame* p_frame)
         {
             angle_theta = (((temp[i].at(j).x + 32767.0) / 65535.0) * pi) + pi; // pi to 2pi
             angle_row   = (((temp[i].at(j).y) / 65535.0) * pi); // -pi to pi
-            frame += LaserBoy_vertex(cos(angle_row) * cos(angle_theta) * 32767.0,
+            frame += Vertex(cos(angle_row) * cos(angle_theta) * 32767.0,
                                      sin(angle_row) * 32767.0,
                                      cos(angle_row) * sin(angle_theta) * -32767.0,
                                      temp[i].at(j).r,
@@ -1707,7 +1707,7 @@ LaserBoy_Bounds hemisphere(LaserBoy_frame* p_frame)
 
 
 //############################################################################
-void LaserBoy_space::load_frame_effects()
+void Space::load_frame_effects()
 {
     //------------------------------------------------------------------------
     frame_effects.push_back(around);

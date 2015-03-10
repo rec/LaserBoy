@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_segment.hpp is part of LaserBoy.
+// segment.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,15 +37,15 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_segment : public LaserBoy_segment_base
+class Segment : public SegmentBase
 {
 public:
-    LaserBoy_segment(LaserBoy_space* ps = NULL)
+    Segment(Space* ps = NULL)
                      : p_space       (ps),
                        palette_index (LASERBOY_ILDA_DEFAULT),
                        segment_error (LASERBOY_OK)           {}
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space* ps,
+    Segment(Space* ps,
                      const int& palette_index,
                      bool       add_origin
                     )
@@ -56,12 +56,12 @@ public:
                         if(add_origin)
                         {
                             reserve(2);
-                            push_back(LaserBoy_vertex());
-                            push_back(LaserBoy_vertex());
+                            push_back(Vertex());
+                            push_back(Vertex());
                         }
                     }
     //------------------------------------------------------------------------
-    LaserBoy_segment(const LaserBoy_segment& segment)
+    Segment(const Segment& segment)
                      : p_space       (segment.p_space),
                        palette_index (segment.palette_index),
                        segment_error (LASERBOY_OK)
@@ -71,7 +71,7 @@ public:
                         insert(end(), segment.begin(), segment.end());
                     }
     //------------------------------------------------------------------------
-    LaserBoy_segment(const LaserBoy_real_segment& real_segment)
+    Segment(const RealSegment& real_segment)
                      : p_space       (real_segment.p_space),
                        palette_index (real_segment.palette_index),
                        segment_error (LASERBOY_OK)
@@ -79,78 +79,78 @@ public:
                         clear();
                         reserve(real_segment.size());
                         for(u_int i = 0; i < real_segment.size(); i++)
-                            push_back((LaserBoy_vertex)real_segment[i]);
+                            push_back((Vertex)real_segment[i]);
                     }
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space   *ps,
-                     LaserBoy_3D_short from,
-                     LaserBoy_vertex   to
+    Segment(Space   *ps,
+                     Short3d from,
+                     Vertex   to
                     ); // the line
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_vertex   p1,
-                     LaserBoy_vertex   p2,
+    Segment(Space*   ps,
+                     Vertex   p1,
+                     Vertex   p2,
                      string            font,
                      string            text
                     );   // mono spaced font constructor
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_vertex   p1,
-                     LaserBoy_vertex   p2,
+    Segment(Space*   ps,
+                     Vertex   p1,
+                     Vertex   p2,
                      string            font,
                      string            text,
                      int               dud
                     );   // variable spaced font constructor
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_3D_short center,
-                     LaserBoy_3D_short arc_start,
+    Segment(Space*   ps,
+                     Short3d center,
+                     Short3d arc_start,
                      double            arc_angle // OK degrees, whatever!
                     );   // circular arc constructor
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_3D_short center,
-                     LaserBoy_3D_short arc_start,
+    Segment(Space*   ps,
+                     Short3d center,
+                     Short3d arc_start,
                      double            arc_angle,
                      double            radii_ratio
                     );   // elliptical arc constructor
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_3D_short center,
-                     LaserBoy_3D_short first_vertex,
+    Segment(Space*   ps,
+                     Short3d center,
+                     Short3d first_vertex,
                      u_int             number_of_sides
                     );   // polygon constructor
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_3D_short center,
-                     LaserBoy_3D_short first_vertex,
+    Segment(Space*   ps,
+                     Short3d center,
+                     Short3d first_vertex,
                      u_int             number_of_sides,
                      double            ratio
                     );   // polystar constructor
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_3D_short center,
+    Segment(Space*   ps,
+                     Short3d center,
                      int               radius,
                      int               pedals_numerator,
                      int               pedals_denominator
                     );   // rhodonea
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
+    Segment(Space*   ps,
                      int               center_radius,
-                     LaserBoy_3D_short center,
+                     Short3d center,
                      int               roller_radius,
                      int               roller_offset
                     );   // epitrochoid (and epicycloid)
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
+    Segment(Space*   ps,
                      int               center_radius,
                      int               roller_radius,
                      int               roller_offset,
-                     LaserBoy_3D_short center
+                     Short3d center
                     );   // hypotrochoid (and hypocycloid)
     //------------------------------------------------------------------------
-    LaserBoy_segment(LaserBoy_space*   ps,
-                     LaserBoy_3D_short center,
+    Segment(Space*   ps,
+                     Short3d center,
                      int               amplitude_x,
                      int               amplitude_y,
                      int               frequency_x,
@@ -160,9 +160,9 @@ public:
                     );   // Lissajous curve
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_segment()                                          {}
+   ~Segment()                                          {}
     //------------------------------------------------------------------------
-    bool operator == (const LaserBoy_segment& segment)
+    bool operator == (const Segment& segment)
             {
                 if(palette_index != segment.palette_index)
                     return false;
@@ -174,7 +174,7 @@ virtual
                 return true;
             }
     //------------------------------------------------------------------------
-    LaserBoy_segment&  operator += (const LaserBoy_segment& segment)
+    Segment&  operator += (const Segment& segment)
                         {
                             if(palette_index != segment.palette_index)
                                 promote_to_true_color();
@@ -183,15 +183,15 @@ virtual
                             return *this;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_segment&  operator += (const LaserBoy_vertex& vertex)
+    Segment&  operator += (const Vertex& vertex)
                         {
                             push_back(vertex);
                             return *this;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_segment   operator + (const LaserBoy_segment& segment)
+    Segment   operator + (const Segment& segment)
                         {
-                            LaserBoy_segment sum(*this);
+                            Segment sum(*this);
                             if(sum.palette_index != segment.palette_index)
                                 sum.promote_to_true_color();
                             sum.reserve(sum.size() + segment.size());
@@ -199,14 +199,14 @@ virtual
                             return sum;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_segment   operator + (const LaserBoy_vertex& vertex)
+    Segment   operator + (const Vertex& vertex)
                         {
-                            LaserBoy_segment sum(*this);
+                            Segment sum(*this);
                             sum.push_back(vertex);
                             return sum;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_segment&  operator =  (const LaserBoy_segment& segment)
+    Segment&  operator =  (const Segment& segment)
                         {
                             clear();
 //                            palette_index = segment.palette_index;
@@ -244,12 +244,12 @@ virtual
                 return (front() | back());
             }
     //------------------------------------------------------------------------
-    LaserBoy_vertex first_lit_vector() const
+    Vertex first_lit_vector() const
                     {
                         for(u_int i = 1; i < size(); i++)
                             if(at(i).is_lit())
                                 return at(i);
-                        return LaserBoy_vertex(0);
+                        return Vertex(0);
                     }
     //------------------------------------------------------------------------
     int first_lit_vector_index() const
@@ -260,12 +260,12 @@ virtual
                 return -1;
             }
     //------------------------------------------------------------------------
-    LaserBoy_vertex first_lit_anchor() const
+    Vertex first_lit_anchor() const
                     {
                         for(u_int i = 1; i < size(); i++)
                             if(at(i).is_lit())
                                 return at(i - 1);
-                        return LaserBoy_vertex(0);
+                        return Vertex(0);
                     }
     //------------------------------------------------------------------------
     int first_lit_anchor_index() const
@@ -284,20 +284,20 @@ virtual
                 return -1;
             }
     //------------------------------------------------------------------------
-    LaserBoy_vertex last_lit_anchor() const
+    Vertex last_lit_anchor() const
                     {
                         for(u_int i = size() - 1; i > 0; i--)
                             if(at(i).is_lit())
                                 return at(i - 1);
-                        return LaserBoy_vertex(0);
+                        return Vertex(0);
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex last_lit_vector() const
+    Vertex last_lit_vector() const
                     {
                         for(u_int i = size() - 1; i > 0; i--)
                             if(at(i).is_lit())
                                 return at(i);
-                        return LaserBoy_vertex(0);
+                        return Vertex(0);
                     }
     //------------------------------------------------------------------------
     int last_lit_vector_index() const
@@ -335,22 +335,22 @@ virtual
                 {
                     u_int             i,
                                       j;
-                    LaserBoy_palette  palette(p_space);
+                    Palette  palette(p_space);
 
                     if(first_lit_vector().is_lit()) // DUH!
                     {
-                        palette.push_back((LaserBoy_color)first_lit_vector());
+                        palette.push_back((Color)first_lit_vector());
                         for(i = first_lit_vector_index() + 1; i < size(); i++)
                         {
                             for(j = 0; j < palette.number_of_colors(); j++)
                             {
-                                if(palette[j] == (LaserBoy_color)at(i))
+                                if(palette[j] == (Color)at(i))
                                     break;
                             }
                             if(    j == palette.number_of_colors() // color not found
                                 && at(i).is_lit()
                               )
-                                palette.push_back((LaserBoy_color)at(i));
+                                palette.push_back((Color)at(i));
                         }
                         return palette.number_of_colors();
                     }
@@ -358,7 +358,7 @@ virtual
                 return 0;
             }
     //------------------------------------------------------------------------
-    LaserBoy_segment& remove_vertex(u_int vertex_index)
+    Segment& remove_vertex(u_int vertex_index)
             {
                 if(size() <= 2) // takes 2 vertices to make a vector!
                     clear();
@@ -367,7 +367,7 @@ virtual
                        )
                 {
                     u_int            i;
-                    LaserBoy_segment segment(p_space);
+                    Segment segment(p_space);
                     segment.reserve(size());
                     for(i = 0; i < vertex_index; i++)
                         segment += at(i);
@@ -378,41 +378,41 @@ virtual
                 return *this;
             }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short    segment_front                 () const ;
-    LaserBoy_3D_short    segment_back                  () const ;
-    LaserBoy_3D_short    segment_top                   () const ;
-    LaserBoy_3D_short    segment_bottom                () const ;
-    LaserBoy_3D_short    segment_right                 () const ;
-    LaserBoy_3D_short    segment_left                  () const ;
-    LaserBoy_3D_short    vertex_farthest_from_origin   () const ;
+    Short3d    segment_front                 () const ;
+    Short3d    segment_back                  () const ;
+    Short3d    segment_top                   () const ;
+    Short3d    segment_bottom                () const ;
+    Short3d    segment_right                 () const ;
+    Short3d    segment_left                  () const ;
+    Short3d    vertex_farthest_from_origin   () const ;
     short                segment_height                () const ;
     short                segment_width                 () const ;
     short                segment_depth                 () const ;
     short                segment_size                  () const ;
     bool                 is_closed_polygon             () const ;
-    LaserBoy_segment&    reverse                       ();
-    LaserBoy_segment&    reverse_sub_segment           (u_int p1, u_int p2);
-    LaserBoy_segment&    reorder_from                  (u_int vertex_index);
-    LaserBoy_segment&    randomize_segments            ();
-    LaserBoy_segment&    conglomerate_lit_segments     ();
-    LaserBoy_segment     shortest_path_of_segments     (const LaserBoy_segment& previous_frame);
+    Segment&    reverse                       ();
+    Segment&    reverse_sub_segment           (u_int p1, u_int p2);
+    Segment&    reorder_from                  (u_int vertex_index);
+    Segment&    randomize_segments            ();
+    Segment&    conglomerate_lit_segments     ();
+    Segment     shortest_path_of_segments     (const Segment& previous_frame);
     void                 blank_all_vertices            ();
     void                 unblank_all_vertices          ();
     void                 blacken_vertices              ();
     void                 reduce_blank_vectors          ();
     void                 omit_equivalent_vectors       ();
     void                 remove_dots                   ();
-    LaserBoy_Error_Code  enhance_dots                  ();
+    ErrorCode  enhance_dots                  ();
     void                 remove_dwell_vertices         ();
     void                 remove_short_vectors          ();
     void                 reduce_lit_vectors            ();
     void                 impose_bit_resolution         ();
-    LaserBoy_Error_Code  reorder_segments              (const LaserBoy_segment& previous_frame);
-    LaserBoy_Error_Code  fracture_segments             ();
-    LaserBoy_Error_Code  bond_segments                 ();
-    LaserBoy_Error_Code  add_vertex                    (u_int  vertex_index);
-    LaserBoy_Error_Code  break_segment                 (u_int& vertex_index);
-    LaserBoy_Error_Code  connect_the_dots              (u_int p1, u_int p2); // vertex indices
+    ErrorCode  reorder_segments              (const Segment& previous_frame);
+    ErrorCode  fracture_segments             ();
+    ErrorCode  bond_segments                 ();
+    ErrorCode  add_vertex                    (u_int  vertex_index);
+    ErrorCode  break_segment                 (u_int& vertex_index);
+    ErrorCode  connect_the_dots              (u_int p1, u_int p2); // vertex indices
     double               vector_angle                  (u_int vertex) const ;
     double               total_angle                   () const ;
     double               max_angle                     () const ;
@@ -422,24 +422,24 @@ virtual
     double               max_color_distance            () const ;
     double               max_dark_distance             () const ;
     double               length_in_time                () const ;
-    LaserBoy_Error_Code  add_dwell                     ();
-    LaserBoy_Error_Code  add_lit_span_vertices         ();
-    LaserBoy_Error_Code  add_blank_span_vertices       ();
+    ErrorCode  add_dwell                     ();
+    ErrorCode  add_lit_span_vertices         ();
+    ErrorCode  add_blank_span_vertices       ();
     void                 flip                          (u_int plane);
     void                 quarter_turn                  (u_int plane, u_int turns);
     void                 z_order_vertices              (unsigned short span);
     void                 flatten_z                     ();
-    LaserBoy_Bounds      rotate                        (LaserBoy_3D_double a);
-    LaserBoy_Bounds      rotate_around_origin          (LaserBoy_3D_double a);
+    Bounds      rotate                        (Double3d a);
+    Bounds      rotate_around_origin          (Double3d a);
     //------------------------------------------------------------------------
-    LaserBoy_Bounds      rotate_on_coordinates         (LaserBoy_3D_double p,
-                                                        LaserBoy_3D_double a
+    Bounds      rotate_on_coordinates         (Double3d p,
+                                                        Double3d a
                                                        );
     //------------------------------------------------------------------------
-    LaserBoy_Bounds      rotate_on_coordinates_x       (LaserBoy_3D_double p, double a);
-    LaserBoy_Bounds      rotate_on_coordinates_y       (LaserBoy_3D_double p, double a);
-    LaserBoy_Bounds      rotate_on_coordinates_z       (LaserBoy_3D_double p, double a);
-    LaserBoy_Bounds      rotate_around_origin          ();
+    Bounds      rotate_on_coordinates_x       (Double3d p, double a);
+    Bounds      rotate_on_coordinates_y       (Double3d p, double a);
+    Bounds      rotate_on_coordinates_z       (Double3d p, double a);
+    Bounds      rotate_around_origin          ();
     //------------------------------------------------------------------------
     void                 ripple                        (int    direction,
                                                         double amplitude,
@@ -447,7 +447,7 @@ virtual
                                                         double phase
                                                        );
     //------------------------------------------------------------------------
-    LaserBoy_palette     as_color_table                () const ;
+    Palette     as_color_table                () const ;
     void                 strip_color                   ();
     void                 strip_color_or                ();
     void                 strip_color_avg               ();
@@ -460,8 +460,8 @@ virtual
     void                 set_vertex_to_black           (u_int index);
     void                 impose_black_level            ();
     void                 rainbow_recolor               (int effect);
-    LaserBoy_segment&    rotate_colors                 (int steps );
-    bool                 find_rgb_in_palette           (const LaserBoy_palette& palette);
+    Segment&    rotate_colors                 (int steps );
+    bool                 find_rgb_in_palette           (const Palette& palette);
     void                 set_rgb_from_palette          ();
     void                 set_palette_to_332            ();
     void                 sync_rgb_and_palette          ();
@@ -471,28 +471,28 @@ virtual
     void                 shade                         (u_char shade);
     void                 tint                          (u_char tint);
     bool                 color_from_bmp                (const string& file);
-    void                 color_from_bmp                (struct LaserBoy_bmp* bmp);
+    void                 color_from_bmp                (struct Bitmap* bmp);
     bool                 subtract_bmp                  (const string& file);
-    void                 subtract_bmp                  (struct LaserBoy_bmp* bmp);
+    void                 subtract_bmp                  (struct Bitmap* bmp);
     //------------------------------------------------------------------------
-    LaserBoy_Bounds      move                          (LaserBoy_3D_double d,
+    Bounds      move                          (Double3d d,
                                                         bool check_bounds = true
                                                        );
     //------------------------------------------------------------------------
-    LaserBoy_Bounds      move                          ();
+    Bounds      move                          ();
     //------------------------------------------------------------------------
-    LaserBoy_Bounds      scale                         (LaserBoy_3D_double s);
-    LaserBoy_Bounds      scale_on_coordinates          (LaserBoy_3D_double p,
-                                                        LaserBoy_3D_double s
+    Bounds      scale                         (Double3d s);
+    Bounds      scale_on_coordinates          (Double3d p,
+                                                        Double3d s
                                                        );
     //------------------------------------------------------------------------
-    LaserBoy_Bounds      scale_around_origin           (LaserBoy_3D_double s);
-    LaserBoy_Bounds      scale_around_origin           ();
-    LaserBoy_3D_double   rectangular_center_of         () const ;
-    LaserBoy_3D_double   mean_of_coordinates           () const ;
+    Bounds      scale_around_origin           (Double3d s);
+    Bounds      scale_around_origin           ();
+    Double3d   rectangular_center_of         () const ;
+    Double3d   mean_of_coordinates           () const ;
     u_int                number_of_segments            () const ;
     //------------------------------------------------------------------------
-    LaserBoy_segment     blend                         (const LaserBoy_segment& segment,
+    Segment     blend                         (const Segment& segment,
                                                         double ratio
                                                        );
     //------------------------------------------------------------------------
@@ -507,33 +507,33 @@ virtual
                                                         u_int& segment_index
                                                        ) const ;
     //------------------------------------------------------------------------
-    LaserBoy_segment     copy_segment                  (u_int index) const ;
-    LaserBoy_frame_set   explode_segments              () const ;
-    LaserBoy_3D_double   rectangular_center_of_segment (u_int index) const ;
-    LaserBoy_3D_double   mean_of_coordinates_of_segment(u_int index) const ;
+    Segment     copy_segment                  (u_int index) const ;
+    FrameSet   explode_segments              () const ;
+    Double3d   rectangular_center_of_segment (u_int index) const ;
+    Double3d   mean_of_coordinates_of_segment(u_int index) const ;
     u_int                segment_index_of_vertex       (u_int index) const ;
-    LaserBoy_Bounds      move_segment                  (u_int index, LaserBoy_3D_double d);
-    LaserBoy_Bounds      rotate_segment                (u_int index, LaserBoy_3D_double a);
-    LaserBoy_Bounds      rotate_segment_around_origin  (u_int index, LaserBoy_3D_double a);
-    LaserBoy_Bounds      scale_segment                 (u_int index, LaserBoy_3D_double m);
-    LaserBoy_Bounds      scale_segment_around_origin   (u_int index, LaserBoy_3D_double m);
+    Bounds      move_segment                  (u_int index, Double3d d);
+    Bounds      rotate_segment                (u_int index, Double3d a);
+    Bounds      rotate_segment_around_origin  (u_int index, Double3d a);
+    Bounds      scale_segment                 (u_int index, Double3d m);
+    Bounds      scale_segment_around_origin   (u_int index, Double3d m);
     //------------------------------------------------------------------------
     void                 to_fstream_wave               (fstream&  out,
-                                                        LaserBoy_wave_header& header,
+                                                        WaveHeader& header,
                                                         bool end_of_frame = false,
                                                         bool unique_frame = false
                                                        );
     //------------------------------------------------------------------------
-    LaserBoy_space*      p_space;
+    Space*      p_space;
 
     int                  palette_index;
-    LaserBoy_Error_Code  segment_error;
+    ErrorCode  segment_error;
     //------------------------------------------------------------------------
 };
 
 //############################################################################
-LaserBoy_segment blank_segment(LaserBoy_space* ps);
-LaserBoy_segment NULL_segment (LaserBoy_space* ps);
+Segment blank_segment(Space* ps);
+Segment NULL_segment (Space* ps);
 
 } // namespace LaserBoy
 

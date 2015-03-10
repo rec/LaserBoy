@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_frame_set.hpp is part of LaserBoy.
+// FrameSet.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,11 +36,11 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_frame_set : public LaserBoy_frame_set_base
+class FrameSet : public FrameSet_base
 {
 public:
     //------------------------------------------------------------------------
-    LaserBoy_frame_set(LaserBoy_space* ps)
+    FrameSet(Space* ps)
                      : p_space            (ps)
                      , frame_set_error    (LASERBOY_OK)
                      , num_2D_frames      ( 0)
@@ -54,7 +54,7 @@ public:
                             null_frame = NULL_frame(ps);
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set(const LaserBoy_frame_set& f)
+    FrameSet(const FrameSet& f)
                      : p_space            (f.p_space)
                      , frame_set_error    (f.frame_set_error)
                      , num_2D_frames      (f.num_2D_frames)
@@ -70,16 +70,16 @@ public:
                             insert(begin(), f.begin(), f.end());
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set(LaserBoy_space* ps,
-                       LaserBoy_vertex(*F)(int, int), // pointer to a function that generates a frame set
+    FrameSet(Space* ps,
+                       Vertex(*F)(int, int), // pointer to a function that generates a frame set
                        int vertices_per_frame,
                        int num_frames
                       );
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_frame_set() {}
+   ~FrameSet() {}
     //------------------------------------------------------------------------
-    LaserBoy_frame& frame(int index) //sets frame_index
+    Frame& frame(int index) //sets frame_index
                     {
                         if(number_of_frames())
                         {
@@ -93,7 +93,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& next_frame() //sets frame_index
+    Frame& next_frame() //sets frame_index
                     {
                         if(number_of_frames())
                         {
@@ -105,7 +105,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& previous_frame() //sets frame_index
+    Frame& previous_frame() //sets frame_index
                     {
                         if(number_of_frames())
                         {
@@ -118,7 +118,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& frame_picker(int index) // does not set frame_index
+    Frame& frame_picker(int index) // does not set frame_index
                     {
                         if(number_of_frames())
                         {
@@ -131,7 +131,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& current_frame()
+    Frame& current_frame()
                     {
                         if(number_of_frames())
                             return at(frame_index);
@@ -187,7 +187,7 @@ virtual
                 return;
             }
     //------------------------------------------------------------------------
-    void  push_back_frame(const LaserBoy_frame& frame)
+    void  push_back_frame(const Frame& frame)
             {
                 push_back(frame);
                 return;
@@ -210,7 +210,7 @@ virtual
                 return vertices;
             }
     //------------------------------------------------------------------------
-    LaserBoy_frame& pre_incr_current_frame()
+    Frame& pre_incr_current_frame()
                     {
                         if(number_of_frames())
                         {
@@ -222,7 +222,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& pre_decr_current_frame()
+    Frame& pre_decr_current_frame()
                     {
                         if(number_of_frames())
                         {
@@ -235,7 +235,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& post_incr_current_frame(int)
+    Frame& post_incr_current_frame(int)
                     {
                         if(number_of_frames())
                         {
@@ -248,7 +248,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& post_decr_current_frame(int)
+    Frame& post_decr_current_frame(int)
                     {
                         if(number_of_frames())
                         {
@@ -262,7 +262,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set& operator  = (const LaserBoy_frame_set& frames)
+    FrameSet& operator  = (const FrameSet& frames)
                         {
                             clear();
                             reserve(frames.size());
@@ -274,14 +274,14 @@ virtual
                             return *this;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set& operator += (const LaserBoy_frame_set& frames)
+    FrameSet& operator += (const FrameSet& frames)
                         {
                             reserve(size() + frames.size());
                             insert(end(), frames.begin(), frames.end());
                             return *this;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set& operator  = (const LaserBoy_frame& frame)
+    FrameSet& operator  = (const Frame& frame)
                         {
                             clear();
                             frame_select_start = -1;
@@ -290,33 +290,33 @@ virtual
                             return *this;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set& operator += (const LaserBoy_frame& frame);
+    FrameSet& operator += (const Frame& frame);
     //------------------------------------------------------------------------
-    LaserBoy_frame_set& operator += (LaserBoy_segment& segment)
+    FrameSet& operator += (Segment& segment)
                         {
-                            LaserBoy_ild_header header;
+                            ILDHeader header;
                             header.format = segment.is_2D();
-                            push_back(LaserBoy_frame(header, segment));
+                            push_back(Frame(header, segment));
                             return *this;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set selected_frames()
+    FrameSet selected_frames()
                         {
-                            LaserBoy_frame_set  selected(p_space);
+                            FrameSet  selected(p_space);
                             for(u_int i = 0; i < number_of_frames(); i++)
                                 if(at(i).is_selected)
                                     selected.push_back(at(i));
                             return selected;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame_set  operator +  (const LaserBoy_frame_set& frames) const
+    FrameSet  operator +  (const FrameSet& frames) const
                         {
-                            LaserBoy_frame_set sum(*this);
+                            FrameSet sum(*this);
                             sum += frames;
                             return sum;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator [] (u_int index) // does not set frame_index
+    Frame& operator [] (u_int index) // does not set frame_index
                     {
                         if(number_of_frames())
                         {
@@ -327,7 +327,7 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_frame selected_frame_index(u_int index)
+    Frame selected_frame_index(u_int index)
                     {
                         if(number_of_frames())
                         {
@@ -349,11 +349,11 @@ virtual
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_segment sum_of_frames()
+    Segment sum_of_frames()
                         {
                             bool              same_palettes = true;
                             u_int             i;
-                            LaserBoy_segment  segment(p_space, front().palette_index, false);
+                            Segment  segment(p_space, front().palette_index, false);
                             for(i = 1; i < number_of_frames(); i++)
                                 if(segment.palette_index != at(i).palette_index)
                                 {
@@ -384,31 +384,31 @@ virtual
     //------------------------------------------------------------------------
     void                 render_frame       (const int& index) const;
     //------------------------------------------------------------------------
-    LaserBoy_frame_set&  reverse            ();
-    LaserBoy_frame_set&  make_current_first ();
-    LaserBoy_frame_set&  swap_frames        (int i, int j);
-    LaserBoy_frame_set&  reverse_selected   ();
-    LaserBoy_frame_set&  random_order       ();
-    LaserBoy_frame_set&  frame_reverse      ();
+    FrameSet&  reverse            ();
+    FrameSet&  make_current_first ();
+    FrameSet&  swap_frames        (int i, int j);
+    FrameSet&  reverse_selected   ();
+    FrameSet&  random_order       ();
+    FrameSet&  frame_reverse      ();
     //------------------------------------------------------------------------
     bool                 from_nothing       ();
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_ild_file                  (const string& file,
+    ErrorCode  from_ild_file                  (const string& file,
                                                          long int&     bytes_skipped
                                                         );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_txt_file                  (const string& file,
+    ErrorCode  from_txt_file                  (const string& file,
                                                          bool          append = false
                                                         );
     //------------------------------------------------------------------------
-    void                 superimpose_frame_set          (LaserBoy_frame_set& overlay);
+    void                 superimpose_frame_set          (FrameSet& overlay);
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  superimpose_from_txt_file      (const string& file,
+    ErrorCode  superimpose_from_txt_file      (const string& file,
                                                          int &new_frame_count,
                                                          int &new_palette_count
                                                         );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_dxf_file                  (const string& file,
+    ErrorCode  from_dxf_file                  (const string& file,
                                                          bool          append = false
                                                         );
     //------------------------------------------------------------------------
@@ -416,7 +416,7 @@ virtual
                                                          bool          append = false
                                                         );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_ifstream_ild              (ifstream& in,
+    ErrorCode  from_ifstream_ild              (ifstream& in,
                                                          long int& bytes_skipped
                                                         );
     //------------------------------------------------------------------------
@@ -434,23 +434,23 @@ virtual
                                                          bool          append = false
                                                         );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_fstream_LaserBoy_wave     (LaserBoy_wave_header header,
+    ErrorCode  from_fstream_LaserBoy_wave     (WaveHeader header,
                                                          fstream&             in,
                                                          bool                 append = false
                                                         );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_fstream_unframed_wave     (LaserBoy_wave_header header,
+    ErrorCode  from_fstream_unframed_wave     (WaveHeader header,
                                                          fstream&             in,
                                                          bool                 append = false
                                                         );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_fstream_qm_wave           (LaserBoy_wave_header header,
+    ErrorCode  from_fstream_qm_wave           (WaveHeader header,
                                                          fstream&             in,
                                                          bool                 global_polarity,
                                                          bool                 append = false
                                                         );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  from_fstream_unformatted_wave  (LaserBoy_wave_header header,
+    ErrorCode  from_fstream_unformatted_wave  (WaveHeader header,
                                                          fstream&             in,
                                                          bool                 global_polarity,
                                                          bool                 append = false
@@ -476,7 +476,7 @@ virtual
     void    reduce_blank_vectors            (                        )       ;
     void    remove_dots                     (                        )       ;
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code     enhance_dots    (                        )       ;
+    ErrorCode     enhance_dots    (                        )       ;
     //------------------------------------------------------------------------
     void    remove_dwell_vertices           (                        )       ;
     void    remove_short_vectors            (                        )       ;
@@ -487,38 +487,38 @@ virtual
     void    explode_current_frame           (                        )       ;
     void    explode_all_frames              (                        )       ;
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  collapse_selected_frames(                   )       ;
+    ErrorCode  collapse_selected_frames(                   )       ;
     //------------------------------------------------------------------------
     void    delete_every_nth_frame          (unsigned short n        )       ;
     void    keep_every_nth_frame            (unsigned short n        )       ;
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  fracture_segments  (                        )       ;
+    ErrorCode  fracture_segments  (                        )       ;
     //------------------------------------------------------------------------
     void    omit_equivalent_vectors         (                        )       ;
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code     bond_segments   (                        )       ;
-    LaserBoy_Error_Code     reorder_segments(                        )       ;
+    ErrorCode     bond_segments   (                        )       ;
+    ErrorCode     reorder_segments(                        )       ;
     //------------------------------------------------------------------------
     void    randomize_segments              (                        )       ;
     void    conglomerate_lit_segments       (                        )       ;
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  add_dwell              (                    )       ;
-    LaserBoy_Error_Code  add_lit_span_vertices  (                    )       ;
-    LaserBoy_Error_Code  add_blank_span_vertices(                    )       ;
+    ErrorCode  add_dwell              (                    )       ;
+    ErrorCode  add_lit_span_vertices  (                    )       ;
+    ErrorCode  add_blank_span_vertices(                    )       ;
     //------------------------------------------------------------------------
     void    delete_redundant_frames         (                        )       ;
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  optimize           (                        )       ;
+    ErrorCode  optimize           (                        )       ;
     //------------------------------------------------------------------------
     void    rainbow_recolor                 (int effect              )       ;
     void    quarter_turn                    (u_int plane, u_int turns)       ;
     //------------------------------------------------------------------------
-    LaserBoy_Bounds  scale_around_origin    (LaserBoy_3D_double f    )       ;
-    LaserBoy_Bounds  scale_around_origin    (                        )       ;
-    LaserBoy_Bounds  rotate_around_origin   (LaserBoy_3D_double f    )       ;
-    LaserBoy_Bounds  rotate_around_origin   (                        )       ;
-    LaserBoy_Bounds  move                   (LaserBoy_3D_double f    )       ;
-    LaserBoy_Bounds  move                   (                        )       ;
+    Bounds  scale_around_origin    (Double3d f    )       ;
+    Bounds  scale_around_origin    (                        )       ;
+    Bounds  rotate_around_origin   (Double3d f    )       ;
+    Bounds  rotate_around_origin   (                        )       ;
+    Bounds  move                   (Double3d f    )       ;
+    Bounds  move                   (                        )       ;
     //------------------------------------------------------------------------
     void    toggle_frame_select_start       (                        )       ;
     void    toggle_frame_select_end         (                        )       ;
@@ -536,9 +536,9 @@ virtual
     void    to_palette_by_index             (u_int index             )       ;
     void    to_target_palette_by_index      (                        )       ;
     bool    color_from_bmp                  (const string& file      )       ;
-    void    color_from_bmp                  (struct LaserBoy_bmp* bmp)       ;
+    void    color_from_bmp                  (struct Bitmap* bmp)       ;
     bool    subtract_bmp                    (const string& file      )       ;
-    void    subtract_bmp                    (struct LaserBoy_bmp* bmp)       ;
+    void    subtract_bmp                    (struct Bitmap* bmp)       ;
     void    flip                            (int plane               )       ;
     void    renumber                        (                        )       ;
     bool    save_as_ild                     (const string& file      )       ;
@@ -559,20 +559,20 @@ virtual
     bool    save_as_bmp_directory           (const string& dir       ) const ;
     bool    save_as_dxf_directory           (const string& dir       ) const ;
     //------------------------------------------------------------------------
-    LaserBoy_space*      p_space           ;
-    LaserBoy_Error_Code  frame_set_error   ;
+    Space*      p_space           ;
+    ErrorCode  frame_set_error   ;
     u_int                num_2D_frames     ,
                          num_3D_frames     ,
                          frame_index       ;
     int                  frame_select_start,
                          frame_select_end  ;
-    LaserBoy_frame       null_frame        ;
+    Frame       null_frame        ;
     string               ild_file_GUID     ;
 };
 
 //############################################################################
-typedef LaserBoy_Bounds(*LaserBoy_frame_effect    )(LaserBoy_frame*    ); // function prototyes
-typedef LaserBoy_Bounds(*LaserBoy_frame_set_effect)(LaserBoy_frame_set*);
+typedef Bounds(*Frame_effect    )(Frame*    ); // function prototyes
+typedef Bounds(*FrameSet_effect)(FrameSet*);
 
 } // namespace LaserBoy
 

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_wave.cpp is part of LaserBoy.
+// wave.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@
 namespace LaserBoy {
 
 //############################################################################
-LaserBoy_wave_header::LaserBoy_wave_header(const LaserBoy_wave_header& header)
+WaveHeader::WaveHeader(const WaveHeader& header)
   : num_channels      (header.num_channels      ),
     bits_per_sample   (header.bits_per_sample   ),
     num_samples       (header.num_samples       ),
     sample_rate       (header.sample_rate       ),
     num_frames        (header.num_frames        ),
-    LaserBoy_wave_mode(header.LaserBoy_wave_mode),
+    wave_mode(header.wave_mode),
     version           (header.version           ),
     parms             (                         )
 {
@@ -61,13 +61,13 @@ LaserBoy_wave_header::LaserBoy_wave_header(const LaserBoy_wave_header& header)
 }
 
 //############################################################################
-LaserBoy_wave_header::LaserBoy_wave_header(const LaserBoy_wave_header& header, int)
+WaveHeader::WaveHeader(const WaveHeader& header, int)
   : num_channels      (8                        ),
     bits_per_sample   (header.bits_per_sample   ),
     num_samples       (header.num_samples       ),
     sample_rate       (header.sample_rate       ),
     num_frames        (header.num_frames        ),
-    LaserBoy_wave_mode(header.LaserBoy_wave_mode),
+    wave_mode(header.wave_mode),
     version           (header.version           ),
     parms             (                         )
 {
@@ -99,13 +99,13 @@ LaserBoy_wave_header::LaserBoy_wave_header(const LaserBoy_wave_header& header, i
 }
 
 //############################################################################
-LaserBoy_wave_header::LaserBoy_wave_header(fstream& in)
+WaveHeader::WaveHeader(fstream& in)
   : num_channels       (0),
     bits_per_sample    (0),
     num_samples        (0),
     sample_rate        (0),
     num_frames         (0),
-    LaserBoy_wave_mode (LASERBOY_WAVE_NO_MODE),
+    wave_mode (LASERBOY_WAVE_NO_MODE),
     version            ("!LaserBoy!"),
     parms              ()
 {
@@ -128,7 +128,7 @@ LaserBoy_wave_header::LaserBoy_wave_header(fstream& in)
 }
 
 //############################################################################
-bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
+bool WaveHeader::from_fstream_wave(fstream& in)
 {
     char    a, b, c, d;
 
@@ -148,7 +148,7 @@ bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
     //------------------------------------------------------------------------
     version            = "!LaserBoy!"; // assume the worst!
     version_guess      = "!LaserBoy!";
-    LaserBoy_wave_mode =   LASERBOY_WAVE_POSITIVE;
+    wave_mode =   LASERBOY_WAVE_POSITIVE;
     //------------------------------------------------------------------------
     in.get(a); if(a != 'R') return false;
     in.get(a); if(a != 'I') return false;
@@ -296,13 +296,13 @@ bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
         version_guess = temp_string;
         //--------------------------------------------------------------------
         in.get(a); in.get(b); in.get(c); in.get(d);
-        LaserBoy_wave_mode = (   (a & 0x000000ff)
+        wave_mode = (   (a & 0x000000ff)
                                | (b & 0x000000ff) << 8
                                | (c & 0x000000ff) << 16
                                | (d & 0x000000ff) << 24
                              );
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_OFFSETS)
+        if(wave_mode & LASERBOY_WAVE_OFFSETS)
             for(i = 0; i < num_channels; i++)
             {
                 in.get(a); in.get(b); in.get(c); in.get(d);
@@ -313,7 +313,7 @@ bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
                             );
             }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_OPTIMIZED)
+        if(wave_mode & LASERBOY_WAVE_OPTIMIZED)
         {
             in.get(a); in.get(b); in.get(c); in.get(d);
             parms.lit_dwell_overhang = (   (a & 0x000000ff)
@@ -502,7 +502,7 @@ bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
             }
         }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
+        if(wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
             for(i = 0; i < num_channels; i++)
             {
                 in.get(a); in.get(b);
@@ -515,14 +515,14 @@ bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
                     resolution[5] = 16;
             }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
+        if(wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
             for(i = 0; i < num_channels; i++)
             {
                 in.get(a);
                 resolution[i] = (u_char)a;
             }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_NUM_FRAMES)
+        if(wave_mode & LASERBOY_WAVE_NUM_FRAMES)
         {
             in.get(a); in.get(b); in.get(c); in.get(d);
             num_frames = (   (a & 0x000000ff)
@@ -532,16 +532,16 @@ bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
                          );
         }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R && in.good())
+        if(wave_mode & LASERBOY_COLOR_RESCALE_R && in.good())
             in.read((char*)color_rescale_r, 256 * sizeof(signed short));
 
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G && in.good())
+        if(wave_mode & LASERBOY_COLOR_RESCALE_G && in.good())
             in.read((char*)color_rescale_g, 256 * sizeof(signed short));
 
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B && in.good())
+        if(wave_mode & LASERBOY_COLOR_RESCALE_B && in.good())
             in.read((char*)color_rescale_b, 256 * sizeof(signed short));
 
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I && in.good())
+        if(wave_mode & LASERBOY_COLOR_RESCALE_I && in.good())
             in.read((char*)color_rescale_i, 256 * sizeof(signed short));
         //--------------------------------------------------------------------
     } // end if(temp_string == "LaserBoy")
@@ -580,7 +580,7 @@ bool LaserBoy_wave_header::from_fstream_wave(fstream& in)
 }
 
 //############################################################################
-void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
+void WaveHeader::to_fstream_wave(fstream& out) const
 {
     short   audio_format          = 1,
             block_align           = num_channels * (bits_per_sample / 8);
@@ -595,40 +595,40 @@ void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
     if(version != "!LaserBoy!") // it is a LaserBoy wave.
     {
         LaserBoy_chunk_size = (   16 // sizeof "LaserBoymmddCCYY"
-                                + sizeof(int) // sizeof (int)LaserBoy_wave_mode
-                                + (   (LaserBoy_wave_mode & LASERBOY_WAVE_OFFSETS)
+                                + sizeof(int) // sizeof (int)wave_mode
+                                + (   (wave_mode & LASERBOY_WAVE_OFFSETS)
                                     ? (num_channels * sizeof(int))
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_WAVE_OPTIMIZED)
+                                + (   (wave_mode & LASERBOY_WAVE_OPTIMIZED)
                                     ? (8 * sizeof(int)) // eight 32bit numbers
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
+                                + (   (wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
                                     ? (num_channels * 2 * sizeof(short))
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
+                                + (   (wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
                                     ? (num_channels * sizeof(u_char))
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_WAVE_NUM_FRAMES)
+                                + (   (wave_mode & LASERBOY_WAVE_NUM_FRAMES)
                                     ? (sizeof(int))
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+                                + (   (wave_mode & LASERBOY_COLOR_RESCALE_R)
                                     ? (256 * sizeof(short))
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+                                + (   (wave_mode & LASERBOY_COLOR_RESCALE_G)
                                     ? (256 * sizeof(short))
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+                                + (   (wave_mode & LASERBOY_COLOR_RESCALE_B)
                                     ? (256 * sizeof(short))
                                     : (0)
                                   )
-                                + (   (LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                                + (   (wave_mode & LASERBOY_COLOR_RESCALE_I)
                                     ? (256 * sizeof(short))
                                     : (0)
                                   )
@@ -721,12 +721,12 @@ void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
         out.put(version[14]); // Y
         out.put(version[15]); // Y
         //--------------------------------------------------------------------
-        out.put((char) (LaserBoy_wave_mode & 0x000000ff)       );
-        out.put((char)((LaserBoy_wave_mode & 0x0000ff00) >> 8 ));
-        out.put((char)((LaserBoy_wave_mode & 0x00ff0000) >> 16));
-        out.put((char)((LaserBoy_wave_mode & 0xff000000) >> 24));
+        out.put((char) (wave_mode & 0x000000ff)       );
+        out.put((char)((wave_mode & 0x0000ff00) >> 8 ));
+        out.put((char)((wave_mode & 0x00ff0000) >> 16));
+        out.put((char)((wave_mode & 0xff000000) >> 24));
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_OFFSETS)
+        if(wave_mode & LASERBOY_WAVE_OFFSETS)
             for(i = 0; i < num_channels; i++)
             {
                 out.put((char)( offset[i] & 0x000000ff)       );
@@ -735,7 +735,7 @@ void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
                 out.put((char)((offset[i] & 0xff000000) >> 24));
             }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_OPTIMIZED)
+        if(wave_mode & LASERBOY_WAVE_OPTIMIZED)
         {
             out.put((char) (parms.lit_dwell_overhang & 0x000000ff)       ); // int
             out.put((char)((parms.lit_dwell_overhang & 0x0000ff00) >> 8 ));
@@ -778,7 +778,7 @@ void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
             out.put((char) ((int)(parms.frames_per_second) & 0x000000ff)       );
         }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
+        if(wave_mode & LASERBOY_WAVE_SIGNAL_MATRIX)
             for(i = 0; i < num_channels; i++)
             {
                 out.put((char) (signal_id[i] & 0x00ff)      );
@@ -788,11 +788,11 @@ void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
                 out.put((char)((LSB_tag[i] & 0xff00) >> 8));
             }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
+        if(wave_mode & LASERBOY_SIGNAL_BIT_RESOLUTION)
             for(i = 0; i < num_channels; i++)
                 out.put(resolution[i]);
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_WAVE_NUM_FRAMES)
+        if(wave_mode & LASERBOY_WAVE_NUM_FRAMES)
         {
             out.put((char)( num_frames & 0x000000ff)       );
             out.put((char)((num_frames & 0x0000ff00) >> 8 ));
@@ -800,13 +800,13 @@ void LaserBoy_wave_header::to_fstream_wave(fstream& out) const
             out.put((char)((num_frames & 0xff000000) >> 24));
         }
         //--------------------------------------------------------------------
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+        if(wave_mode & LASERBOY_COLOR_RESCALE_R)
             out.write((char*)color_rescale_r, 256 * sizeof(signed short));
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+        if(wave_mode & LASERBOY_COLOR_RESCALE_G)
             out.write((char*)color_rescale_g, 256 * sizeof(signed short));
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+        if(wave_mode & LASERBOY_COLOR_RESCALE_B)
             out.write((char*)color_rescale_b, 256 * sizeof(signed short));
-        if(LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+        if(wave_mode & LASERBOY_COLOR_RESCALE_I)
             out.write((char*)color_rescale_i, 256 * sizeof(signed short));
         //--------------------------------------------------------------------
     } // end if(with_LaserBoy_stuff)

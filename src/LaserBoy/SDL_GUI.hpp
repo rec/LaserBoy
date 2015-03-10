@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_SDL_GUI.hpp is part of LaserBoy.
+// SDL_GUI.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -38,18 +38,18 @@ namespace LaserBoy {
 
 //############################################################################
 //  BITMAP MEMORY AND SDL
-void bmp_clone_SDL_Surface(struct LaserBoy_bmp* bmp,    struct SDL_Surface*  screen, int copy);
-void bmp_to_SDL_Surface   (struct LaserBoy_bmp* bmp,    struct SDL_Surface*  screen);
-void SDL_Surface_to_bmp   (struct SDL_Surface*  screen, struct LaserBoy_bmp* bmp);
+void bmp_clone_SDL_Surface(struct Bitmap* bmp,    struct SDL_Surface*  screen, int copy);
+void bmp_to_SDL_Surface   (struct Bitmap* bmp,    struct SDL_Surface*  screen);
+void SDL_Surface_to_bmp   (struct SDL_Surface*  screen, struct Bitmap* bmp);
 
 //############################################################################
-class LaserBoy_SDL_GUI : public LaserBoy_GUI_base
+class SDL_GUI : public GUI_base
 {
 public:
-    LaserBoy_SDL_GUI(int x, int y);
+    SDL_GUI(int x, int y);
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_SDL_GUI();
+   ~SDL_GUI();
     //------------------------------------------------------------------------
 virtual  void    display_space()
                     {
@@ -115,7 +115,7 @@ virtual  int        display_prompt_and_echo_int                (const string& pr
 virtual  int        display_prompt_and_echo_nibble             (const string& prompt );
 virtual  bool       display_prompt_and_echo_bool               (const string& prompt );
     //------------------------------------------------------------------------
-virtual  bool       report_ild_file_open                       (LaserBoy_frame_set& frame_set,
+virtual  bool       report_ild_file_open                       (FrameSet& frame_set,
                                                                 const string& file_name
                                                                );
     //------------------------------------------------------------------------
@@ -199,15 +199,15 @@ virtual  void       display_message                            (const string& me
     bool    save_as_txt_menu                     ();
     bool    save_as_bmp_menu                     ();
     //------------------------------------------------------------------------
-    void    display_rescale_file_error           (LaserBoy_Rescale_Error_Code error);
+    void    display_rescale_file_error           (RescaleErrorCode error);
     void    process_terminate_request            ();
     void    Laserboy_terminating                 ();
     int     start_menu_loop                      ();
     //------------------------------------------------------------------------
     bool    display_wave                         ();
     bool    display_unframed_wave                ();
-    void    display_LaserBoy_wave  (fstream& in, LaserBoy_wave_header header);
-    void    display_unframed_wave  (fstream& in, LaserBoy_wave_header header);
+    void    display_LaserBoy_wave  (fstream& in, WaveHeader header);
+    void    display_unframed_wave  (fstream& in, WaveHeader header);
     //------------------------------------------------------------------------
     // data
     //------------------------------------------------------------------------

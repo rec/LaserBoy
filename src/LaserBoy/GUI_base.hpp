@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_GUI_base.hpp is part of LaserBoy.
+// GUI_base.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,10 +35,10 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_GUI_base
+class GUI_base
 {
 public:
-    LaserBoy_GUI_base(int x, int y)
+    GUI_base(int x, int y)
         : running            (false),
           prompt_escaped     (false),
           teminate_requested (false),
@@ -49,7 +49,7 @@ public:
                                        {}
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_GUI_base() {}
+   ~GUI_base() {}
     //------------------------------------------------------------------------
 virtual void     display_space                              (                     ) = 0;
 virtual void     capture_screen                             (                     ) = 0;
@@ -72,7 +72,7 @@ virtual int      display_prompt_and_echo_int                (const string& promp
 virtual int      display_prompt_and_echo_nibble             (const string& prompt ) = 0;
 virtual bool     display_prompt_and_echo_bool               (const string& prompt ) = 0;
     //------------------------------------------------------------------------
-virtual bool     report_ild_file_open                       (LaserBoy_frame_set& frame_set,
+virtual bool     report_ild_file_open                       (FrameSet& frame_set,
                                                              const string& file_name
                                                             )                       = 0;
     //------------------------------------------------------------------------
@@ -87,7 +87,7 @@ virtual void     display_progress                           (      int   countdo
     u_int        xres,
                  yres;
     string       file_name;
-    LaserBoy_TUI space;
+    TUI space;
 };
 
 } // namespace LaserBoy

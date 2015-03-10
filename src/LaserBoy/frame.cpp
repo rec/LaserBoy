@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_frame.cpp is part of LaserBoy.
+// frame.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,12 +32,12 @@
 namespace LaserBoy {
 
 //############################################################################
-LaserBoy_frame::LaserBoy_frame(LaserBoy_space* ps,
-                               LaserBoy_vertex(*F)(int, int),
+Frame::Frame(Space* ps,
+                               Vertex(*F)(int, int),
                                int vertices_per_frame,
                                int frame_index
                               )
-               : LaserBoy_segment (ps   )
+               : Segment (ps   )
                , is_selected      (false)
                , is_unique        (true )
                , is_wagged        (false)
@@ -52,7 +52,7 @@ LaserBoy_frame::LaserBoy_frame(LaserBoy_space* ps,
     is_wagged              = false;
     palette_index          = LASERBOY_LASERBOY_HUES;
     format                 = LASERBOY_3D_FRAME;
-    LaserBoy_vertex vertex = F(0, frame_index);
+    Vertex vertex = F(0, frame_index);
     vertex.blank();
     reserve(vertices_per_frame + 2);
     push_back(vertex);
@@ -62,7 +62,7 @@ LaserBoy_frame::LaserBoy_frame(LaserBoy_space* ps,
 }
 
 //############################################################################
-bool LaserBoy_frame::save_as_ild(const string& file)
+bool Frame::save_as_ild(const string& file)
 {
     if(palette_index != LASERBOY_ILDA_DEFAULT)
         return p_space->save_as_ild(file);
@@ -75,7 +75,7 @@ bool LaserBoy_frame::save_as_ild(const string& file)
     {
         if(p_space->auto_minimize)
         {
-            LaserBoy_frame copy(*this);
+            Frame copy(*this);
             copy.minimize(0);
             copy.to_ofstream_ild(out);
         }
@@ -90,14 +90,14 @@ bool LaserBoy_frame::save_as_ild(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_frame::save_as_txt(const string& file)
+bool Frame::save_as_txt(const string& file)
 {
     ofstream out(file.c_str(), ios::out);
     if(out.is_open())
     {
         txt_tag(out);
         //--------------------------------------------------------------------
-        LaserBoy_frame copy(*this);
+        Frame copy(*this);
         if(p_space->auto_minimize)
             copy.minimize(0);
         //--------------------------------------------------------------------
@@ -130,7 +130,7 @@ bool LaserBoy_frame::save_as_txt(const string& file)
 }
 
 //############################################################################
-bool LaserBoy_frame::save_as_txt_table(const string& file)
+bool Frame::save_as_txt_table(const string& file)
 {
     ofstream out(file.c_str(), ios::out);
     if(out.is_open())
@@ -145,17 +145,17 @@ bool LaserBoy_frame::save_as_txt_table(const string& file)
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::optimize(LaserBoy_3D_short point_of_entry)
+ErrorCode Frame::optimize(Short3d point_of_entry)
 {
     int                  i,
                          j,
                          dwell_samples;
-    LaserBoy_3D_double   _0,
+    Double3d   _0,
                          _1,
                          _2;
-    LaserBoy_vertex      vertex,
+    Vertex      vertex,
                          black_vertex;
-    LaserBoy_Error_Code  stat = LASERBOY_OK;
+    ErrorCode  stat = LASERBOY_OK;
     //------------------------------------------------------------------------
     vertex = front();
     vertex.blank();
@@ -171,7 +171,7 @@ LaserBoy_Error_Code LaserBoy_frame::optimize(LaserBoy_3D_short point_of_entry)
     // intro from the origin to the first vertex
     //------------------------------------------------------------------------
     intro.clear();
-    intro += LaserBoy_segment(p_space, point_of_entry, vertex); // line from entry point to first vertex
+    intro += Segment(p_space, point_of_entry, vertex); // line from entry point to first vertex
     //------------------------------------------------------------------------
     _0 = point_of_entry;
     _1 =
@@ -259,7 +259,7 @@ LaserBoy_Error_Code LaserBoy_frame::optimize(LaserBoy_3D_short point_of_entry)
     {
         vertex = front();
         vertex.blank();
-        bridge += LaserBoy_segment(p_space, back(), vertex); // line from last vertex to first for repete
+        bridge += Segment(p_space, back(), vertex); // line from last vertex to first for repete
         //--------------------------------------------------------------------
         _0 = back();
         _1 =
@@ -329,15 +329,15 @@ LaserBoy_Error_Code LaserBoy_frame::optimize(LaserBoy_3D_short point_of_entry)
 }
 
 //############################################################################
-void LaserBoy_frame::add_coda(LaserBoy_3D_short next_frame_entry_point)
+void Frame::add_coda(Short3d next_frame_entry_point)
 {
     int                 i,
                         j,
                         dwell_samples;
-    LaserBoy_3D_double  _0,
+    Double3d  _0,
                         _1,
                         _2;
-    LaserBoy_vertex     vertex,
+    Vertex     vertex,
                         black_vertex;
     //------------------------------------------------------------------------
     // coda is dwell only at the last point before moving toward netx frame entry
@@ -395,8 +395,8 @@ void LaserBoy_frame::add_coda(LaserBoy_3D_short next_frame_entry_point)
 }
 
 //############################################################################
-bool LaserBoy_frame::from_ifstream_format_3(ifstream& in,
-                                            const LaserBoy_ild_header& header,
+bool Frame::from_ifstream_format_3(ifstream& in,
+                                            const ILDHeader& header,
                                             long int& bytes_skipped
                                            )
 {
@@ -406,14 +406,14 @@ bool LaserBoy_frame::from_ifstream_format_3(ifstream& in,
     if(quantity)
     {
         u_int                i;
-        LaserBoy_color       color;
-        LaserBoy_vertex      vertex;
-        LaserBoy_ild_header  next_header;
+        Color       color;
+        Vertex      vertex;
+        ILDHeader  next_header;
         //--------------------------------------------------------------------
         reserve(quantity);
         for(i = 0; i < quantity; i++)
             if(color.from_ifstream_ild(in))
-                push_back((LaserBoy_vertex)color);
+                push_back((Vertex)color);
             else
                 return false;
         //--------------------------------------------------------------------
@@ -454,12 +454,12 @@ bool LaserBoy_frame::from_ifstream_format_3(ifstream& in,
 }
 
 //############################################################################
-bool LaserBoy_frame::from_ifstream_ild(ifstream& in,
-                                       const LaserBoy_ild_header& header
+bool Frame::from_ifstream_ild(ifstream& in,
+                                       const ILDHeader& header
                                       )
 {
     u_int            i;
-    LaserBoy_vertex  vertex;
+    Vertex  vertex;
     //------------------------------------------------------------------------
     clear();
     *this = header;
@@ -485,12 +485,12 @@ bool LaserBoy_frame::from_ifstream_ild(ifstream& in,
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::from_ifstream_dxf(ifstream& in)
+ErrorCode Frame::from_ifstream_dxf(ifstream& in)
 {
     u_int            i;
-    LaserBoy_vertex  vertex;
+    Vertex  vertex;
 
-    LaserBoy_real_segment real_vertices(p_space);
+    RealSegment real_vertices(p_space);
     //------------------------------------------------------------------------
     format        = LASERBOY_3D_FRAME ;
     palette_index = LASERBOY_TRUE_COLOR;
@@ -502,7 +502,7 @@ LaserBoy_Error_Code LaserBoy_frame::from_ifstream_dxf(ifstream& in)
         real_vertices.normalize();
         reserve(real_vertices.size() - 2);
         for(i = 2; i < real_vertices.size(); i++)
-            push_back((LaserBoy_vertex)real_vertices[i]);
+            push_back((Vertex)real_vertices[i]);
     }
     else
     {
@@ -516,7 +516,7 @@ LaserBoy_Error_Code LaserBoy_frame::from_ifstream_dxf(ifstream& in)
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::from_ifstream_txt(ifstream& in,
+ErrorCode Frame::from_ifstream_txt(ifstream& in,
                                                       const u_int& group_type,
                                                       const u_int& element_type,
                                                       u_int& line_number
@@ -575,7 +575,7 @@ LaserBoy_Error_Code LaserBoy_frame::from_ifstream_txt(ifstream& in,
       )
     {
         u_int i;
-        LaserBoy_vertex vertex;
+        Vertex vertex;
         for(i = 0; i < size(); i++)
             if(!at(i).from_ifstream_txt(in, group_type, element_type, line_number))
                 break;
@@ -590,7 +590,7 @@ LaserBoy_Error_Code LaserBoy_frame::from_ifstream_txt(ifstream& in,
     //------------------------------------------------------------------------
     else
     {
-        LaserBoy_vertex vertex;
+        Vertex vertex;
         clear();
         while(vertex.from_ifstream_txt(in, group_type, element_type, line_number))
             push_back(vertex);
@@ -604,19 +604,19 @@ LaserBoy_Error_Code LaserBoy_frame::from_ifstream_txt(ifstream& in,
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_frame::move_selection(LaserBoy_3D_double d, bool check_bounds)
+Bounds Frame::move_selection(Double3d d, bool check_bounds)
 {
     if(size() > 1)
     {
         u_int            i;
-        LaserBoy_Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
+        Bounds  out_of_bounds = LASERBOY_IN_BOUNDS;
         //--------------------------------------------------------------------
         if(check_bounds)
             for(i = 0; i < size(); i++)
             {
                 if(is_index_selected(i))
                 {
-                    out_of_bounds = LaserBoy_bounds_check(d + at(i).as_3D_short(), LASERBOY_CUBE);
+                    out_of_bounds = bounds_checkc(d + at(i).as_3D_short(), LASERBOY_CUBE);
                     if(out_of_bounds)
                         return out_of_bounds;
                 }
@@ -626,8 +626,8 @@ LaserBoy_Bounds LaserBoy_frame::move_selection(LaserBoy_3D_double d, bool check_
         {
             if(is_index_selected(i))
             {
-                at(i) = LaserBoy_vertex(d + at(i).as_3D_short(),
-                                        at(i).as_LaserBoy_color(),
+                at(i) = Vertex(d + at(i).as_3D_short(),
+                                        at(i).as_Color(),
                                         at(i).k,
                                         at(i).c
                                        );
@@ -639,13 +639,13 @@ LaserBoy_Bounds LaserBoy_frame::move_selection(LaserBoy_3D_double d, bool check_
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_frame::scale_selection(LaserBoy_3D_double m)
+Bounds Frame::scale_selection(Double3d m)
 {
     if(size() > 1)
     {
         u_int               i;
-        LaserBoy_Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
-        LaserBoy_3D_double  f,
+        Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
+        Double3d  f,
                             center = selected_segment().mean_of_coordinates();
 
         for(i = 0; i < size(); i++)
@@ -653,7 +653,7 @@ LaserBoy_Bounds LaserBoy_frame::scale_selection(LaserBoy_3D_double m)
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                out_of_bounds |= LaserBoy_bounds_check(((f - center) * m) + center, LASERBOY_CUBE);
+                out_of_bounds |= bounds_checkc(((f - center) * m) + center, LASERBOY_CUBE);
             }
         }
         //--------------------------------------------------------------------
@@ -665,8 +665,8 @@ LaserBoy_Bounds LaserBoy_frame::scale_selection(LaserBoy_3D_double m)
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                at(i) = LaserBoy_vertex( ((f - center) * m) + center,
-                                       (LaserBoy_color)at(i),
+                at(i) = Vertex( ((f - center) * m) + center,
+                                       (Color)at(i),
                                        at(i).k,
                                        at(i).c
                                      );
@@ -678,20 +678,20 @@ LaserBoy_Bounds LaserBoy_frame::scale_selection(LaserBoy_3D_double m)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_frame::scale_selection_on_fulcrum(LaserBoy_3D_double magnitude)
+Bounds Frame::scale_selection_on_fulcrum(Double3d magnitude)
 {
     if(size() > 1)
     {
         u_int               i;
-        LaserBoy_Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
-        LaserBoy_3D_double  f;
+        Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
+        Double3d  f;
         //--------------------------------------------------------------------
         for(i = 0; i < size(); i++)
         {
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                out_of_bounds |= LaserBoy_bounds_check(((f - p_space->fulcrum) * magnitude) + p_space->fulcrum, LASERBOY_CUBE);
+                out_of_bounds |= bounds_checkc(((f - p_space->fulcrum) * magnitude) + p_space->fulcrum, LASERBOY_CUBE);
             }
         }
         //--------------------------------------------------------------------
@@ -703,8 +703,8 @@ LaserBoy_Bounds LaserBoy_frame::scale_selection_on_fulcrum(LaserBoy_3D_double ma
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                at(i) = LaserBoy_vertex( ((f - p_space->fulcrum) * magnitude) + p_space->fulcrum,
-                                       (LaserBoy_color)at(i),
+                at(i) = Vertex( ((f - p_space->fulcrum) * magnitude) + p_space->fulcrum,
+                                       (Color)at(i),
                                        at(i).k,
                                        at(i).c
                                      );
@@ -716,13 +716,13 @@ LaserBoy_Bounds LaserBoy_frame::scale_selection_on_fulcrum(LaserBoy_3D_double ma
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_frame::rotate_selection(LaserBoy_3D_double a)
+Bounds Frame::rotate_selection(Double3d a)
 {
     if(size() > 1)
     {
         u_int               i;
-        LaserBoy_Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
-        LaserBoy_3D_double  f,
+        Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
+        Double3d  f,
                             center = selected_segment().mean_of_coordinates();
 
         for(i = 0; i < size(); i++)
@@ -730,7 +730,7 @@ LaserBoy_Bounds LaserBoy_frame::rotate_selection(LaserBoy_3D_double a)
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates(f, center, a), LASERBOY_CUBE);
+                out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates(f, center, a), LASERBOY_CUBE);
             }
         }
         //--------------------------------------------------------------------
@@ -742,8 +742,8 @@ LaserBoy_Bounds LaserBoy_frame::rotate_selection(LaserBoy_3D_double a)
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates(f, center, a),
-                                       (LaserBoy_color)at(i),
+                at(i) = Vertex( rotate_vertex_on_coordinates(f, center, a),
+                                       (Color)at(i),
                                        at(i).k,
                                        at(i).c
                                      );
@@ -755,20 +755,20 @@ LaserBoy_Bounds LaserBoy_frame::rotate_selection(LaserBoy_3D_double a)
 }
 
 //############################################################################
-LaserBoy_Bounds LaserBoy_frame::rotate_selection_on_fulcrum(LaserBoy_3D_double angle)
+Bounds Frame::rotate_selection_on_fulcrum(Double3d angle)
 {
     if(size() > 1)
     {
         u_int               i;
-        LaserBoy_Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
-        LaserBoy_3D_double  f;
+        Bounds     out_of_bounds = LASERBOY_IN_BOUNDS;
+        Double3d  f;
 
         for(i = 0; i < size(); i++)
         {
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                out_of_bounds |= LaserBoy_bounds_check(rotate_vertex_on_coordinates(f, p_space->fulcrum, angle), LASERBOY_CUBE);
+                out_of_bounds |= bounds_checkc(rotate_vertex_on_coordinates(f, p_space->fulcrum, angle), LASERBOY_CUBE);
             }
         }
         //--------------------------------------------------------------------
@@ -780,8 +780,8 @@ LaserBoy_Bounds LaserBoy_frame::rotate_selection_on_fulcrum(LaserBoy_3D_double a
             if(is_index_selected(i))
             {
                 f = at(i).as_3D_short();
-                at(i) = LaserBoy_vertex( rotate_vertex_on_coordinates(f, p_space->fulcrum, angle),
-                                       (LaserBoy_color)at(i),
+                at(i) = Vertex( rotate_vertex_on_coordinates(f, p_space->fulcrum, angle),
+                                       (Color)at(i),
                                        at(i).k,
                                        at(i).c
                                      );
@@ -793,7 +793,7 @@ LaserBoy_Bounds LaserBoy_frame::rotate_selection_on_fulcrum(LaserBoy_3D_double a
 }
 
 //############################################################################
-void LaserBoy_frame::next_segment_select()
+void Frame::next_segment_select()
 {
     u_int segment_index, start, end;
     find_segment_of_vertex(egg, start, end, segment_index);
@@ -802,7 +802,7 @@ void LaserBoy_frame::next_segment_select()
 }
 
 //############################################################################
-void LaserBoy_frame::next_segment_egg()
+void Frame::next_segment_egg()
 {
     u_int segment_index, start, end;
     find_segment_of_vertex(egg, start, end, segment_index);
@@ -811,7 +811,7 @@ void LaserBoy_frame::next_segment_egg()
 }
 
 //############################################################################
-void LaserBoy_frame::next_segment_spider()
+void Frame::next_segment_spider()
 {
     u_int segment_index, start, end;
     find_segment_of_vertex(spider, start, end, segment_index);
@@ -820,7 +820,7 @@ void LaserBoy_frame::next_segment_spider()
 }
 
 //############################################################################
-void LaserBoy_frame::previous_segment_select()
+void Frame::previous_segment_select()
 {
     u_int segment_index, start, end;
     find_segment_of_vertex(egg, start, end, segment_index);
@@ -831,7 +831,7 @@ void LaserBoy_frame::previous_segment_select()
 }
 
 //############################################################################
-void LaserBoy_frame::previous_segment_egg()
+void Frame::previous_segment_egg()
 {
     u_int segment_index, start, end;
     find_segment_of_vertex(egg, start, end, segment_index);
@@ -842,7 +842,7 @@ void LaserBoy_frame::previous_segment_egg()
 }
 
 //############################################################################
-void LaserBoy_frame::previous_segment_spider()
+void Frame::previous_segment_spider()
 {
     u_int segment_index, start, end;
     find_segment_of_vertex(spider, start, end, segment_index);
@@ -853,7 +853,7 @@ void LaserBoy_frame::previous_segment_spider()
 }
 
 //############################################################################
-void LaserBoy_frame::color_select()
+void Frame::color_select()
 {
     if(size() > 1)
     {
@@ -891,7 +891,7 @@ void LaserBoy_frame::color_select()
 }
 
 //############################################################################
-void LaserBoy_frame::color_index_select()
+void Frame::color_index_select()
 {
     if(size() > 1)
     {
@@ -938,7 +938,7 @@ void LaserBoy_frame::color_index_select()
 }
 
 //############################################################################
-void LaserBoy_frame::color_span_select()
+void Frame::color_span_select()
 {
     if(size() > 1)
     {
@@ -1005,7 +1005,7 @@ void LaserBoy_frame::color_span_select()
 }
 
 //############################################################################
-void LaserBoy_frame::color_index_black()
+void Frame::color_index_black()
 {
     if(size() > 1)
     {
@@ -1046,7 +1046,7 @@ void LaserBoy_frame::color_index_black()
 }
 
 //############################################################################
-void LaserBoy_frame::color_span_black()
+void Frame::color_span_black()
 {
     if(size() > 1)
     {
@@ -1113,7 +1113,7 @@ void LaserBoy_frame::color_span_black()
 }
 
 //############################################################################
-void LaserBoy_frame::color_black_in_select()
+void Frame::color_black_in_select()
 {
     if(size() > 1)
     {
@@ -1147,7 +1147,7 @@ void LaserBoy_frame::color_black_in_select()
 }
 
 //############################################################################
-void LaserBoy_frame::color_cycle_select(int steps)
+void Frame::color_cycle_select(int steps)
 {
     if(size() > 1)
     {
@@ -1176,7 +1176,7 @@ void LaserBoy_frame::color_cycle_select(int steps)
         //--------------------------------------------------------------------
         else
         {
-            LaserBoy_segment selected_vectors(p_space);
+            Segment selected_vectors(p_space);
             vector<int>      selected_vectors_index;
 
             for(i = 0; i < size(); i++)
@@ -1204,7 +1204,7 @@ void LaserBoy_frame::color_cycle_select(int steps)
 }
 
 //############################################################################
-void LaserBoy_frame::blank_vertices()
+void Frame::blank_vertices()
 {
     if(size() > 1)
     {
@@ -1216,7 +1216,7 @@ void LaserBoy_frame::blank_vertices()
 }
 
 //############################################################################
-void LaserBoy_frame::unblank_vertices()
+void Frame::unblank_vertices()
 {
     if(size() > 1)
     {
@@ -1228,7 +1228,7 @@ void LaserBoy_frame::unblank_vertices()
 }
 
 //############################################################################
-void LaserBoy_frame::black_vertices()
+void Frame::black_vertices()
 {
     if(size() > 1)
     {
@@ -1244,7 +1244,7 @@ void LaserBoy_frame::black_vertices()
 }
 
 //############################################################################
-void LaserBoy_frame::unblack_vertices()
+void Frame::unblack_vertices()
 {
     if(size() > 1)
     {
@@ -1256,14 +1256,14 @@ void LaserBoy_frame::unblack_vertices()
 }
 
 //############################################################################
-void LaserBoy_frame::minimize(int frame_index)
+void Frame::minimize(int frame_index)
 {
-    LaserBoy_segment entry(p_space);
+    Segment entry(p_space);
     //------------------------------------------------------------------------
     if(frame_index <= 0)
     {
-        entry.push_back(LaserBoy_vertex());
-        entry.push_back(LaserBoy_vertex()); // the orginal vector
+        entry.push_back(Vertex());
+        entry.push_back(Vertex()); // the orginal vector
     }
     else
         entry = p_space->frame_picker(frame_index - 1);
@@ -1300,9 +1300,9 @@ void LaserBoy_frame::minimize(int frame_index)
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::add_vertex(u_int vertex_index)
+ErrorCode Frame::add_vertex(u_int vertex_index)
 {
-    if(    !LaserBoy_segment::add_vertex(vertex_index)
+    if(    !Segment::add_vertex(vertex_index)
         && size() > 2
         && vertex_index < size()
       )
@@ -1318,38 +1318,38 @@ LaserBoy_Error_Code LaserBoy_frame::add_vertex(u_int vertex_index)
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::break_segment()
+ErrorCode Frame::break_segment()
 {
-    LaserBoy_segment::break_segment(spider); // sets spider
+    Segment::break_segment(spider); // sets spider
     return segment_error;
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::set_spider_to_egg()
+ErrorCode Frame::set_spider_to_egg()
 {
-    at(spider) = (LaserBoy_3D_short)at(egg);
+    at(spider) = (Short3d)at(egg);
     return segment_error;
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::set_egg_to_spider()
+ErrorCode Frame::set_egg_to_spider()
 {
-    at(egg) = (LaserBoy_3D_short)at(spider);
+    at(egg) = (Short3d)at(spider);
     return segment_error;
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_frame::connect_the_dots()
+ErrorCode Frame::connect_the_dots()
 {
-    LaserBoy_segment::connect_the_dots(egg, spider);
+    Segment::connect_the_dots(egg, spider);
     return segment_error;
 }
 
 //############################################################################
-LaserBoy_frame& LaserBoy_frame::to_dots()
+Frame& Frame::to_dots()
 {
     u_int           i;
-    LaserBoy_frame  frame(p_space, palette_index, false);
+    Frame  frame(p_space, palette_index, false);
     //------------------------------------------------------------------------
     frame.reserve(size() + size_of_selection());
     //------------------------------------------------------------------------
@@ -1374,11 +1374,11 @@ LaserBoy_frame& LaserBoy_frame::to_dots()
 }
 
 //############################################################################
-LaserBoy_frame& LaserBoy_frame::selected_to_dots()
+Frame& Frame::selected_to_dots()
 {
     u_int           i,
                     new_spider = spider;
-    LaserBoy_frame  frame(p_space, palette_index, false);
+    Frame  frame(p_space, palette_index, false);
     //------------------------------------------------------------------------
     frame.reserve(size() + size_of_selection());
     //------------------------------------------------------------------------
@@ -1407,25 +1407,25 @@ LaserBoy_frame& LaserBoy_frame::selected_to_dots()
 }
 
 //############################################################################
-LaserBoy_frame& LaserBoy_frame::remove_at_spider()
+Frame& Frame::remove_at_spider()
 {
     int new_spider = spider;
-    LaserBoy_segment::remove_vertex(spider);
+    Segment::remove_vertex(spider);
     spider = new_spider - 1;
     normalize_cursors();
     return *this;
 }
 
 //############################################################################
-LaserBoy_frame& LaserBoy_frame::remove_vertex(u_int vertex_index)
+Frame& Frame::remove_vertex(u_int vertex_index)
 {
-    LaserBoy_segment::remove_vertex(vertex_index);
+    Segment::remove_vertex(vertex_index);
     normalize_cursors();
     return *this;
 }
 
 //############################################################################
-void LaserBoy_frame::to_ofstream_ild(ofstream& out)
+void Frame::to_ofstream_ild(ofstream& out)
 {
     char number[8];
     quantity = (u_short)size();
@@ -1447,7 +1447,7 @@ void LaserBoy_frame::to_ofstream_ild(ofstream& out)
             sprintf(number, "%05d", identity);
             name = "ESI" + string(number);
         }
-        LaserBoy_ild_header::to_ofstream_ild(out);
+        ILDHeader::to_ofstream_ild(out);
         for(int i = 0; i < quantity; i++)
             at(i).to_ofstream_ild(out, format, (i == quantity - 1));
     }
@@ -1456,8 +1456,8 @@ void LaserBoy_frame::to_ofstream_ild(ofstream& out)
     {
         if(palette_index == LASERBOY_TRUE_COLOR)
         {
-            LaserBoy_ild_header header  = (LaserBoy_ild_header)*this;
-            LaserBoy_palette    palette = as_color_table(); // *this
+            ILDHeader header  = (ILDHeader)*this;
+            Palette    palette = as_color_table(); // *this
             header.identity--;
             header.format = LASERBOY_TABLE;
             header.name   = p_space->GUID8char();
@@ -1468,7 +1468,7 @@ void LaserBoy_frame::to_ofstream_ild(ofstream& out)
             sprintf(number, "%05d", identity);
             name = "ESI" + string(number);
         }
-        LaserBoy_ild_header::to_ofstream_ild(out);
+        ILDHeader::to_ofstream_ild(out);
         for(int i = 0; i < quantity; i++)
             at(i).to_ofstream_ild(out, format, (i == quantity - 1));
     }
@@ -1477,7 +1477,7 @@ void LaserBoy_frame::to_ofstream_ild(ofstream& out)
 }
 
 //############################################################################
-void LaserBoy_frame::to_ofstream_txt_color_table(ofstream& out)
+void Frame::to_ofstream_txt_color_table(ofstream& out)
 {
     out << "# ---------------------------------------------------------------"
         << ENDL
@@ -1490,7 +1490,7 @@ void LaserBoy_frame::to_ofstream_txt_color_table(ofstream& out)
     //------------------------------------------------------------------------
     for(u_int i = 0; i < size(); i++)
         if(at(i).is_lit())
-            ((LaserBoy_color)at(i)).to_ofstream_txt(out, p_space->save_txt_color_hex);
+            ((Color)at(i)).to_ofstream_txt(out, p_space->save_txt_color_hex);
         else
             out << "    -1"
                 << ENDL;
@@ -1500,7 +1500,7 @@ void LaserBoy_frame::to_ofstream_txt_color_table(ofstream& out)
 }
 
 //############################################################################
-void LaserBoy_frame::to_ofstream_txt(ofstream& out, int frame_index)
+void Frame::to_ofstream_txt(ofstream& out, int frame_index)
 {
     int output_format = (   (is_2D())
                            ?(  (p_space->save_txt_with_color)
@@ -1790,12 +1790,12 @@ void LaserBoy_frame::to_ofstream_txt(ofstream& out, int frame_index)
 }
 
 //############################################################################
-void LaserBoy_frame::render(int skin) const
+void Frame::render(int skin) const
 {
-    LaserBoy_3D_double _0,
+    Double3d _0,
                        _1;
 
-    LaserBoy_color     lb_color;
+    Color     lb_color;
 
     bool     rotate_view = (p_space->view_angle  != 0.0),
              offset_view = (p_space->view_offset != 0  ),
@@ -3888,15 +3888,15 @@ void LaserBoy_frame::render(int skin) const
 }
 
 //############################################################################
-bool LaserBoy_frame::save_as_wave(const string& file, bool optimized, bool timed)
+bool Frame::save_as_wave(const string& file, bool optimized, bool timed)
 {
     fstream out(file.c_str(), ios::out | ios::binary);
     //------------------------------------------------------------------------
     if(out.is_open() && size() > 1)
     {
         int                   i;
-        LaserBoy_frame        copy (*this);
-        LaserBoy_wave_header  header(p_space->sample_rate,
+        Frame        copy (*this);
+        WaveHeader  header(p_space->sample_rate,
                                        LASERBOY_WAVE_POSITIVE
                                      | LASERBOY_WAVE_END_OF_FRAME
                                      | LASERBOY_WAVE_UNIQUE_FRAME
@@ -3909,7 +3909,7 @@ bool LaserBoy_frame::save_as_wave(const string& file, bool optimized, bool timed
                                     );
         //--------------------------------------------------------------------
         if(p_space->invert_wave_output)
-            header.LaserBoy_wave_mode &= ~LASERBOY_WAVE_POSITIVE;
+            header.wave_mode &= ~LASERBOY_WAVE_POSITIVE;
         //--------------------------------------------------------------------
         header.signal_id [0] = LASERBOY_SIGNAL_X_POSITION; // default values
         header.signal_id [1] = LASERBOY_SIGNAL_Y_POSITION;
@@ -3938,19 +3938,19 @@ bool LaserBoy_frame::save_as_wave(const string& file, bool optimized, bool timed
         header.resolution[6] = 16 - p_space->signal_bit_mask[6];
         header.resolution[7] = 16 - p_space->signal_bit_mask[7];
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_R)
             for(i = 0; i < 256; i++)
                 header.color_rescale_r[i] = p_space->color_rescale_r[i];
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_G)
             for(i = 0; i < 256; i++)
                 header.color_rescale_g[i] = p_space->color_rescale_g[i];
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_B)
             for(i = 0; i < 256; i++)
                 header.color_rescale_b[i] = p_space->color_rescale_b[i];
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
             for(i = 0; i < 256; i++)
                 header.color_rescale_i[i] = p_space->color_rescale_i[i];
         //--------------------------------------------------------------------
@@ -3966,8 +3966,8 @@ bool LaserBoy_frame::save_as_wave(const string& file, bool optimized, bool timed
         //--------------------------------------------------------------------
         if(optimized)
         {
-            LaserBoy_vertex  origin;
-            header.LaserBoy_wave_mode |= LASERBOY_WAVE_OPTIMIZED;
+            Vertex  origin;
+            header.wave_mode |= LASERBOY_WAVE_OPTIMIZED;
             header.parms.lit_dwell_overhang     =        p_space->lit_dwell_overhang;
             header.parms.lit_delta_max          = (float)p_space->lit_delta_max;
             header.parms.blank_delta_max        = (float)p_space->blank_delta_max;
@@ -3981,7 +3981,7 @@ bool LaserBoy_frame::save_as_wave(const string& file, bool optimized, bool timed
             header.to_fstream_wave(out); // take up the space!
             copy.optimize(0); // as a single frame
             copy.add_coda(origin);
-            copy.coda += LaserBoy_segment(p_space, copy.coda.back(), origin);
+            copy.coda += Segment(p_space, copy.coda.back(), origin);
             copy.to_fstream_wave(out, header, true, timed);
         }
         else
@@ -3999,8 +3999,8 @@ bool LaserBoy_frame::save_as_wave(const string& file, bool optimized, bool timed
 }
 
 //############################################################################
-void LaserBoy_frame::to_fstream_wave(fstream& out,
-                                     LaserBoy_wave_header& header,
+void Frame::to_fstream_wave(fstream& out,
+                                     WaveHeader& header,
                                      bool optimized,
                                      bool timed
                                     )
@@ -4013,8 +4013,8 @@ void LaserBoy_frame::to_fstream_wave(fstream& out,
                                             / 500000.0 // make it twice the max_dwell_microsec
                                           )
                                       );
-        LaserBoy_vertex   origin;
-        LaserBoy_segment  chill(p_space);
+        Vertex   origin;
+        Segment  chill(p_space);
         if(chill_samples < 10)
             chill_samples = 10;
         for(int i = 0; i < chill_samples; i++)
@@ -4034,13 +4034,13 @@ void LaserBoy_frame::to_fstream_wave(fstream& out,
                                                     + bridge.size()
                                                   )
                                               );
-            LaserBoy_segment::to_fstream_wave(out, header, is_wagged, is_wagged);
+            Segment::to_fstream_wave(out, header, is_wagged, is_wagged);
             if(total_frame_scans > 1)
             {
                 for(frame_scan = 1; frame_scan < total_frame_scans; frame_scan++)
                 {
                     bridge.to_fstream_wave(out, header, true, !is_wagged && (frame_scan == 1)); // frame scan 1 is unique
-                    LaserBoy_segment::to_fstream_wave(out, header, is_wagged, false);
+                    Segment::to_fstream_wave(out, header, is_wagged, false);
                     p_space->p_GUI->display_progress(total_frame_scans - frame_scan);
                 }
                 coda.to_fstream_wave(out, header, false, false);
@@ -4048,7 +4048,7 @@ void LaserBoy_frame::to_fstream_wave(fstream& out,
         } // end if(p_space->still_frame_duration > 0.0)
         else // no repete no bridge
         {
-            LaserBoy_segment::to_fstream_wave(out, header, false, false);
+            Segment::to_fstream_wave(out, header, false, false);
             coda.to_fstream_wave(out, header, false, false);
         }
         //--------------------------------------------------------------------
@@ -4066,22 +4066,22 @@ void LaserBoy_frame::to_fstream_wave(fstream& out,
                                               )
                                             / size()
                                           );
-        LaserBoy_segment::to_fstream_wave(out, header, true, true);
+        Segment::to_fstream_wave(out, header, true, true);
         for(frame_scan = 1; frame_scan < total_frame_scans; frame_scan++)
         {
-            LaserBoy_segment::to_fstream_wave(out, header, true, false);
+            Segment::to_fstream_wave(out, header, true, false);
             p_space->p_GUI->display_progress(total_frame_scans - frame_scan);
         }
     } // end if(optimized)
     //------------------------------------------------------------------------
     else // no intro, bridge or coda!
-        LaserBoy_segment::to_fstream_wave(out, header, true, true);
+        Segment::to_fstream_wave(out, header, true, true);
     //------------------------------------------------------------------------
     return;
 }
 
 //############################################################################
-bool LaserBoy_frame::save_as_dxf(const string& file) const
+bool Frame::save_as_dxf(const string& file) const
 {
     ofstream out(file.c_str(), ios::out);
     if(out.is_open())
@@ -4089,11 +4089,11 @@ bool LaserBoy_frame::save_as_dxf(const string& file) const
         u_int               segment_vector_index,
                             vertex_index;
 
-        LaserBoy_frame_set  segments(p_space);
+        FrameSet  segments(p_space);
         //--------------------------------------------------------------------
         if(p_space->auto_minimize)
         {
-            LaserBoy_frame  copy(*this);
+            Frame  copy(*this);
             copy.minimize(0);
             segments = copy.explode_segments();
         }
@@ -4241,12 +4241,12 @@ bool LaserBoy_frame::save_as_dxf(const string& file) const
 }
 
 //############################################################################
-bool LaserBoy_frame::save_as_bmp(const string& file) const
+bool Frame::save_as_bmp(const string& file) const
 {
     if(size() > 1)
     {
         char   file_name[80];
-        struct LaserBoy_bmp bmp_out = {0};
+        struct Bitmap bmp_out = {0};
 
         if(palette_index == LASERBOY_TRUE_COLOR)
             bmp_init(&bmp_out, p_space->output_bmp_size, p_space->output_bmp_size, 24);
@@ -4258,7 +4258,7 @@ bool LaserBoy_frame::save_as_bmp(const string& file) const
         bmp_clear(&bmp_out, bmp_out.black);
 
         u_short              i;
-        LaserBoy_3D_double   _0,
+        Double3d   _0,
                              _1;
         int                  bmp_center  = bmp_out.yres / 2;
         double               scale       = bmp_out.yres / 65536.0;
@@ -4298,18 +4298,18 @@ bool LaserBoy_frame::save_as_bmp(const string& file) const
 }
 
 //############################################################################
-LaserBoy_frame blank_frame(LaserBoy_space* ps)
+Frame blank_frame(Space* ps)
 {
-    LaserBoy_frame frame(ps);
+    Frame frame(ps);
     frame = blank_segment(ps);
     frame.is_2D();
     return frame;
 }
 
 //############################################################################
-LaserBoy_frame NULL_frame(LaserBoy_space* ps)
+Frame NULL_frame(Space* ps)
 {
-    LaserBoy_frame frame(ps);
+    Frame frame(ps);
     frame = blank_segment(ps);
     frame.is_2D();
     return frame;

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_wave.hpp is part of LaserBoy.
+// wave.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,10 +36,10 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_wave_optimization_parameters
+class WaveOptimizationParameters
 {
 public:
-    LaserBoy_wave_optimization_parameters()
+    WaveOptimizationParameters()
               : lit_dwell_overhang     (-1), // -1 indicates undefined
                 lit_delta_max          (-1),
                 blank_delta_max        (-1),
@@ -50,7 +50,7 @@ public:
                 frames_per_second      (-1)
                                                       {}
     //------------------------------------------------------------------------
-   ~LaserBoy_wave_optimization_parameters()           {}
+   ~WaveOptimizationParameters()           {}
     //------------------------------------------------------------------------
     int    lit_dwell_overhang;
     float  lit_delta_max,
@@ -63,16 +63,16 @@ public:
 };
 
 //############################################################################
-class LaserBoy_wave_header
+class WaveHeader
 {
 public:
-    LaserBoy_wave_header()
+    WaveHeader()
                   : num_channels       (0),
                     bits_per_sample    (0),
                     num_samples        (0),
                     sample_rate        (0),
                     num_frames         (0),
-                    LaserBoy_wave_mode (LASERBOY_WAVE_NO_MODE),
+                    wave_mode (LASERBOY_WAVE_NO_MODE),
                     version            ("!LaserBoy!"),
                     parms              ()
     {
@@ -93,13 +93,13 @@ public:
         }
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_header(int r, int m, short c, string v)
+    WaveHeader(int r, int m, short c, string v)
                   : num_channels       ( c),
                     bits_per_sample    (16),
                     num_samples        ( 0),
                     sample_rate        ( r),
                     num_frames         ( 0),
-                    LaserBoy_wave_mode ( m),
+                    wave_mode ( m),
                     version            ( v),
                     parms              (  )
     {
@@ -120,11 +120,11 @@ public:
         }
     }
     //------------------------------------------------------------------------
-    LaserBoy_wave_header    (const LaserBoy_wave_header& header     );
-    LaserBoy_wave_header    (const LaserBoy_wave_header& header, int); // copy 8ch from 6ch
-    LaserBoy_wave_header    (fstream& in                            );
+    WaveHeader    (const WaveHeader& header     );
+    WaveHeader    (const WaveHeader& header, int); // copy 8ch from 6ch
+    WaveHeader    (fstream& in                            );
     //------------------------------------------------------------------------
-   ~LaserBoy_wave_header    ()                        {}
+   ~WaveHeader    ()                        {}
     //------------------------------------------------------------------------
     bool     from_fstream_wave (fstream& in );
     void     to_fstream_wave   (fstream& out) const;
@@ -145,13 +145,13 @@ public:
     u_int    num_samples,
              sample_rate,
              num_frames ,
-             LaserBoy_wave_mode; // up to 32 binary flags;
+             wave_mode; // up to 32 binary flags;
     //------------------------------------------------------------------------
     int      offset      [8];
     //------------------------------------------------------------------------
     string   version        ;
     //------------------------------------------------------------------------
-    LaserBoy_wave_optimization_parameters parms;
+    WaveOptimizationParameters parms;
 };
 
 //############################################################################
@@ -166,17 +166,17 @@ public:
 
 
 //############################################################################
-class LaserBoy_wave_sample
+class WaveSample
 {
 public:
-    LaserBoy_wave_sample(u_int n)
+    WaveSample(u_int n)
                         : channel      (new short[n]),
                           num_channels (n           )
         {
             memset((void*)channel, 0x00, num_channels * sizeof(short));
         }
     //------------------------------------------------------------------------
-   ~LaserBoy_wave_sample()    {    delete channel;    }
+   ~WaveSample()    {    delete channel;    }
     //------------------------------------------------------------------------
     bool from_fstream_wave(fstream& in)
             {
@@ -229,14 +229,14 @@ public:
                 return false; // returns false if EOF
             }
     //------------------------------------------------------------------------
-    void to_fstream_wave(fstream& out, LaserBoy_wave_header& header)
+    void to_fstream_wave(fstream& out, WaveHeader& header)
             {
                 out.write((char*)channel, num_channels * sizeof(signed short));
                 header.num_samples++;
                 return;
             }
     //------------------------------------------------------------------------
-    void to_fstream_wave_inverted(fstream& out, LaserBoy_wave_header& header)
+    void to_fstream_wave_inverted(fstream& out, WaveHeader& header)
             {
                 negate();
                 out.write((char*)channel, num_channels * sizeof(signed short));
@@ -245,7 +245,7 @@ public:
                 return;
             }
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample& operator = (const LaserBoy_wave_sample& sample)
+    WaveSample& operator = (const WaveSample& sample)
             {
                 delete channel;
                 num_channels = sample.num_channels;
@@ -266,9 +266,9 @@ public:
                 return;
             }
     //------------------------------------------------------------------------
-    LaserBoy_wave_sample  operator + (const LaserBoy_wave_sample& s) // side-by-side as tracks
+    WaveSample  operator + (const WaveSample& s) // side-by-side as tracks
             {
-                LaserBoy_wave_sample sum(num_channels + s.num_channels);
+                WaveSample sum(num_channels + s.num_channels);
                 memcpy(   (void*)sum.channel,
                           (void*)channel,
                           num_channels * sizeof(short)
@@ -285,7 +285,7 @@ public:
 };
 
 //############################################################################
-typedef LaserBoy_wave_sample*  LaserBoy_wave_sample_pointer;
+typedef WaveSample*  WaveSamplePointer;
 
 //############################################################################
 

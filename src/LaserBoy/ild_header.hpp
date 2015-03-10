@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_ild_header.hpp is part of LaserBoy.
+// ild_header.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,10 +36,10 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_ild_header
+class ILDHeader
 {
 public:
-    LaserBoy_ild_header(const char&    fmt = 0,
+    ILDHeader(const char&    fmt = 0,
                         const string&  n   = "ESI.....",
                         const string&  o   = "LaserBoy",
                         const u_short& q   = 0,
@@ -60,7 +60,7 @@ public:
                     ild_header_error (h  )
                   {}
     //------------------------------------------------------------------------
-    LaserBoy_ild_header(const LaserBoy_ild_header& header)
+    ILDHeader(const ILDHeader& header)
                   : format           (header.format          ),
                     name             (header.name            ),
                     owner            (header.owner           ),
@@ -73,9 +73,9 @@ public:
                   {}
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_ild_header() {}
+   ~ILDHeader() {}
     //------------------------------------------------------------------------
-    LaserBoy_ild_header& operator = (const LaserBoy_ild_header& header)
+    ILDHeader& operator = (const ILDHeader& header)
                             {
                                 format           = header.format          ;
                                 name             = header.name            ;
@@ -101,7 +101,7 @@ virtual
                          total           ;
     char                 scanner         ,
                          future          ;
-    LaserBoy_Error_Code  ild_header_error;
+    ErrorCode  ild_header_error;
 };
 
 } // namespace LaserBoy

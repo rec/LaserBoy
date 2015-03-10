@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_vertex.hpp is part of LaserBoy.
+// Vertex.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,10 +37,10 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_vertex : public LaserBoy_3D_short, public LaserBoy_color
+class Vertex : public Short3d, public Color
 {
 public:
-    LaserBoy_vertex(const short&   _x = 0,
+    Vertex(const short&   _x = 0,
                     const short&   _y = 0,
                     const short&   _z = 0,
                     const u_char&  _r = 255,
@@ -49,57 +49,57 @@ public:
                     const u_char&  _k = LASERBOY_BLANKING_BIT,
                     const u_char&  _c = 55
                    )
-                 : LaserBoy_3D_short (_x, _y, _z),
-                   LaserBoy_color    (_r, _g, _b),
+                 : Short3d (_x, _y, _z),
+                   Color    (_r, _g, _b),
                    k                 (_k        ),
                    c                 (_c        )               {}
     //------------------------------------------------------------------------
-    LaserBoy_vertex(const LaserBoy_vertex& p)
-                 : LaserBoy_3D_short (p.x, p.y, p.z),
-                   LaserBoy_color    (p.r, p.g, p.b),
+    Vertex(const Vertex& p)
+                 : Short3d (p.x, p.y, p.z),
+                   Color    (p.r, p.g, p.b),
                    k                 (p.k          ),
                    c                 (p.c          )            {}
     //------------------------------------------------------------------------
-    LaserBoy_vertex(const LaserBoy_real_vertex& rv) // cast to LaserBoy_vertex from LaserBoy_real_vertex
-                 : LaserBoy_3D_short ((short)round(rv.x),
+    Vertex(const RealVertex& rv) // cast to Vertex from RealVertex
+                 : Short3d ((short)round(rv.x),
                                       (short)round(rv.y),
                                       (short)round(rv.z)
                                      ),
-                   LaserBoy_color    (rv.r, rv.g, rv.b),
+                   Color    (rv.r, rv.g, rv.b),
                    k                 (rv.k),
                    c                 (rv.c)                     {}
     //------------------------------------------------------------------------
-    LaserBoy_vertex(const LaserBoy_3D_short& s,
-                    const LaserBoy_color&    rgb,
+    Vertex(const Short3d& s,
+                    const Color&    rgb,
                     const u_char&            _k = LASERBOY_BLANKING_BIT,
                     const u_char&            _c = 0
                    )
-                 : LaserBoy_3D_short (s  ),
-                   LaserBoy_color    (rgb),
+                 : Short3d (s  ),
+                   Color    (rgb),
                    k                 (_k ),
                    c                 (_c )                      {}
     //------------------------------------------------------------------------
-    LaserBoy_vertex(const LaserBoy_3D_short& s,
+    Vertex(const Short3d& s,
                     const u_char&            _c
                    )
-                 : LaserBoy_3D_short (s            ),
-                   LaserBoy_color    (255, 255, 255),
+                 : Short3d (s            ),
+                   Color    (255, 255, 255),
                    k                 (LASERBOY_BLANKING_BIT),
                    c                 (_c           )            {}
     //------------------------------------------------------------------------
-    LaserBoy_vertex(const LaserBoy_3D_short& s)
-                 : LaserBoy_3D_short (s            ),
-                   LaserBoy_color    (255, 255, 255),
+    Vertex(const Short3d& s)
+                 : Short3d (s            ),
+                   Color    (255, 255, 255),
                    k                 (LASERBOY_BLANKING_BIT),
                    c                 (0            )            {}
     //------------------------------------------------------------------------
-    LaserBoy_vertex(const LaserBoy_color& rgb)
-                 : LaserBoy_3D_short (0, 0, 0),
-                   LaserBoy_color    (rgb    ),
+    Vertex(const Color& rgb)
+                 : Short3d (0, 0, 0),
+                   Color    (rgb    ),
                    k                 (LASERBOY_BLANKING_BIT),
                    c                 (0      )                  {}
     //------------------------------------------------------------------------
-    LaserBoy_vertex& operator = (const LaserBoy_vertex& p)
+    Vertex& operator = (const Vertex& p)
                     {
                         x = p.x;
                         y = p.y;
@@ -112,7 +112,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex& operator = (const LaserBoy_3D_short& s) // only assign the coordinates
+    Vertex& operator = (const Short3d& s) // only assign the coordinates
                     {
                         x = s.x;
                         y = s.y;
@@ -120,10 +120,10 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex  operator + (const LaserBoy_3D_short& s)
+    Vertex  operator + (const Short3d& s)
                         {
                             int X, Y, Z;
-                            LaserBoy_vertex sum(*this);
+                            Vertex sum(*this);
                             X = x + s.x;
                             Y = y + s.y;
                             Z = z + s.z;
@@ -148,7 +148,7 @@ public:
                             return sum;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_vertex& operator += (const LaserBoy_3D_short& s)
+    Vertex& operator += (const Short3d& s)
                     {
                         x += s.x;
                         y += s.y;
@@ -156,16 +156,16 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex  operator - (const LaserBoy_3D_short& s)
+    Vertex  operator - (const Short3d& s)
                     {
-                        LaserBoy_vertex diff(*this);
+                        Vertex diff(*this);
                         diff.x -= s.x;
                         diff.y -= s.y;
                         diff.z -= s.z;
                         return diff;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex& operator -= (const LaserBoy_3D_short& s)
+    Vertex& operator -= (const Short3d& s)
                     {
                         x -= s.x;
                         y -= s.y;
@@ -173,7 +173,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex& operator *= (const LaserBoy_3D_short& s)
+    Vertex& operator *= (const Short3d& s)
                     {
                         x = (short)(x * s.x);
                         y = (short)(y * s.y);
@@ -181,7 +181,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex& operator *= (const LaserBoy_3D_double& f)
+    Vertex& operator *= (const Double3d& f)
                     {
                         x = (short)(x * f.x);
                         y = (short)(y * f.y);
@@ -189,9 +189,9 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_vertex blend(const LaserBoy_vertex& v, double ratio)
+    Vertex blend(const Vertex& v, double ratio)
                     {
-                        LaserBoy_vertex blended;
+                        Vertex blended;
                         blended.unblank();
                         blended.x = (short) (((1.0 - ratio) * x) + (ratio * v.x) + 0.5);
                         blended.y = (short) (((1.0 - ratio) * y) + (ratio * v.y) + 0.5);
@@ -202,7 +202,7 @@ public:
                         return blended;
                     }
     //------------------------------------------------------------------------
-    bool operator == (const LaserBoy_vertex& p) const
+    bool operator == (const Vertex& p) const
             {
                 if(    (x != p.x)
                     || (y != p.y)
@@ -217,7 +217,7 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    bool operator != (const LaserBoy_vertex& p) const
+    bool operator != (const Vertex& p) const
             {
                 if(    (x == p.x)
                     && (y == p.y)
@@ -232,16 +232,16 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    LaserBoy_vertex  operator - ()
+    Vertex  operator - ()
                     {
-                        LaserBoy_vertex negative;
+                        Vertex negative;
                         negative.x = -x;
                         negative.y = -y;
                         negative.z = -z;
                         return negative;
                     }
     //------------------------------------------------------------------------
-    bool is_equal_2D(const LaserBoy_vertex& p) const
+    bool is_equal_2D(const Vertex& p) const
             {
                 if(    (x != p.x)
                     || (y != p.y)
@@ -529,8 +529,8 @@ public:
             return (in.good() && got_data);
         }
     //------------------------------------------------------------------------
-    LaserBoy_vertex& blank  () { k |=  LASERBOY_BLANKING_BIT;  return *this; }
-    LaserBoy_vertex& unblank() { k &= ~LASERBOY_BLANKING_BIT;  return *this; }
+    Vertex& blank  () { k |=  LASERBOY_BLANKING_BIT;  return *this; }
+    Vertex& unblank() { k &= ~LASERBOY_BLANKING_BIT;  return *this; }
     //------------------------------------------------------------------------
     bool is_blank     () const { return (bool)(k & LASERBOY_BLANKING_BIT);   }
     bool is_lit       () const { return !is_blank();                         }
@@ -568,7 +568,7 @@ public:
                 c = 0;
             }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short as_3D_short() const {  return (LaserBoy_3D_short)(*this); }
+    Short3d as_3D_short() const {  return (Short3d)(*this); }
     //------------------------------------------------------------------------
     int color_of(int black_level) const
         {
@@ -583,14 +583,14 @@ public:
                    : -1; // is blank
         }
     //------------------------------------------------------------------------
-    LaserBoy_color as_LaserBoy_color() const
+    Color as_Color() const
         {
-            return (LaserBoy_color)(*this);
+            return (Color)(*this);
         }
     //------------------------------------------------------------------------
-    LaserBoy_vertex bit_masked(const u_int signal_bit_mask[8]) const
+    Vertex bit_masked(const u_int signal_bit_mask[8]) const
                     {
-                        LaserBoy_vertex masked = *this;
+                        Vertex masked = *this;
                         masked.x &=  short_bit_mask[signal_bit_mask[0]];
                         masked.y &=  short_bit_mask[signal_bit_mask[1]];
                         masked.z &=  short_bit_mask[signal_bit_mask[5]];
@@ -600,18 +600,18 @@ public:
                         return masked;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short bit_masked_position(const u_int signal_bit_mask[8]) const
+    Short3d bit_masked_position(const u_int signal_bit_mask[8]) const
                         {
-                            LaserBoy_3D_short masked = *this;
+                            Short3d masked = *this;
                             masked.x &= short_bit_mask[signal_bit_mask[0]];
                             masked.y &= short_bit_mask[signal_bit_mask[1]];
                             masked.z &= short_bit_mask[signal_bit_mask[5]];
                             return masked;
                         }
     //------------------------------------------------------------------------
-    LaserBoy_color bit_masked_color(const u_int signal_bit_mask[8]) const
+    Color bit_masked_color(const u_int signal_bit_mask[8]) const
                     {
-                        LaserBoy_color masked = *this;
+                        Color masked = *this;
                         masked.r &= (short_bit_mask[signal_bit_mask[2]] >> 7);
                         masked.g &= (short_bit_mask[signal_bit_mask[3]] >> 7);
                         masked.b &= (short_bit_mask[signal_bit_mask[4]] >> 7);
@@ -620,7 +620,7 @@ public:
     //------------------------------------------------------------------------
     //------------------------------------------------------------------------
     void to_fstream_wave(fstream&               out,
-                         LaserBoy_wave_header&  header,
+                         WaveHeader&  header,
                          const u_int            signal_bit_mask[8],
                          const bool&            end_of_frame,
                          const bool&            unique_frame
@@ -645,7 +645,7 @@ public:
         out.put(    yy & 0x00ff      ); // y
         out.put((   yy & 0xff00) >> 8);
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_R)
         {
             if(is_blank())
                 color = header.color_rescale_r[0];
@@ -666,7 +666,7 @@ public:
             out.put((color & 0xff00) >> 8);
         }
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_G)
         {
             if(is_blank())
                 color = header.color_rescale_g[0];
@@ -687,7 +687,7 @@ public:
             out.put((color & 0xff00) >> 8);
         }
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_B)
         {
             if(is_blank())
                 color = header.color_rescale_b[0];
@@ -720,7 +720,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_TTL:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = (is_lit()) ? (header.color_rescale_i[LASERBOY_MAX_COLOR_SHORT]) : (header.color_rescale_i[0]);
                 else
                     color = (is_lit()) ? (LASERBOY_MAX_COLOR_SHORT) : (0);
@@ -729,7 +729,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_OR_ANALOG:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[rr | gg | bb];
                 else
                     color = (rr | gg | bb) << 7;
@@ -738,7 +738,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_WEIGHTED_ANALOG:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[((76 * rr) + (150 * gg) + (28 * bb)) / 254];
                 else
                     color = (((76 * rr) + (150 * gg) + (28 * bb)) / 254) << 7;
@@ -747,7 +747,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_AVG_ANALOG:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[(rr + gg + bb) / 3];
                 else
                     color = ((rr + gg + bb) / 3) << 7;
@@ -756,7 +756,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_O_SCOPE:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[(((76 * rr) + (150 * gg) + (28 * bb)) / 254)] -  - LASERBOY_MAX_COLOR_SHORT;
                 else
                     color = ((((76 * rr) + (150 * gg) + (28 * bb)) / 254) << 7) - LASERBOY_MAX_COLOR_SHORT;
@@ -778,7 +778,7 @@ public:
     //------------------------------------------------------------------------
     //------------------------------------------------------------------------
     void to_fstream_wave_inverted(fstream&               out,
-                                  LaserBoy_wave_header&  header,
+                                  WaveHeader&  header,
                                   const u_int            signal_bit_mask[8],
                                   const bool&            end_of_frame,
                                   const bool&            unique_frame
@@ -800,7 +800,7 @@ public:
         out.put( -yy & 0x00ff      ); // y
         out.put((-yy & 0xff00) >> 8);
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_R)
         {
             if(is_blank())
                 color = header.color_rescale_r[0];
@@ -823,7 +823,7 @@ public:
             out.put((color & 0xff00) >> 8);
         }
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_G)
         {
             if(is_blank())
                 color = header.color_rescale_g[0];
@@ -846,7 +846,7 @@ public:
             out.put((color & 0xff00) >> 8);
         }
         //--------------------------------------------------------------------
-        if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
+        if(header.wave_mode & LASERBOY_COLOR_RESCALE_B)
         {
             if(is_blank())
                 color = header.color_rescale_b[0];
@@ -881,7 +881,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_TTL:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = (is_lit()) ? (header.color_rescale_i[LASERBOY_MAX_COLOR_SHORT]) : (header.color_rescale_i[0]);
                 else
                     color = (is_lit()) ? (LASERBOY_MAX_COLOR_SHORT) : (0);
@@ -891,7 +891,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_OR_ANALOG:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[rr | gg | bb];
                 else
                     color = (rr | gg | bb) << 7;
@@ -901,7 +901,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_WEIGHTED_ANALOG:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[((76 * rr) + (150 * gg) + (28 * bb)) / 254];
                 else
                     color = (((76 * rr) + (150 * gg) + (28 * bb)) / 254) << 7;
@@ -911,7 +911,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_AVG_ANALOG:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[(rr + gg + bb) / 3];
                 else
                     color = ((rr + gg + bb) / 3) << 7;
@@ -921,7 +921,7 @@ public:
                 break;
             //----------------------------------------------------------------
             case LASERBOY_SIGNAL_MONO_O_SCOPE:
-                if(header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                if(header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                     color = header.color_rescale_i[(((76 * rr) + (150 * gg) + (28 * bb)) / 254)] -  - LASERBOY_MAX_COLOR_SHORT;
                 else
                 color = ((((76 * rr) + (150 * gg) + (28 * bb)) / 254) << 7) - LASERBOY_MAX_COLOR_SHORT;
@@ -947,15 +947,15 @@ public:
 };
 
 //############################################################################
-class LaserBoy_segment_base : public vector<LaserBoy_vertex>
+class SegmentBase : public vector<Vertex>
 {
 public:
     //------------------------------------------------------------------------
-    LaserBoy_segment_base()
+    SegmentBase()
             {}
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_segment_base()
+   ~SegmentBase()
             { clear(); }
     //------------------------------------------------------------------------
 };

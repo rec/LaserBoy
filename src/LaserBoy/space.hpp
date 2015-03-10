@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_space.hpp is part of LaserBoy.
+// space.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,22 +37,22 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_GUI_base;
+class GUI_base;
 
 //############################################################################
-class LaserBoy_space : public LaserBoy_frame_set, public LaserBoy_palette_set
+class Space : public FrameSet, public PaletteSet
 {
 public:
-    LaserBoy_space(LaserBoy_GUI_base* gui = NULL);
+    Space(GUI_base* gui = NULL);
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_space()
+   ~Space()
     {
         bmp_free (&bmp);
         bmp_free (&background);
     }
     //------------------------------------------------------------------------
-    LaserBoy_frame& operator [] (int index)    // does not set frame_index
+    Frame& operator [] (int index)    // does not set frame_index
                     {                          // eliminates ambiguity of space being
                         if(number_of_frames()) // both a frame set and palette set
                         {
@@ -60,14 +60,14 @@ virtual
                                 index = 0;
                             if(index < 0)
                                 index = number_of_frames() - 1;
-                            return LaserBoy_frame_set::at(index);
+                            return FrameSet::at(index);
                         }
                         return null_frame;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_space& operator += (const LaserBoy_frame_set& frames)
+    Space& operator += (const FrameSet& frames)
                     {
-                        LaserBoy_frame_set::insert(LaserBoy_frame_set::end(),
+                        FrameSet::insert(FrameSet::end(),
                                                    frames.begin(), frames.end()
                                                   );
                         return *this;
@@ -75,13 +75,13 @@ virtual
     //------------------------------------------------------------------------
     void clear_frames()
                 {
-                    LaserBoy_frame_set::clear();
+                    FrameSet::clear();
                     return;
                 }
     //------------------------------------------------------------------------
     void clear_palettes()
                 {
-                    LaserBoy_palette_set::clear();
+                    PaletteSet::clear();
                     return;
                 }
     //------------------------------------------------------------------------
@@ -113,17 +113,17 @@ virtual
     //------------------------------------------------------------------------
     void load_color_rescale_files     ();
 
-    LaserBoy_Rescale_Error_Code  load_color_rescale_file(int color_channel);
+    RescaleErrorCode  load_color_rescale_file(int color_channel);
 
     int  color_rescales_flags         ();
     //------------------------------------------------------------------------
     void load_frame_effects           ();
     void load_frame_set_effects       ();
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code  call_frame_effect      (string name);
-    LaserBoy_Error_Code  call_frame_set_effect  (string name);
+    ErrorCode  call_frame_effect      (string name);
+    ErrorCode  call_frame_set_effect  (string name);
     //------------------------------------------------------------------------
-    void load_background_bitmap       (struct LaserBoy_bmp* bmp);
+    void load_background_bitmap       (struct Bitmap* bmp);
     bool load_background_bitmap       (const string& file      );
     void clear_background_bitmap      ();
     void recolor_background           ();
@@ -144,9 +144,9 @@ virtual
                      view_angle.z -= two_pi;
                 }
     //------------------------------------------------------------------------
-    LaserBoy_bmp* p_bmp           () { return &bmp;            }
-    LaserBoy_bmp* p_background    () { return &background;     }
-    LaserBoy_bmp* p_background_bmp() { return &background_bmp; }
+    Bitmap* p_bmp           () { return &bmp;            }
+    Bitmap* p_background    () { return &background;     }
+    Bitmap* p_background_bmp() { return &background_bmp; }
     //------------------------------------------------------------------------
     void undo_wave_temp(fstream &in, fstream &out, const string& file_name)
                 {
@@ -215,35 +215,35 @@ virtual
     //------------------------------------------------------------------------
     void apply_wave_offsets        (fstream&             wave_in,
                                     fstream&             wave_out,
-                                    LaserBoy_wave_header wave_in_header
+                                    WaveHeader wave_in_header
                                    );
     //------------------------------------------------------------------------
     void invert_wave               (fstream&             wave_in,
                                     fstream&             wave_out,
-                                    LaserBoy_wave_header wave_in_header
+                                    WaveHeader wave_in_header
                                    );
     //------------------------------------------------------------------------
     void invert_signals            (fstream&             wave_in,
                                     fstream&             wave_out,
-                                    LaserBoy_wave_header wave_in_header
+                                    WaveHeader wave_in_header
                                    );
     //------------------------------------------------------------------------
     void black_level_to_wave       (fstream&             wave_in,
                                     fstream&             wave_out,
-                                    LaserBoy_wave_header wave_in_header
+                                    WaveHeader wave_in_header
                                    );
     //------------------------------------------------------------------------
     void bit_resolution_to_wave    (fstream&             wave_in,
                                     fstream&             wave_out,
-                                    LaserBoy_wave_header wave_in_header
+                                    WaveHeader wave_in_header
                                    );
     //------------------------------------------------------------------------
     void apply_color_rescales      (fstream&             wave_in,
                                     fstream&             wave_out,
-                                    LaserBoy_wave_header wave_in_header
+                                    WaveHeader wave_in_header
                                    );
     //------------------------------------------------------------------------
-    void split_wave_XY_r_g_b_i_LR  (LaserBoy_wave_header wave_in_header,
+    void split_wave_XY_r_g_b_i_LR  (WaveHeader wave_in_header,
                                     fstream&             wave_in,
                                     fstream&             wave_out_XY,
                                     fstream&             wave_out_r,
@@ -253,7 +253,7 @@ virtual
                                     fstream&             wave_out_LR
                                    );
     //------------------------------------------------------------------------
-    void split_wave_XY_rg_bi_LR    (LaserBoy_wave_header wave_in_header,
+    void split_wave_XY_rg_bi_LR    (WaveHeader wave_in_header,
                                     fstream&             wave_in,
                                     fstream&             wave_out_XY,
                                     fstream&             wave_out_rg,
@@ -292,19 +292,19 @@ virtual
                                     bool     global_polartity
                                    );
     //------------------------------------------------------------------------
-    void add_audio_to_wave         (LaserBoy_wave_header wave_in_header_laser,
-                                    LaserBoy_wave_header wave_in_header_audio,
+    void add_audio_to_wave         (WaveHeader wave_in_header_laser,
+                                    WaveHeader wave_in_header_audio,
                                     fstream&             in_laser,
                                     fstream&             in_audio,
                                     fstream&             out
                                    );
     //------------------------------------------------------------------------
-    void add_silence_to_wave       (LaserBoy_wave_header wave_in_header_laser,
+    void add_silence_to_wave       (WaveHeader wave_in_header_laser,
                                     fstream&             in_laser,
                                     fstream&             out
                                    );
     //------------------------------------------------------------------------
-    void format_wave               (LaserBoy_wave_header wave_in_header_laser,
+    void format_wave               (WaveHeader wave_in_header_laser,
                                     fstream&             in_laser,
                                     fstream&             out,
                                     bool                 global_polartity,
@@ -316,12 +316,12 @@ virtual
     string LaserBoy_wave_LSB_tag_to_name    (const u_short& LSB_tag  ) const;
     string LaserBoy_dots_setting_id_to_name (const int&   id       ) const;
     //------------------------------------------------------------------------
-//    void   tell(LaserBoy_wave_header header, string label) const;
+//    void   tell(WaveHeader header, string label) const;
     //------------------------------------------------------------------------
-    LaserBoy_GUI_base *p_GUI;
+    GUI_base *p_GUI;
 
     struct
-    LaserBoy_bmp       bmp           , // a memory clone of screen
+    Bitmap       bmp           , // a memory clone of screen
                        background    , // empty for clearing screen
                        background_bmp; // possibly a bitmap picture
 
@@ -329,20 +329,20 @@ virtual
                        install_GUID         ,
                        color_rescale_file[4]; // txt file names for each color channel
 
-    LaserBoy_color     bg_color       ,
+    Color     bg_color       ,
                        rendered_bounds,
                        rendered_blank ,
                        rendered_black ;
 
-    LaserBoy_3D_double fulcrum     ,
+    Double3d fulcrum     ,
                        view_angle  ,
                        view_scale  ,
                        view_offset ;
 
     vector<string>                    frame_effect_names    ,
                                       frame_set_effect_names;
-    vector<LaserBoy_frame_effect>     frame_effects         ;
-    vector<LaserBoy_frame_set_effect> frame_set_effects     ;
+    vector<Frame_effect>     frame_effects         ;
+    vector<FrameSet_effect> frame_set_effects     ;
 
     bool    show_vertices            ,
             show_blanking            ,

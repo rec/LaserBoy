@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_ild_header.cpp is part of LaserBoy.
+// ild_header.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 namespace LaserBoy {
 
 //############################################################################
-bool LaserBoy_ild_header::from_ifstream_ild(ifstream& in, long int& bytes_skipped)
+bool ILDHeader::from_ifstream_ild(ifstream& in, long int& bytes_skipped)
 {
     char      a, b, c, d;
     int       i;
@@ -195,7 +195,7 @@ on_eof_error:
 }
 
 //############################################################################
-void LaserBoy_ild_header::to_ofstream_ild(ofstream& out, bool dumb_file_format)
+void ILDHeader::to_ofstream_ild(ofstream& out, bool dumb_file_format)
 {
     u_int i;
     //------------------------------------------------------------------------

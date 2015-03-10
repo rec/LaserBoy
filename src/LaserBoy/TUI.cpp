@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_TUI.cpp is part of LaserBoy.
+// TUI.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 namespace LaserBoy {
 
 //############################################################################
-void LaserBoy_TUI::overlay_palettes()
+void TUI::overlay_palettes()
 {
     u_int  i,
            j,
@@ -233,9 +233,9 @@ void LaserBoy_TUI::overlay_palettes()
 }
 
 //############################################################################
-void LaserBoy_TUI::render_space()
+void TUI::render_space()
 {
-    LaserBoy_color  bit_masked;
+    Color  bit_masked;
 
     u_int           select_start_color,
                     select_end_color  ,
@@ -574,7 +574,7 @@ void LaserBoy_TUI::render_space()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_frame_stats()
+void TUI::overlay_frame_stats()
 {
     u_int i,
           vertices     = (int)current_frame().size(),
@@ -593,7 +593,7 @@ void LaserBoy_TUI::overlay_frame_stats()
 
     if(current_frame().size())
     {
-        LaserBoy_vertex    at_egg    = current_frame().at(current_frame().egg   ),
+        Vertex    at_egg    = current_frame().at(current_frame().egg   ),
                            at_spider = current_frame().at(current_frame().spider),
                            fathest   = current_frame().vertex_farthest_from_origin();
 
@@ -729,7 +729,7 @@ void LaserBoy_TUI::overlay_frame_stats()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_frame_set_stats()
+void TUI::overlay_frame_set_stats()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = bmp.yres + LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -769,7 +769,7 @@ void LaserBoy_TUI::overlay_frame_set_stats()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_palette_set_stats()
+void TUI::overlay_palette_set_stats()
 {
     u_int  i,
            y_line       = 8 * font_size_factor,
@@ -799,14 +799,14 @@ void LaserBoy_TUI::overlay_palette_set_stats()
         y_off += y_line;
         bmp_printf(&bmp, x_off, y_off, next_hue(), bmp_bg_color, transparent_menu_font, font_size_factor,
                    "%s          ",
-                   LaserBoy_palette_set::at(i).name.c_str()
+                   PaletteSet::at(i).name.c_str()
                   );
     }
     return;
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_program_menu()
+void TUI::overlay_program_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -947,7 +947,7 @@ void LaserBoy_TUI::overlay_program_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_in_file_type_menu()
+void TUI::overlay_in_file_type_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -991,7 +991,7 @@ void LaserBoy_TUI::overlay_in_file_type_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_in_ild_action_menu()
+void TUI::overlay_in_ild_action_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1036,7 +1036,7 @@ void LaserBoy_TUI::overlay_in_ild_action_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_in_dxf_action_menu()
+void TUI::overlay_in_dxf_action_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1083,7 +1083,7 @@ void LaserBoy_TUI::overlay_in_dxf_action_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_in_wav_action_menu()
+void TUI::overlay_in_wav_action_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1139,7 +1139,7 @@ void LaserBoy_TUI::overlay_in_wav_action_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_in_txt_action_menu()
+void TUI::overlay_in_txt_action_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1186,7 +1186,7 @@ void LaserBoy_TUI::overlay_in_txt_action_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_in_bmp_action_menu()
+void TUI::overlay_in_bmp_action_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1234,7 +1234,7 @@ void LaserBoy_TUI::overlay_in_bmp_action_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_if_not_z_options()
+void TUI::overlay_if_not_z_options()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1280,7 +1280,7 @@ void LaserBoy_TUI::overlay_if_not_z_options()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_dots_options()
+void TUI::overlay_dots_options()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1315,7 +1315,7 @@ void LaserBoy_TUI::overlay_dots_options()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_out_file_type_menu()
+void TUI::overlay_out_file_type_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1362,7 +1362,7 @@ void LaserBoy_TUI::overlay_out_file_type_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_out_ild_menu()
+void TUI::overlay_out_ild_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1405,7 +1405,7 @@ void LaserBoy_TUI::overlay_out_ild_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_out_dxf_menu()
+void TUI::overlay_out_dxf_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1439,7 +1439,7 @@ void LaserBoy_TUI::overlay_out_dxf_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_out_wav_menu()
+void TUI::overlay_out_wav_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1509,7 +1509,7 @@ void LaserBoy_TUI::overlay_out_wav_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_out_txt_menu()
+void TUI::overlay_out_txt_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1561,7 +1561,7 @@ void LaserBoy_TUI::overlay_out_txt_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_out_bmp_menu()
+void TUI::overlay_out_bmp_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1601,7 +1601,7 @@ void LaserBoy_TUI::overlay_out_bmp_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_value_settings_menu()
+void TUI::overlay_value_settings_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -1787,7 +1787,7 @@ void LaserBoy_TUI::overlay_value_settings_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_veiw_menu()
+void TUI::overlay_veiw_menu()
 {
     int    x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
            y_off        = x_off,
@@ -2177,7 +2177,7 @@ void LaserBoy_TUI::overlay_veiw_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_visuals_menu()
+void TUI::overlay_visuals_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -2342,7 +2342,7 @@ void LaserBoy_TUI::overlay_visuals_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_switch_settings_menu()
+void TUI::overlay_switch_settings_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -2558,7 +2558,7 @@ void LaserBoy_TUI::overlay_switch_settings_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_palette_tranz_menu()
+void TUI::overlay_palette_tranz_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -2688,7 +2688,7 @@ void LaserBoy_TUI::overlay_palette_tranz_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_frame_set_tranz_menu()
+void TUI::overlay_frame_set_tranz_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -2804,7 +2804,7 @@ void LaserBoy_TUI::overlay_frame_set_tranz_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_frame_tranz_menu()
+void TUI::overlay_frame_tranz_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -2949,7 +2949,7 @@ void LaserBoy_TUI::overlay_frame_tranz_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_draw_color_blank_menu()
+void TUI::overlay_draw_color_blank_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -3133,7 +3133,7 @@ void LaserBoy_TUI::overlay_draw_color_blank_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_move_scale_rotate_menu()
+void TUI::overlay_move_scale_rotate_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -3283,7 +3283,7 @@ void LaserBoy_TUI::overlay_move_scale_rotate_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_direct_draw_segments_menu()
+void TUI::overlay_direct_draw_segments_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -3407,7 +3407,7 @@ void LaserBoy_TUI::overlay_direct_draw_segments_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_wave_utilities_menu()
+void TUI::overlay_wave_utilities_menu()
 {
     int y_line = 8 * font_size_factor,
         x_off  = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -3504,7 +3504,7 @@ void LaserBoy_TUI::overlay_wave_utilities_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_show_split_or_join_waves_menu()
+void TUI::overlay_show_split_or_join_waves_menu()
 {
     int y_line = 8 * font_size_factor,
         x_off  = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -3574,7 +3574,7 @@ void LaserBoy_TUI::overlay_show_split_or_join_waves_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_show_wave_options_menu()
+void TUI::overlay_show_wave_options_menu()
 {
     int y_line = 8 * font_size_factor,
         x_off  = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -3608,7 +3608,7 @@ void LaserBoy_TUI::overlay_show_wave_options_menu()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_wave_show_settings_menu()
+void TUI::overlay_wave_show_settings_menu()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -3654,7 +3654,7 @@ void LaserBoy_TUI::overlay_wave_show_settings_menu()
 }
 
 //############################################################################
-bool LaserBoy_TUI::overlay_wave_analysis(string file_name)
+bool TUI::overlay_wave_analysis(string file_name)
 {
     fstream in;
     in.open(file_name.c_str(), ios::in | ios::binary);
@@ -3675,9 +3675,9 @@ bool LaserBoy_TUI::overlay_wave_analysis(string file_name)
 //                                blue_map(1024);
 //        for(u_int i = 0; i < 1024; i++)
 //            red_map[i] = green_map[i] = blue_map[i] = 0;
-        LaserBoy_wave_header header;
+        WaveHeader header;
         header.from_fstream_wave(in);
-        LaserBoy_wave_sample sample_0(header.num_channels),
+        WaveSample sample_0(header.num_channels),
                              sample_1(header.num_channels);
         //--------------------------------------------------------------------
         p_GUI->display_state("analyzing wave");
@@ -3818,7 +3818,7 @@ bool LaserBoy_TUI::overlay_wave_analysis(string file_name)
 }
 
 //############################################################################
-bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
+bool TUI::overlay_wave_header_stats(string file_name)
 {
     int       i,
               y_line       = 8 * font_size_factor,
@@ -3826,7 +3826,7 @@ bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
               y_off        = x_off;
     u_int     bmp_bg_color = bmp.make_rgb(bg_color.r, bg_color.g, bg_color.b);
     fstream   in;
-    LaserBoy_wave_header header;
+    WaveHeader header;
     //------------------------------------------------------------------------
     in.open(file_name.c_str(), ios::in | ios::binary);
     if(in.is_open())
@@ -3858,7 +3858,7 @@ bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
                     , "LaserBoy wave header version : %s"
                     , header.version.c_str()
                   );
-    if(!(header.LaserBoy_wave_mode & LASERBOY_WAVE_OPTIMIZED))
+    if(!(header.wave_mode & LASERBOY_WAVE_OPTIMIZED))
     {
         y_off += y_line;
         bmp_printf(   &bmp, x_off, y_off, bmp.white, bmp_bg_color, transparent_menu_font, font_size_factor
@@ -3896,9 +3896,9 @@ bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
         y_off += y_line;
         y_off += y_line;
         bmp_printf(   &bmp, x_off, y_off, next_hue(), bmp_bg_color, transparent_menu_font, font_size_factor
-                    , ((header.LaserBoy_wave_mode & LASERBOY_WAVE_POSITIVE) ? ("wave polarity ........: positive signal") : ("wave polarity ........: negative signal"))
+                    , ((header.wave_mode & LASERBOY_WAVE_POSITIVE) ? ("wave polarity ........: positive signal") : ("wave polarity ........: negative signal"))
                   );
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_OPTIMIZED)
+        if(header.wave_mode & LASERBOY_WAVE_OPTIMIZED)
         {
             y_off += y_line;
             bmp_printf(   &bmp, x_off, y_off, next_hue(), bmp_bg_color, transparent_menu_font, font_size_factor
@@ -3941,7 +3941,7 @@ bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
                         , header.parms.frames_per_second
                       );
         }
-        if(header.LaserBoy_wave_mode & LASERBOY_WAVE_NUM_FRAMES)
+        if(header.wave_mode & LASERBOY_WAVE_NUM_FRAMES)
         {
             y_off += y_line;
             bmp_printf(   &bmp, x_off, y_off, next_hue(), bmp_bg_color, transparent_menu_font, font_size_factor
@@ -3961,10 +3961,10 @@ bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
                         , "%2d: %s : %c%s : %s :   %4d : %3d"
                         , i
                         , ((header.signal_id[i] >= 0) ? ("   ") : ("neg"))
-                        , (  (    (i == 2 && header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
-                               || (i == 3 && header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
-                               || (i == 4 && header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
-                               || (i == 5 && header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+                        , (  (    (i == 2 && header.wave_mode & LASERBOY_COLOR_RESCALE_R)
+                               || (i == 3 && header.wave_mode & LASERBOY_COLOR_RESCALE_G)
+                               || (i == 4 && header.wave_mode & LASERBOY_COLOR_RESCALE_B)
+                               || (i == 5 && header.wave_mode & LASERBOY_COLOR_RESCALE_I)
                              )
                            ? ('*')
                            : (' ')
@@ -3976,10 +3976,10 @@ bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
                       );
         }
     }
-    if(    (header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_R)
-        || (header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_G)
-        || (header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_B)
-        || (header.LaserBoy_wave_mode & LASERBOY_COLOR_RESCALE_I)
+    if(    (header.wave_mode & LASERBOY_COLOR_RESCALE_R)
+        || (header.wave_mode & LASERBOY_COLOR_RESCALE_G)
+        || (header.wave_mode & LASERBOY_COLOR_RESCALE_B)
+        || (header.wave_mode & LASERBOY_COLOR_RESCALE_I)
       )
     {
         y_off += y_line;
@@ -3997,7 +3997,7 @@ bool LaserBoy_TUI::overlay_wave_header_stats(string file_name)
 }
 
 //############################################################################
-short LaserBoy_TUI::overlay_wave_signal_polarities(string file_name, int polarity[8])
+short TUI::overlay_wave_signal_polarities(string file_name, int polarity[8])
 {
     int            i,
                    y_line       = 8 * font_size_factor,
@@ -4007,7 +4007,7 @@ short LaserBoy_TUI::overlay_wave_signal_polarities(string file_name, int polarit
     fstream        in;
     //------------------------------------------------------------------------
     in.open(file_name.c_str(), ios::in | ios::binary);
-    LaserBoy_wave_header header(in);
+    WaveHeader header(in);
     in.close();
     //------------------------------------------------------------------------
     TUI_palette_index = 61;
@@ -4024,7 +4024,7 @@ short LaserBoy_TUI::overlay_wave_signal_polarities(string file_name, int polarit
         y_off += y_line;
         y_off += y_line;
         bmp_printf(   &bmp, x_off, y_off, next_hue(), bmp_bg_color, transparent_menu_font, font_size_factor
-                    , ((header.LaserBoy_wave_mode & LASERBOY_WAVE_POSITIVE) ? ("wave polarity ........: positive signal") : ("wave polarity ........: negative signal"))
+                    , ((header.wave_mode & LASERBOY_WAVE_POSITIVE) ? ("wave polarity ........: positive signal") : ("wave polarity ........: negative signal"))
                   );
     }
     y_off += y_line;
@@ -4100,7 +4100,7 @@ short LaserBoy_TUI::overlay_wave_signal_polarities(string file_name, int polarit
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_wave_offsets()
+void TUI::overlay_wave_offsets()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -4164,7 +4164,7 @@ void LaserBoy_TUI::overlay_wave_offsets()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_color_rescale_stats()
+void TUI::overlay_color_rescale_stats()
 {
     int    y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -4215,7 +4215,7 @@ void LaserBoy_TUI::overlay_color_rescale_stats()
 }
 
 //############################################################################
-void LaserBoy_TUI::overlay_bit_resolution_settings()
+void TUI::overlay_bit_resolution_settings()
 {
     u_int  y_line       = 8 * font_size_factor,
            x_off        = LASERBOY_STATS_DISPLAY_OFFSET * font_size_factor,
@@ -4279,7 +4279,7 @@ void LaserBoy_TUI::overlay_bit_resolution_settings()
 }
 
 //############################################################################
-void LaserBoy_TUI::get_directory_list(string dir, string ext)
+void TUI::get_directory_list(string dir, string ext)
 {
     working_directory = dir;
     current_extension = ext;
@@ -4295,7 +4295,7 @@ void LaserBoy_TUI::get_directory_list(string dir, string ext)
 }
 
 //############################################################################
-int LaserBoy_TUI::overlay_file_list(string start)
+int TUI::overlay_file_list(string start)
 {
     u_int  i,
            y_line       = 8 * font_size_factor,
@@ -4337,7 +4337,7 @@ int LaserBoy_TUI::overlay_file_list(string start)
 }
 
 //############################################################################
-int LaserBoy_TUI::overlay_directory_list(string start)
+int TUI::overlay_directory_list(string start)
 {
     u_int  i,
            y_line       = 8 * font_size_factor,
@@ -4380,7 +4380,7 @@ int LaserBoy_TUI::overlay_directory_list(string start)
 }
 
 //############################################################################
-int LaserBoy_TUI::overlay_frame_effects(string start)
+int TUI::overlay_frame_effects(string start)
 {
     int    i,
            y_line        = 8 * font_size_factor,
@@ -4417,7 +4417,7 @@ int LaserBoy_TUI::overlay_frame_effects(string start)
 }
 
 //############################################################################
-int LaserBoy_TUI::overlay_frame_set_effects(string start)
+int TUI::overlay_frame_set_effects(string start)
 {
     int    i,
            y_line        = 8 * font_size_factor,

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_3D_double.hpp is part of LaserBoy.
+// 3D_double.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,16 +36,16 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_3D_double
+class Double3d
 {
 public:
-    LaserBoy_3D_double(const double& f = 0)
+    Double3d(const double& f = 0)
                : x(f)
                , y(f)
                , z(f)
                                                 {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_double(const double& _x,
+    Double3d(const double& _x,
                        const double& _y,
                        const double& _z
                       )
@@ -54,21 +54,21 @@ public:
                , z(_z)
                                                 {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_double(const LaserBoy_3D_double& f)
+    Double3d(const Double3d& f)
                : x(f.x)
                , y(f.y)
                , z(f.z)
                                                 {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_double(const LaserBoy_3D_short& s)
+    Double3d(const Short3d& s)
                : x(s.x)
                , y(s.y)
                , z(s.z)
                                                 {}
     //------------------------------------------------------------------------
-   ~LaserBoy_3D_double()                        {}
+   ~Double3d()                        {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator = (const LaserBoy_3D_double& f)
+    Double3d& operator = (const Double3d& f)
                     {
                         x = f.x;
                         y = f.y;
@@ -76,13 +76,13 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator = (const double& f)
+    Double3d& operator = (const double& f)
                     {
                         x = y = z = f;
                         return *this;
                     }
     //------------------------------------------------------------------------
-    bool operator == (const LaserBoy_3D_double& f) const
+    bool operator == (const Double3d& f) const
             {
                 if(    (x != f.x)
                     || (y != f.y)
@@ -92,7 +92,7 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    bool operator != (const LaserBoy_3D_double& f) const
+    bool operator != (const Double3d& f) const
             {
                 if(    (x == f.x)
                     && (y == f.y)
@@ -122,40 +122,40 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    bool operator > (const LaserBoy_3D_double& f) const // distance from the origin
+    bool operator > (const Double3d& f) const // distance from the origin
             {
                 return(   (  x *   x +   y *   y +   z *   z)
                         > (f.x * f.x + f.y * f.y + f.z * f.z)
                       );
             }
     //------------------------------------------------------------------------
-    bool operator >= (const LaserBoy_3D_double& f) const // distance from the origin
+    bool operator >= (const Double3d& f) const // distance from the origin
             {
                 return(    (  x *   x +   y *   y +   z *   z)
                         >= (f.x * f.x + f.y * f.y + f.z * f.z)
                       );
             }
     //------------------------------------------------------------------------
-    bool operator < (const LaserBoy_3D_double& f) const // distance from the origin
+    bool operator < (const Double3d& f) const // distance from the origin
             {
                 return(   (  x *   x +   y *   y +   z *   z)
                         < (f.x * f.x + f.y * f.y + f.z * f.z)
                       );
             }
     //------------------------------------------------------------------------
-    bool operator <= (const LaserBoy_3D_double& f) const // distance from the origin
+    bool operator <= (const Double3d& f) const // distance from the origin
             {
                 return(    (  x *   x +   y *   y +   z *   z)
                         <= (f.x * f.x + f.y * f.y + f.z * f.z)
                       );
             }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator -  (const LaserBoy_3D_double& f) const
+    Double3d  operator -  (const Double3d& f) const
                     {
-                        return LaserBoy_3D_double(x - f.x, y - f.y, z - f.z);
+                        return Double3d(x - f.x, y - f.y, z - f.z);
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator -= (const LaserBoy_3D_double& f)
+    Double3d& operator -= (const Double3d& f)
                     {
                         x -= f.x;
                         y -= f.y;
@@ -163,7 +163,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator -= (const double& f)
+    Double3d& operator -= (const double& f)
                     {
                         x -= f;
                         y -= f;
@@ -171,23 +171,23 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator +  (const LaserBoy_3D_double& f) const
+    Double3d  operator +  (const Double3d& f) const
                     {
-                        return LaserBoy_3D_double(x + f.x,
+                        return Double3d(x + f.x,
                                                   y + f.y,
                                                   z + f.z
                                                  );
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator +  (const LaserBoy_3D_short& s) const
+    Double3d  operator +  (const Short3d& s) const
                     {
-                        return LaserBoy_3D_double(x + s.x,
+                        return Double3d(x + s.x,
                                                   y + s.y,
                                                   z + s.z
                                                  );
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator += (const LaserBoy_3D_double& f)
+    Double3d& operator += (const Double3d& f)
                     {
                         x += f.x;
                         y += f.y;
@@ -195,7 +195,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator += (const double& f)
+    Double3d& operator += (const double& f)
                     {
                         x += f;
                         y += f;
@@ -203,40 +203,40 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator *  (const LaserBoy_3D_double& f) const
+    Double3d  operator *  (const Double3d& f) const
                     {
-                        return LaserBoy_3D_double(x * f.x, y * f.y, z * f.z);
+                        return Double3d(x * f.x, y * f.y, z * f.z);
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator /  (const LaserBoy_3D_double& f) const
+    Double3d  operator /  (const Double3d& f) const
                     {
-                        LaserBoy_3D_double quotient;
+                        Double3d quotient;
                         if(f.x)    quotient.x = x / f.x;
                         if(f.y)    quotient.y = y / f.y;
                         if(f.z)    quotient.z = z / f.z;
                         return quotient;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator *  (const double& f) const
+    Double3d  operator *  (const double& f) const
                     {
-                        return LaserBoy_3D_double(x * f, y * f, z * f);
+                        return Double3d(x * f, y * f, z * f);
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator /  (const double& f) const
+    Double3d  operator /  (const double& f) const
                     {
                         if(f)
-                            return LaserBoy_3D_double(x / f, y / f, z / f);
-                        return LaserBoy_3D_double();
+                            return Double3d(x / f, y / f, z / f);
+                        return Double3d();
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double  operator /  (const int& i) const
+    Double3d  operator /  (const int& i) const
                     {
                         if(i)
-                            return LaserBoy_3D_double(x / i, y / i, z / i);
-                        return LaserBoy_3D_double();
+                            return Double3d(x / i, y / i, z / i);
+                        return Double3d();
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator *= (const LaserBoy_3D_double& f)
+    Double3d& operator *= (const Double3d& f)
                     {
                         x *= f.x;
                         y *= f.y;
@@ -244,7 +244,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator *= (const double& f)
+    Double3d& operator *= (const double& f)
                     {
                         x *= f;
                         y *= f;
@@ -252,7 +252,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator /= (const LaserBoy_3D_double& f)
+    Double3d& operator /= (const Double3d& f)
                     {
                         if(    (f.x != 0.0)
                             && (f.y != 0.0)
@@ -264,7 +264,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double& operator /= (const double& f)
+    Double3d& operator /= (const double& f)
                     {
                         if(f != 0.0)
                         {
@@ -275,24 +275,24 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    operator LaserBoy_3D_short() const // cast to LaserBoy_3D_short
+    operator Short3d() const // cast to Short3d
                 {
-                    return LaserBoy_3D_short( (short)round(x),
+                    return Short3d( (short)round(x),
                                               (short)round(y),
                                               (short)round(z)
                                             );
                 }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double operator - ()
+    Double3d operator - ()
                 {
-                    LaserBoy_3D_double negative;
+                    Double3d negative;
                     negative.x = -x;
                     negative.y = -y;
                     negative.z = -z;
                     return negative;
                 }
     //------------------------------------------------------------------------
-    double operator | (const LaserBoy_3D_double& f) const // distance from each other
+    double operator | (const Double3d& f) const // distance from each other
                 {
                     return( sqrt(   (double)(x - f.x) * (x - f.x)
                                   + (double)(y - f.y) * (y - f.y)
@@ -303,13 +303,13 @@ public:
     //------------------------------------------------------------------------
     double magnitude() const // distance from origin
                 {
-                    LaserBoy_3D_double origin;
+                    Double3d origin;
                     return(origin | *this);
                 }
     //------------------------------------------------------------------------
-    LaserBoy_3D_double direction() const // z and y rotational angle from origin
+    Double3d direction() const // z and y rotational angle from origin
             {
-                LaserBoy_3D_double origin,
+                Double3d origin,
                                    basline_vertex,
                                    copy = *this,
                                    rotation;

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 2013 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_3D_short.hpp is part of LaserBoy.
+// 3D_short.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,25 +33,25 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_3D_short
+class Short3d
 {
 public:
-    LaserBoy_3D_short(const short& s = 0)
+    Short3d(const short& s = 0)
                : x(s), y(s), z(s)                       {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_short( const short& _x,
+    Short3d( const short& _x,
                        const short& _y,
                        const short& _z
                      )
                : x(_x), y(_y), z(_z)                    {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_short(const LaserBoy_3D_short& p)
+    Short3d(const Short3d& p)
                : x(p.x), y(p.y), z(p.z)                 {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_short(const int& s)
+    Short3d(const int& s)
                : x((short)s), y((short)s), z((short)s)  {}
     //------------------------------------------------------------------------
-    LaserBoy_3D_short& operator = (const LaserBoy_3D_short& p)
+    Short3d& operator = (const Short3d& p)
                     {
                         x = p.x;
                         y = p.y;
@@ -59,7 +59,7 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    bool operator == (const LaserBoy_3D_short& p) const
+    bool operator == (const Short3d& p) const
             {
                 if(    (x != p.x)
                     || (y != p.y)
@@ -69,7 +69,7 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    bool operator != (const LaserBoy_3D_short& p) const
+    bool operator != (const Short3d& p) const
             {
                 if(    (x == p.x)
                     && (y == p.y)
@@ -79,38 +79,38 @@ public:
                 return true;
             }
     //------------------------------------------------------------------------
-    bool operator > (const LaserBoy_3D_short& p) const // distance from the origin
+    bool operator > (const Short3d& p) const // distance from the origin
             {
                 return(   ((double)  x *   x + (double)  y *   y + (double)  z *   z)
                         > ((double)p.x * p.x + (double)p.y * p.y + (double)p.z * p.z)
                       );
             }
     //------------------------------------------------------------------------
-    bool operator >= (const LaserBoy_3D_short& p) const // distance from the origin
+    bool operator >= (const Short3d& p) const // distance from the origin
             {
                 return(    ((double)  x *   x + (double)  y *   y + (double)  z *   z)
                         >= ((double)p.x * p.x + (double)p.y * p.y + (double)p.z * p.z)
                       );
             }
     //------------------------------------------------------------------------
-    bool operator < (const LaserBoy_3D_short& p) const // distance from the origin
+    bool operator < (const Short3d& p) const // distance from the origin
             {
                 return(   ((double)  x *   x + (double)  y *   y + (double)  z *   z)
                         < ((double)p.x * p.x + (double)p.y * p.y + (double)p.z * p.z)
                       );
             }
     //------------------------------------------------------------------------
-    bool operator <= (const LaserBoy_3D_short& p) const // distance from the origin
+    bool operator <= (const Short3d& p) const // distance from the origin
             {
                 return(    ((double)  x *   x + (double)  y *   y + (double)  z *   z)
                         <= ((double)p.x * p.x + (double)p.y * p.y + (double)p.z * p.z)
                       );
             }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short  operator -  (const LaserBoy_3D_short& s)
+    Short3d  operator -  (const Short3d& s)
                     {
                         int X, Y, Z;
-                        LaserBoy_3D_short diff(*this);
+                        Short3d diff(*this);
                         X = x - s.x;
                         Y = y - s.y;
                         Z = z - s.z;
@@ -135,7 +135,7 @@ public:
                         return diff;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short& operator -= (const LaserBoy_3D_short& p)
+    Short3d& operator -= (const Short3d& p)
                     {
                         x -= p.x;
                         y -= p.y;
@@ -143,10 +143,10 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short  operator +  (const LaserBoy_3D_short& s) const
+    Short3d  operator +  (const Short3d& s) const
                     {
                         int X, Y, Z;
-                        LaserBoy_3D_short sum(*this);
+                        Short3d sum(*this);
                         X = x + s.x;
                         Y = y + s.y;
                         Z = z + s.z;
@@ -171,7 +171,7 @@ public:
                         return sum;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short& operator += (const LaserBoy_3D_short& p)
+    Short3d& operator += (const Short3d& p)
                     {
                         x += p.x;
                         y += p.y;
@@ -179,16 +179,16 @@ public:
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short  operator - ()
+    Short3d  operator - ()
                     {
-                        LaserBoy_3D_short negative;
+                        Short3d negative;
                         negative.x = -x;
                         negative.y = -y;
                         negative.z = -z;
                         return negative;
                     }
     //------------------------------------------------------------------------
-    double operator | (const LaserBoy_3D_short& p) const // distance from each other
+    double operator | (const Short3d& p) const // distance from each other
                 {
                     double dx = abs(x - p.x),
                            dy = abs(y - p.y),
@@ -198,11 +198,11 @@ public:
     //------------------------------------------------------------------------
     double magnitude() const // distance from origin
                 {
-                    LaserBoy_3D_short origin;
+                    Short3d origin;
                     return(origin | *this);
                 }
     //------------------------------------------------------------------------
-    LaserBoy_3D_short abs_3D() {  return LaserBoy_3D_short(abs(x), abs(y), abs(z));  }
+    Short3d abs_3D() {  return Short3d(abs(x), abs(y), abs(z));  }
     //------------------------------------------------------------------------
     int               sum()    {  return (int)x + (int)y + (int)z;             }
     //------------------------------------------------------------------------

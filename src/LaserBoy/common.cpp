@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_common.cpp is part of LaserBoy.
+// common.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -436,7 +436,7 @@ bool get_next_hex(ifstream& in, double& number, u_int& line_number)
 }
 
 //############################################################################
-int LaserBoy_version_check(string& version_string, string install_GUID, u_int app_runs_count)
+int version_check(string& version_string, string install_GUID, u_int app_runs_count)
 {
     using boost::asio::ip::tcp;
     try

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_real_segment.cpp is part of LaserBoy.
+// RealSegment.cpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,9 +32,9 @@
 namespace LaserBoy {
 
 //############################################################################
-LaserBoy_real_segment::LaserBoy_real_segment(LaserBoy_space* ps,
-                                             LaserBoy_real_vertex from,
-                                             LaserBoy_real_vertex to
+RealSegment::RealSegment(Space* ps,
+                                             RealVertex from,
+                                             RealVertex to
                                             ) // 3D line function
                 : p_space            (ps),
                   palette_index      (LASERBOY_ILDA_DEFAULT),
@@ -47,14 +47,14 @@ LaserBoy_real_segment::LaserBoy_real_segment(LaserBoy_space* ps,
                             );
     if(steps)
     {
-        LaserBoy_3D_double _to        (to),
+        Double3d _to        (to),
                            _from      (from),
                            difference (_to - _from),
                            delta      (difference / steps);
         //--------------------------------------------------------------------
         for(int i = 1; i < steps; i++)
-            push_back(LaserBoy_real_vertex( LaserBoy_3D_double(_from + (delta * i)),
-                                            (LaserBoy_color)to,
+            push_back(RealVertex( Double3d(_from + (delta * i)),
+                                            (Color)to,
                                             to.k,
                                             to.c
                                           )
@@ -64,7 +64,7 @@ LaserBoy_real_segment::LaserBoy_real_segment(LaserBoy_space* ps,
 }
 
 //############################################################################
-u_int LaserBoy_real_segment::number_of_color_vectors() const
+u_int RealSegment::number_of_color_vectors() const
 {
     u_int count = 0;
     for(u_int i = 1; i < size(); i++)
@@ -74,7 +74,7 @@ u_int LaserBoy_real_segment::number_of_color_vectors() const
 }
 
 //############################################################################
-u_int LaserBoy_real_segment::number_of_dark_vectors() const
+u_int RealSegment::number_of_dark_vectors() const
 {
     u_int count = 0;
     for(u_int i = 1; i < size(); i++)
@@ -84,9 +84,9 @@ u_int LaserBoy_real_segment::number_of_dark_vectors() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::segment_front() const
+Double3d RealSegment::segment_front() const
 {
-    LaserBoy_3D_double front_;
+    Double3d front_;
     front_.z = -DBL_MAX;
     for(u_int i = 0; i < size(); i++)
         if(at(i).z > front_.z)
@@ -95,9 +95,9 @@ LaserBoy_3D_double LaserBoy_real_segment::segment_front() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::segment_back() const
+Double3d RealSegment::segment_back() const
 {
-    LaserBoy_3D_double back_;
+    Double3d back_;
     back_.z = DBL_MAX;
     for(u_int i = 0; i < size(); i++)
         if(at(i).z < back_.z)
@@ -106,9 +106,9 @@ LaserBoy_3D_double LaserBoy_real_segment::segment_back() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::segment_top() const
+Double3d RealSegment::segment_top() const
 {
-    LaserBoy_3D_double top_;
+    Double3d top_;
     top_.y = -DBL_MAX;
     for(u_int i = 0; i < size(); i++)
         if(at(i).y > top_.y)
@@ -117,9 +117,9 @@ LaserBoy_3D_double LaserBoy_real_segment::segment_top() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::segment_bottom() const
+Double3d RealSegment::segment_bottom() const
 {
-    LaserBoy_3D_double bottom_;
+    Double3d bottom_;
     bottom_.y = DBL_MAX;
     for(u_int i = 0; i < size(); i++)
         if(at(i).y < bottom_.y)
@@ -128,9 +128,9 @@ LaserBoy_3D_double LaserBoy_real_segment::segment_bottom() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::segment_right() const
+Double3d RealSegment::segment_right() const
 {
-    LaserBoy_3D_double right_;
+    Double3d right_;
     right_.x = -DBL_MAX;
     for(u_int i = 0; i < size(); i++)
         if(at(i).x > right_.x)
@@ -139,9 +139,9 @@ LaserBoy_3D_double LaserBoy_real_segment::segment_right() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::segment_left() const
+Double3d RealSegment::segment_left() const
 {
-    LaserBoy_3D_double left_;
+    Double3d left_;
     left_.x = DBL_MAX;
     for(u_int i = 0; i < size(); i++)
         if(at(i).x < left_.x)
@@ -150,24 +150,24 @@ LaserBoy_3D_double LaserBoy_real_segment::segment_left() const
 }
 
 //############################################################################
-double LaserBoy_real_segment::segment_height() const
+double RealSegment::segment_height() const
 {
     return (segment_top().y - segment_bottom().y);
 }
 //############################################################################
-double LaserBoy_real_segment::segment_width() const
+double RealSegment::segment_width() const
 {
     return (segment_right().x - segment_left().x);
 }
 
 //############################################################################
-double LaserBoy_real_segment::segment_depth() const
+double RealSegment::segment_depth() const
 {
     return (segment_front().z - segment_back().z);
 }
 
 //############################################################################
-double LaserBoy_real_segment::segment_size() const
+double RealSegment::segment_size() const
 {
     double greatest = 0;
     if(segment_width () > greatest)    greatest = segment_width ();
@@ -177,7 +177,7 @@ double LaserBoy_real_segment::segment_size() const
 }
 
 //############################################################################
-void LaserBoy_real_segment::blank_all_vertices()
+void RealSegment::blank_all_vertices()
 {
     for(u_int i = 0; i < size(); i++)
         at(i).blank();
@@ -185,7 +185,7 @@ void LaserBoy_real_segment::blank_all_vertices()
 }
 
 //############################################################################
-void LaserBoy_real_segment::unblank_all_vertices()
+void RealSegment::unblank_all_vertices()
 {
     for(u_int i = 1; i < size(); i++)
         at(i).unblank();
@@ -193,13 +193,13 @@ void LaserBoy_real_segment::unblank_all_vertices()
 }
 
 //############################################################################
-LaserBoy_real_segment& LaserBoy_real_segment::reverse()
+RealSegment& RealSegment::reverse()
 {
     if(size() > 1)
     {
         int                    i;
-        LaserBoy_real_segment  reversed;
-        LaserBoy_real_vertex   vertex;
+        RealSegment  reversed;
+        RealVertex   vertex;
         //--------------------------------------------------------------------
         reversed.reserve(size());
         //--------------------------------------------------------------------
@@ -227,7 +227,7 @@ LaserBoy_real_segment& LaserBoy_real_segment::reverse()
 }
 
 //############################################################################
-void LaserBoy_real_segment::flip(u_int plane)
+void RealSegment::flip(u_int plane)
 {
     if(size() > 1)
     {
@@ -268,7 +268,7 @@ void LaserBoy_real_segment::flip(u_int plane)
 }
 
 //############################################################################
-void LaserBoy_real_segment::quarter_turn(u_int plane, u_int turns)
+void RealSegment::quarter_turn(u_int plane, u_int turns)
 {
     if(size() > 1)
     {
@@ -313,7 +313,7 @@ void LaserBoy_real_segment::quarter_turn(u_int plane, u_int turns)
 }
 
 //############################################################################
-void LaserBoy_real_segment::flatten_z()
+void RealSegment::flatten_z()
 {
     if(size() > 1)
     {
@@ -324,13 +324,13 @@ void LaserBoy_real_segment::flatten_z()
 }
 
 //############################################################################
-void LaserBoy_real_segment::rotate_around_origin(LaserBoy_3D_double a)
+void RealSegment::rotate_around_origin(Double3d a)
 {
     if(size() > 1)
     {
         for(u_int i = 0; i < size(); i++)
-            at(i) = LaserBoy_real_vertex(rotate_vertex(at(i), a),
-                                         (LaserBoy_color)at(i),
+            at(i) = RealVertex(rotate_vertex(at(i), a),
+                                         (Color)at(i),
                                          at(i).k,
                                          at(i).c
                                         );
@@ -339,13 +339,13 @@ void LaserBoy_real_segment::rotate_around_origin(LaserBoy_3D_double a)
 }
 
 //############################################################################
-void LaserBoy_real_segment::rotate_on_coordinates(LaserBoy_3D_double p, LaserBoy_3D_double a)
+void RealSegment::rotate_on_coordinates(Double3d p, Double3d a)
 {
     if(size() > 1)
     {
         for(u_int i = 0; i < size(); i++)
-            at(i) = LaserBoy_real_vertex(rotate_vertex_on_coordinates(at(i), p, a),
-                                         (LaserBoy_color)at(i),
+            at(i) = RealVertex(rotate_vertex_on_coordinates(at(i), p, a),
+                                         (Color)at(i),
                                          at(i).k,
                                          at(i).c
                                         );
@@ -354,7 +354,7 @@ void LaserBoy_real_segment::rotate_on_coordinates(LaserBoy_3D_double p, LaserBoy
 }
 
 //############################################################################
-bool LaserBoy_real_segment::find_rgb_in_palette(const LaserBoy_palette& palette)
+bool RealSegment::find_rgb_in_palette(const Palette& palette)
 {
     u_int         i,
                   j;
@@ -363,7 +363,7 @@ bool LaserBoy_real_segment::find_rgb_in_palette(const LaserBoy_palette& palette)
     //------------------------------------------------------------------------
     for(i = 0; i < size(); i++)
         for(j = 0; j < palette.number_of_colors(); j++)
-            if((LaserBoy_color)at(i) == palette.at(j))
+            if((Color)at(i) == palette.at(j))
             {
                 at(i).c = (u_char)j;
                 match[i] = true;
@@ -376,7 +376,7 @@ bool LaserBoy_real_segment::find_rgb_in_palette(const LaserBoy_palette& palette)
 }
 
 //############################################################################
-void LaserBoy_real_segment::set_rgb_from_palette()
+void RealSegment::set_rgb_from_palette()
 {
     front().r =
     front().g =
@@ -392,7 +392,7 @@ void LaserBoy_real_segment::set_rgb_from_palette()
 }
 
 //############################################################################
-void LaserBoy_real_segment::set_palette_to_332()
+void RealSegment::set_palette_to_332()
 {
     front().c = 0x00;
     for(u_int i = 1; i < size(); i++)
@@ -404,7 +404,7 @@ void LaserBoy_real_segment::set_palette_to_332()
 }
 
 //############################################################################
-void LaserBoy_real_segment::sync_rgb_and_palette()
+void RealSegment::sync_rgb_and_palette()
 {
     if(size() > 1)
     {
@@ -415,19 +415,19 @@ void LaserBoy_real_segment::sync_rgb_and_palette()
         {
             u_int             i               ,
                               j               ;
-            LaserBoy_palette  palette(p_space);
+            Palette  palette(p_space);
             //----------------------------------------------------------------
-            palette.push_back((LaserBoy_color)at(first_lit_vector_index()));
+            palette.push_back((Color)at(first_lit_vector_index()));
             //----------------------------------------------------------------
             for(i = first_lit_vector_index() + 1; i < size(); i++)
             {
                 for(j = 0; j < palette.number_of_colors(); j++)
-                    if(at(i).is_lit() && (palette[j] == (LaserBoy_color)at(i)))
+                    if(at(i).is_lit() && (palette[j] == (Color)at(i)))
                         break;
                 if(    j == palette.number_of_colors()
                     && at(i).is_lit()
                   )
-                    palette.push_back((LaserBoy_color)at(i));
+                    palette.push_back((Color)at(i));
                 if(palette.number_of_colors() > LASERBOY_PALETTE_MAX)
                     break;
             }
@@ -451,7 +451,7 @@ void LaserBoy_real_segment::sync_rgb_and_palette()
 }
 
 //############################################################################
-void LaserBoy_real_segment::best_match_palette(u_int index)
+void RealSegment::best_match_palette(u_int index)
 {
     if(    (int)index != palette_index
         && index < p_space->number_of_palettes()
@@ -477,7 +477,7 @@ void LaserBoy_real_segment::best_match_palette(u_int index)
 }
 
 //############################################################################
-void LaserBoy_real_segment::bit_reduce_to_palette()
+void RealSegment::bit_reduce_to_palette()
 {
     if(palette_index == LASERBOY_TRUE_COLOR)
     {
@@ -490,30 +490,30 @@ void LaserBoy_real_segment::bit_reduce_to_palette()
 
 
 //############################################################################
-void LaserBoy_real_segment::best_reduce_to_palette()
+void RealSegment::best_reduce_to_palette()
 {
     if(number_of_color_vectors() >= 1)
     {
         u_int             i               ,
                           j               ;
-        LaserBoy_palette  palette(p_space);
+        Palette  palette(p_space);
         //--------------------------------------------------------------------
         if(!p_space->allow_lit_black)
             convert_black_to_blank();
         else
             impose_black_level();
         //--------------------------------------------------------------------
-        palette.push_back((LaserBoy_color)at(first_lit_vector_index()));
+        palette.push_back((Color)at(first_lit_vector_index()));
         //--------------------------------------------------------------------
         for(i = first_lit_vector_index() + 1; i < size(); i++)
         {
             for(j = 0; j < palette.number_of_colors(); j++)
-                if(at(i).is_lit() && (palette[j] == (LaserBoy_color)at(i)))
+                if(at(i).is_lit() && (palette[j] == (Color)at(i)))
                     break;
             if(    j == palette.number_of_colors()
                 && at(i).is_lit()
               )
-                palette.push_back((LaserBoy_color)at(i));
+                palette.push_back((Color)at(i));
         }
         //--------------------------------------------------------------------
         palette.best_reduction();
@@ -528,7 +528,7 @@ void LaserBoy_real_segment::best_reduce_to_palette()
 }
 
 //############################################################################
-void LaserBoy_real_segment::convert_black_to_blank()
+void RealSegment::convert_black_to_blank()
 {
     for(u_int i = 0; i < size(); i++)
     {
@@ -544,7 +544,7 @@ void LaserBoy_real_segment::convert_black_to_blank()
 }
 
 //############################################################################
-void LaserBoy_real_segment::convert_blank_to_black()
+void RealSegment::convert_blank_to_black()
 {
     for(u_int i = 0; i < size(); i++)
     {
@@ -561,11 +561,11 @@ void LaserBoy_real_segment::convert_blank_to_black()
 }
 
 //############################################################################
-void LaserBoy_real_segment::impose_black_level()
+void RealSegment::impose_black_level()
 {
     for(u_int i = 0; i < size(); i++)
     {
-        if(at(i).as_LaserBoy_color().intensity() < p_space->black_level)
+        if(at(i).as_Color().intensity() < p_space->black_level)
         {
             at(i).r = 0;
             at(i).g = 0;
@@ -576,11 +576,11 @@ void LaserBoy_real_segment::impose_black_level()
 }
 
 //############################################################################
-void LaserBoy_real_segment::move(LaserBoy_3D_double d)
+void RealSegment::move(Double3d d)
 {
     for(u_int i = 0; i < size(); i++)
-        at(i) = LaserBoy_real_vertex(at(i).as_3D_double() + d,
-                                     (LaserBoy_color)at(i),
+        at(i) = RealVertex(at(i).as_3D_double() + d,
+                                     (Color)at(i),
                                      at(i).k,
                                      at(i).c
                                     );
@@ -588,19 +588,19 @@ void LaserBoy_real_segment::move(LaserBoy_3D_double d)
 }
 
 //############################################################################
-void LaserBoy_real_segment::scale(LaserBoy_3D_double s)
+void RealSegment::scale(Double3d s)
 {
-    LaserBoy_3D_double center = mean_of_coordinates();
+    Double3d center = mean_of_coordinates();
     scale_on_coordinates(center, s);
     return;
 }
 
 //############################################################################
-void LaserBoy_real_segment::scale_on_coordinates(LaserBoy_3D_double p, LaserBoy_3D_double s)
+void RealSegment::scale_on_coordinates(Double3d p, Double3d s)
 {
     for(u_int i = 0; i < size(); i++)
-        at(i) = LaserBoy_real_vertex(((at(i).as_3D_double() - p) * s) + p,
-                                     (LaserBoy_color)at(i),
+        at(i) = RealVertex(((at(i).as_3D_double() - p) * s) + p,
+                                     (Color)at(i),
                                      at(i).k,
                                      at(i).c
                                     );
@@ -608,7 +608,7 @@ void LaserBoy_real_segment::scale_on_coordinates(LaserBoy_3D_double p, LaserBoy_
 }
 
 //############################################################################
-void LaserBoy_real_segment::scale_around_origin(LaserBoy_3D_double s)
+void RealSegment::scale_around_origin(Double3d s)
 {
     for(u_int i = 0; i < size(); i++)
         at(i) *= s;
@@ -616,9 +616,9 @@ void LaserBoy_real_segment::scale_around_origin(LaserBoy_3D_double s)
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::rectangular_center_of() const
+Double3d RealSegment::rectangular_center_of() const
 {
-    LaserBoy_3D_double center;
+    Double3d center;
     if(size() > 1)
     {
         double  max_x = -DBL_MAX,
@@ -645,9 +645,9 @@ LaserBoy_3D_double LaserBoy_real_segment::rectangular_center_of() const
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::mean_of_coordinates() const
+Double3d RealSegment::mean_of_coordinates() const
 {
-    LaserBoy_3D_double mean;
+    Double3d mean;
     if(size() > 1)
     {
         mean = front();
@@ -659,7 +659,7 @@ LaserBoy_3D_double LaserBoy_real_segment::mean_of_coordinates() const
 }
 
 //############################################################################
-u_int LaserBoy_real_segment::number_of_segments() const // a segment is a series of lit verticies
+u_int RealSegment::number_of_segments() const // a segment is a series of lit verticies
 {
     u_int  i,
            segment_count = 0;
@@ -679,7 +679,7 @@ u_int LaserBoy_real_segment::number_of_segments() const // a segment is a series
 }
 
 //############################################################################
-bool LaserBoy_real_segment::find_segment_at_index(u_int segment_index, u_int& start, u_int& end) const
+bool RealSegment::find_segment_at_index(u_int segment_index, u_int& start, u_int& end) const
 {   // the first segment is number zero!
     if(size() > 1)
     {
@@ -729,9 +729,9 @@ bool LaserBoy_real_segment::find_segment_at_index(u_int segment_index, u_int& st
 }
 
 //############################################################################
-LaserBoy_real_segment LaserBoy_real_segment::copy_segment(u_int segment_index) const
+RealSegment RealSegment::copy_segment(u_int segment_index) const
 {
-    LaserBoy_real_segment segment(p_space);
+    RealSegment segment(p_space);
     if(size() > 1)
     {
         u_int start, end;
@@ -747,19 +747,19 @@ LaserBoy_real_segment LaserBoy_real_segment::copy_segment(u_int segment_index) c
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::rectangular_center_of_segment(u_int segment_index) const
+Double3d RealSegment::rectangular_center_of_segment(u_int segment_index) const
 {
     return (copy_segment(segment_index)).rectangular_center_of();
 }
 
 //############################################################################
-LaserBoy_3D_double LaserBoy_real_segment::mean_of_coordinates_of_segment(u_int segment_index) const
+Double3d RealSegment::mean_of_coordinates_of_segment(u_int segment_index) const
 {
     return (copy_segment(segment_index)).mean_of_coordinates();
 }
 
 //############################################################################
-void LaserBoy_real_segment::move_segment(u_int segment_index, LaserBoy_3D_double d)
+void RealSegment::move_segment(u_int segment_index, Double3d d)
 {
     if(size() > 1)
     {
@@ -775,21 +775,21 @@ void LaserBoy_real_segment::move_segment(u_int segment_index, LaserBoy_3D_double
 }
 
 //############################################################################
-void LaserBoy_real_segment::rotate_segment(u_int segment_index, LaserBoy_3D_double a)
+void RealSegment::rotate_segment(u_int segment_index, Double3d a)
 {
     if(size() > 1)
     {
         u_int               i     ,
                             start ,
                             end   ;
-        LaserBoy_3D_double  center;
+        Double3d  center;
 
         find_segment_at_index(segment_index, start, end);
         center = mean_of_coordinates_of_segment(segment_index);
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_real_vertex( rotate_vertex_on_coordinates(at(i), center, a),
-                                   (LaserBoy_color)at(i),
+            at(i) = RealVertex( rotate_vertex_on_coordinates(at(i), center, a),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c
                                  );
@@ -798,7 +798,7 @@ void LaserBoy_real_segment::rotate_segment(u_int segment_index, LaserBoy_3D_doub
 }
 
 //############################################################################
-void LaserBoy_real_segment::rotate_segment_around_origin(u_int segment_index, LaserBoy_3D_double a)
+void RealSegment::rotate_segment_around_origin(u_int segment_index, Double3d a)
 {
     if(size() > 1)
     {
@@ -808,8 +808,8 @@ void LaserBoy_real_segment::rotate_segment_around_origin(u_int segment_index, La
         find_segment_at_index(segment_index, start, end);
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_real_vertex( rotate_vertex(at(i), a),
-                                   (LaserBoy_color)at(i),
+            at(i) = RealVertex( rotate_vertex(at(i), a),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c
                                  );
@@ -818,21 +818,21 @@ void LaserBoy_real_segment::rotate_segment_around_origin(u_int segment_index, La
 }
 
 //############################################################################
-void LaserBoy_real_segment::scale_segment(u_int segment_index, LaserBoy_3D_double m)
+void RealSegment::scale_segment(u_int segment_index, Double3d m)
 {
     if(size() > 1)
     {
         u_int              i     ,
                            start ,
                            end   ;
-        LaserBoy_3D_double center;
+        Double3d center;
         //--------------------------------------------------------------------
         find_segment_at_index(segment_index, start, end);
         center = mean_of_coordinates_of_segment(segment_index);
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_real_vertex( scale_vertex_on_coordinates(at(i), center, m),
-                                   (LaserBoy_color)at(i),
+            at(i) = RealVertex( scale_vertex_on_coordinates(at(i), center, m),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c);
         //--------------------------------------------------------------------
@@ -841,7 +841,7 @@ void LaserBoy_real_segment::scale_segment(u_int segment_index, LaserBoy_3D_doubl
 }
 
 //############################################################################
-void LaserBoy_real_segment::scale_segment_around_origin(u_int segment_index, LaserBoy_3D_double m)
+void RealSegment::scale_segment_around_origin(u_int segment_index, Double3d m)
 {
     if(size() > 1)
     {
@@ -852,8 +852,8 @@ void LaserBoy_real_segment::scale_segment_around_origin(u_int segment_index, Las
         find_segment_at_index(segment_index, start, end);
         //--------------------------------------------------------------------
         for(i = start; i <= end; i++)
-            at(i) = LaserBoy_real_vertex( m * at(i),
-                                   (LaserBoy_color)at(i),
+            at(i) = RealVertex( m * at(i),
+                                   (Color)at(i),
                                    at(i).k,
                                    at(i).c
                                  );
@@ -863,7 +863,7 @@ void LaserBoy_real_segment::scale_segment_around_origin(u_int segment_index, Las
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
+ErrorCode RealSegment::from_ifstream_dxf(ifstream& in)
 {
     u_char                 dxf_color_index     ,
                            prev_dxf_color_index;
@@ -883,19 +883,19 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
     string                 entity_string,
                            font         ,
                            text         ;
-    LaserBoy_3D_double     double_3D_1,
+    Double3d     double_3D_1,
                            double_3D_2,
                            double_3D_3,
                            double_3D_4;
-    LaserBoy_color         color,
+    Color         color,
                            prev_color;
-    LaserBoy_real_segment  real_vertices(p_space);
+    RealSegment  real_vertices(p_space);
     vector<double>         vertex_x,
                            vertex_y;
     bool                   closed_polyline;
     //------------------------------------------------------------------------
-    push_back(LaserBoy_real_vertex()); // every LaserBoy_real_segment::from_ifstream_dxf
-    push_back(LaserBoy_real_vertex()); // has an original vector this.size() not less than 2
+    push_back(RealVertex()); // every RealSegment::from_ifstream_dxf
+    push_back(RealVertex()); // has an original vector this.size() not less than 2
     //------------------------------------------------------------------------
     while(in.good() && entity_string != "ENTITIES") // ignore everthing up to ENTITIES
         in >> entity_string;
@@ -948,8 +948,8 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                                     break;
                     }
                 }
-                push_back(LaserBoy_real_vertex(double_3D_1, color).blank());
-                push_back(LaserBoy_real_vertex(double_3D_1, color).unblank());
+                push_back(RealVertex(double_3D_1, color).blank());
+                push_back(RealVertex(double_3D_1, color).unblank());
             }
             else if(entity_string == "LINE")
             {
@@ -988,8 +988,8 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                                     break;
                     }
                 }
-                push_back(LaserBoy_real_vertex(double_3D_1, color).blank());
-                push_back(LaserBoy_real_vertex(double_3D_2, color).unblank());
+                push_back(RealVertex(double_3D_1, color).blank());
+                push_back(RealVertex(double_3D_2, color).unblank());
             }
             //----------------------------------------------------------------
             else if(    entity_string == "CIRCLE"
@@ -1046,7 +1046,7 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                 double_3D_2.y = radius * sin(arc_start);
                 double_3D_2.z = double_3D_1.z;
 
-                push_back(LaserBoy_real_vertex(double_3D_1 + double_3D_2, color).blank());
+                push_back(RealVertex(double_3D_1 + double_3D_2, color).blank());
 
                 for(a = 1; a <= arc_vertices; a++)
                 {
@@ -1054,7 +1054,7 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                     double_3D_2.y = radius * sin(a * arc_step + arc_start);
                     double_3D_2.z = double_3D_1.z;
 
-                    push_back(LaserBoy_real_vertex(double_3D_1 + double_3D_2, color).unblank());
+                    push_back(RealVertex(double_3D_1 + double_3D_2, color).unblank());
                 }
             }
             //----------------------------------------------------------------
@@ -1118,14 +1118,14 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                 double_3D_4.x = -major_axis * cos(arc_start);
                 double_3D_4.y = -minor_axis * sin(arc_start);
                 double_3D_4.z = double_3D_1.z;
-                real_vertices.push_back(LaserBoy_real_vertex(double_3D_4, color).blank());
+                real_vertices.push_back(RealVertex(double_3D_4, color).blank());
                 for(a = 1; a <= arc_vertices; a++)
                 {
                     double_3D_4.x = -major_axis * cos(a * arc_step + arc_start);
                     double_3D_4.y = -minor_axis * sin(a * arc_step + arc_start);
                     double_3D_4.z = double_3D_1.z;
 
-                    real_vertices.push_back(LaserBoy_real_vertex(double_3D_4, color).unblank());
+                    real_vertices.push_back(RealVertex(double_3D_4, color).unblank());
                 }
                 if(double_3D_3 != 0.0)
                     for(vertex_index = 0; vertex_index < real_vertices.size(); vertex_index++)
@@ -1199,14 +1199,14 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                     }
                     if(first_segment_vertex_index == -1)
                     {
-                        push_back(LaserBoy_real_vertex(double_3D_1, color).blank());
+                        push_back(RealVertex(double_3D_1, color).blank());
                         first_segment_vertex_index = (int)size() - 1;
                     }
                     else
-                        push_back(LaserBoy_real_vertex(double_3D_1, prev_color).unblank());
+                        push_back(RealVertex(double_3D_1, prev_color).unblank());
                 } // end while(entity_string == "VERTEX")
                 if(closed_polyline)
-                    push_back(LaserBoy_real_vertex((LaserBoy_3D_double)(at(first_segment_vertex_index)), back().as_LaserBoy_color()).unblank());
+                    push_back(RealVertex((Double3d)(at(first_segment_vertex_index)), back().as_Color()).unblank());
             }
             //----------------------------------------------------------------
             else if(entity_string == "LWPOLYLINE")
@@ -1248,18 +1248,18 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                     double_3D_1.x = vertex_x.front();
                     double_3D_1.y = vertex_y.front();
                     double_3D_1.z = 0;
-                    push_back(LaserBoy_real_vertex(double_3D_1, color).blank());
+                    push_back(RealVertex(double_3D_1, color).blank());
                     for(u_int a = 0; a < arc_vertices; a++)
                     {
                         double_3D_1.x = vertex_x[a];
                         double_3D_1.y = vertex_y[a];
-                        push_back(LaserBoy_real_vertex(double_3D_1, color).unblank());
+                        push_back(RealVertex(double_3D_1, color).unblank());
                     }
                     if(group_70_flag & 0x01) // closed polyline
                     {
                         double_3D_1.x = vertex_x.front();
                         double_3D_1.y = vertex_y.front();
-                        push_back(LaserBoy_real_vertex(double_3D_1, color).unblank());
+                        push_back(RealVertex(double_3D_1, color).unblank());
                     }
                 }
             }
@@ -1269,7 +1269,7 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                 int                text_index,
                                    vertex_index;
                 long int           bytes_skipped;
-                LaserBoy_frame_set font_frames(p_space);
+                FrameSet font_frames(p_space);
                 double_3D_1 = 0.0;
                 double_3D_3 = 0.0;
                 while(get_dxf_pair(in, group_code, entity_string))
@@ -1377,10 +1377,10 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
                                                 ) * radius;
                                 //------------------------------------------------
                                 real_vertices.push_back(   (font_frames[text[text_index] - '!'].at(vertex_index).is_blank())
-                                                         ? (LaserBoy_real_vertex(double_3D_2, color).blank())
+                                                         ? (RealVertex(double_3D_2, color).blank())
                                                          : (   (font_frames[text[text_index] - '!'].at(vertex_index).is_black(p_space->black_level))
-                                                             ? (LaserBoy_real_vertex(double_3D_2, LaserBoy_color(0,0,0)).unblank())
-                                                             : (LaserBoy_real_vertex(double_3D_2, color).unblank())
+                                                             ? (RealVertex(double_3D_2, Color(0,0,0)).unblank())
+                                                             : (RealVertex(double_3D_2, color).unblank())
                                                            )
                                                        );
                             }
@@ -1415,12 +1415,12 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_dxf(ifstream& in)
 }
 
 //############################################################################
-LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_txt(ifstream& in,
+ErrorCode RealSegment::from_ifstream_txt(ifstream& in,
                                                              const u_int& group_type,
                                                              u_int& line_number
                                                             )
 {
-    LaserBoy_real_vertex real_vertex;
+    RealVertex real_vertex;
     //------------------------------------------------------------------------
     if(    group_type == LASERBOY_3D_FRAME_PALETTE
         || group_type == LASERBOY_2D_FRAME_PALETTE
@@ -1430,8 +1430,8 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_txt(ifstream& in,
         palette_index = LASERBOY_TRUE_COLOR;
     //------------------------------------------------------------------------
     clear();
-    push_back(LaserBoy_real_vertex());
-    push_back(LaserBoy_real_vertex());
+    push_back(RealVertex());
+    push_back(RealVertex());
     //------------------------------------------------------------------------
     if(in.good())
     {
@@ -1447,12 +1447,12 @@ LaserBoy_Error_Code LaserBoy_real_segment::from_ifstream_txt(ifstream& in,
 }
 
 //############################################################################
-void LaserBoy_real_segment::normalize()
+void RealSegment::normalize()
 {
     u_int               i;
     double              real_size   =  0.0,
                         real_scale  =  1.0;
-    LaserBoy_3D_double  real_min    =  DBL_MAX,
+    Double3d  real_min    =  DBL_MAX,
                         real_max    = -DBL_MAX,
                         real_offset =  0.0;
 
@@ -1510,13 +1510,13 @@ void LaserBoy_real_segment::normalize()
 //############################################################################
 //////////////////////////////////////////////////////////////////////////////
 //############################################################################
-void LaserBoy_real_segment_set::normalize()
+void RealSegmentSet::normalize()
 {
     u_int               i,
                         j;
     double              real_size   =  0.0,
                         real_scale  =  1.0;
-    LaserBoy_3D_double  real_min    =  DBL_MAX,
+    Double3d  real_min    =  DBL_MAX,
                         real_max    = -DBL_MAX,
                         real_offset =  0.0;
 

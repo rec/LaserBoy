@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_palette_set.hpp is part of LaserBoy.
+// palette_set.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,10 +36,10 @@
 namespace LaserBoy {
 
 //############################################################################
-class LaserBoy_palette_set : public LaserBoy_palette_set_base
+class PaletteSet : public PaletteSetBase
 {
 public:
-    LaserBoy_palette_set(LaserBoy_space* ps = NULL)
+    PaletteSet(Space* ps = NULL)
                   : p_space                (ps),
                     palette_set_error      (LASERBOY_OK),
                     palette_index          (LASERBOY_ILDA_DEFAULT),
@@ -50,16 +50,16 @@ public:
                     }
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_palette_set()  {}
+   ~PaletteSet()  {}
     //------------------------------------------------------------------------
-    LaserBoy_palette_set& replace_palette_set(const LaserBoy_palette_set& palette_set)
+    PaletteSet& replace_palette_set(const PaletteSet& palette_set)
                     {
                         clear();
                         insert(begin(), palette_set.begin(), palette_set.end());
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette_set& operator = (const LaserBoy_palette_set& palette_set)
+    PaletteSet& operator = (const PaletteSet& palette_set)
                     {
                         clear();
                         reserve(palette_set.size());
@@ -68,20 +68,20 @@ virtual
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette_set& operator += (const LaserBoy_palette_set& palette_set)
+    PaletteSet& operator += (const PaletteSet& palette_set)
                     {
                         reserve(size() + palette_set.size());
                         insert(end(), palette_set.begin(), palette_set.end());
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette_set& operator += (const LaserBoy_palette& palette)
+    PaletteSet& operator += (const Palette& palette)
                     {
                         push_back(palette);
                         return *this;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette_set& push_back_palette(const LaserBoy_palette& palette)
+    PaletteSet& push_back_palette(const Palette& palette)
                     {
                         push_back(palette);
                         return *this;
@@ -115,7 +115,7 @@ virtual
                             target_palette_index = 0;
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette&  palette(u_int index) //sets palette_index
+    Palette&  palette(u_int index) //sets palette_index
                     {
                         if(number_of_palettes())
                         {
@@ -129,7 +129,7 @@ virtual
                         return front();
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette&  set_target_palette_to(u_int index) //sets target_palette_index
+    Palette&  set_target_palette_to(u_int index) //sets target_palette_index
                     {
                         if(number_of_palettes())
                         {
@@ -143,14 +143,14 @@ virtual
                         return front();
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette& current_palette()
+    Palette& current_palette()
                     {
                         if(palette_index != LASERBOY_TRUE_COLOR)
                             return at(palette_index);
                         return at(target_palette_index);
                     }
     //------------------------------------------------------------------------
-    LaserBoy_palette& target_palette()
+    Palette& target_palette()
                     {
                         return at(target_palette_index);
                     }
@@ -182,22 +182,22 @@ virtual
     //------------------------------------------------------------------------
     string              GUID8char                   ();
     //------------------------------------------------------------------------
-    LaserBoy_palette&   palette_picker              (int index);
+    Palette&   palette_picker              (int index);
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code palette_from_ifstream_txt   (ifstream&       in,
+    ErrorCode palette_from_ifstream_txt   (ifstream&       in,
                                                      const u_int&    group_type,
                                                      u_int&          line_number,
                                                      const string&   name = ""
                                                     );
     //------------------------------------------------------------------------
-    LaserBoy_Error_Code palettes_from_txt_file      (const string& file);
+    ErrorCode palettes_from_txt_file      (const string& file);
     //------------------------------------------------------------------------
     void                populate_palette_set        ();
     void                add_palette                 ();
     void                copy_palette                (int index);
     //------------------------------------------------------------------------
-    LaserBoy_space*      p_space;
-    LaserBoy_Error_Code  palette_set_error   ;
+    Space*      p_space;
+    ErrorCode  palette_set_error   ;
     int                  palette_index       ;  // may be LASERBOY_TRUE_COLOR (-1)
     u_int                target_palette_index,
                          selected_color_index;

@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_common.hpp is part of LaserBoy.
+// common.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ typedef unsigned int   u_int  ;
 typedef unsigned short u_short;
 typedef unsigned char  u_char ;
 
-typedef unsigned int   LaserBoy_Bounds    ;
-typedef unsigned int   LaserBoy_Error_Code;
-typedef unsigned int   LaserBoy_Rescale_Error_Code;
+typedef unsigned int   Bounds    ;
+typedef unsigned int   ErrorCode;
+typedef unsigned int   RescaleErrorCode;
 //############################################################################
 extern const double    quarter_pi;
 extern const double    half_pi;
@@ -95,7 +95,7 @@ bool   get_next_number(ifstream& in, double& number, u_int& line_number);
 bool   get_next_hex   (ifstream& in, double& number, u_int& line_number);
 
 //############################################################################
-int    LaserBoy_version_check(string &version_string,
+int    version_check(string &version_string,
                               string install_GUID,
                               u_int app_runs_count
                              );

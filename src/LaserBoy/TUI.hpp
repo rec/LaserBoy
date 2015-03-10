@@ -11,7 +11,7 @@
 // Copyright 2003, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 2015 James Lehman.
 // This source is distributed under the terms of the GNU General Public License.
 //
-// LaserBoy_TUI.hpp is part of LaserBoy.
+// TUI.hpp is part of LaserBoy.
 //
 // LaserBoy is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,11 +36,11 @@ namespace LaserBoy {
 
 
 //############################################################################
-class LaserBoy_TUI : public LaserBoy_space
+class TUI : public Space
 {
 public:
-    LaserBoy_TUI(LaserBoy_GUI_base* gui)
-                : LaserBoy_space         (gui),
+    TUI(GUI_base* gui)
+                : Space         (gui),
                   TUI_palette_index      (  0),
                   current_menu_name_bc   (  0),
                   current_menu_name      (   ),
@@ -51,7 +51,7 @@ public:
                                                       {};
     //------------------------------------------------------------------------
 virtual
-   ~LaserBoy_TUI()                                    {};
+   ~TUI()                                    {};
     //------------------------------------------------------------------------
     void    render_space                          ();
     void    overlay_palettes                      ();
@@ -113,13 +113,13 @@ virtual
                 return;
             }
     //------------------------------------------------------------------------
-    LaserBoy_TUI& operator = (const LaserBoy_frame_set& frames)
+    TUI& operator = (const FrameSet& frames)
                     {
-                        LaserBoy_frame_set::clear();
-                        LaserBoy_frame_set::reserve(frames.number_of_frames());
-                        LaserBoy_frame_set::insert (LaserBoy_frame_set::end(),
-                                                    frames.LaserBoy_frame_set::begin(),
-                                                    frames.LaserBoy_frame_set::end()
+                        FrameSet::clear();
+                        FrameSet::reserve(frames.number_of_frames());
+                        FrameSet::insert (FrameSet::end(),
+                                                    frames.FrameSet::begin(),
+                                                    frames.FrameSet::end()
                                                    );
                         return *this;
                     }
